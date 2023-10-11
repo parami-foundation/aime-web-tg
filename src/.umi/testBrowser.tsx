@@ -3,13 +3,13 @@
 // DO NOT CHANGE IT MANUALLY!
 import React, { useEffect, useState } from 'react';
 import { ApplyPluginsType } from 'umi';
-import { renderClient, RenderClientOpts } from '/Users/hikaru/Git/Parami/aime-tma/node_modules/@umijs/renderer-react';
+import { renderClient, RenderClientOpts } from '/Users/hikaru/Git/Parami/aime-web-tg/node_modules/@umijs/renderer-react';
 import { createHistory } from './core/history';
 import { createPluginManager } from './core/plugin';
 import { getRoutes } from './core/route';
 import type { Location } from 'history';
 
-import '/Users/hikaru/Git/Parami/aime-tma/src/global.less';
+import '/Users/hikaru/Git/Parami/aime-web-tg/src/global.less';
 const publicPath = '/';
 const runtimePublicPath = false;
 

@@ -4,12 +4,12 @@
 import React from 'react';
 
 export async function getRoutes() {
-  const routes = {"1":{"title":"Auth","path":"/","parentId":"@@/global-layout","id":"1"},"@@/global-layout":{"id":"@@/global-layout","path":"/","isLayout":true}} as const;
+  const routes = {"1":{"path":"/","parentId":"@@/global-layout","id":"1"},"@@/global-layout":{"id":"@@/global-layout","path":"/","isLayout":true}} as const;
   return {
     routes,
     routeComponents: {
 '1': React.lazy(() => import(/* webpackChunkName: "p__auth__index" */'@/pages/auth/index.tsx')),
-'@@/global-layout': React.lazy(() => import(/* webpackChunkName: "layouts__index" */'/Users/hikaru/Git/Parami/aime-tma/src/layouts/index.tsx')),
+'@@/global-layout': React.lazy(() => import(/* webpackChunkName: "layouts__index" */'/Users/hikaru/Git/Parami/aime-web-tg/src/layouts/index.tsx')),
 },
   };
 }

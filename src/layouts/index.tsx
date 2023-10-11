@@ -63,52 +63,54 @@ const Layout: React.FC = () => {
       initOptions={{
         debug: true,
         cssVars: true,
-      }}>
+      }}
+    >
       <WagmiConfig
         config={wagmiConfig}
       >
-        {!didInit ? (
-          <Result
-            status="error"
-            title="SDK init error"
-            subTitle="SDK init function is not yet called."
-            extra={[
-              <Button
-                type="primary"
-                key="retry"
-                onClick={() => {
-                  window.location.reload();
-                }}
-              >
-                Retry
-              </Button>,
-            ]}
-          >
-            <Paragraph>
-              {errorMessage}
-            </Paragraph>
-          </Result>
-        ) : !components ? (
-          <Spin tip="Loading" size="large">
-            <div className="content" />
-          </Spin>
-        ) : (
-          <ConfigProvider
-            theme={{
-              algorithm: theme.defaultAlgorithm,
-              token: {
-                wireframe: false,
-                colorPrimary: THEME_CONFIG.colorPrimary,
-                borderRadius: THEME_CONFIG.borderRadius,
-                boxShadow: THEME_CONFIG.boxShadow,
-              },
-            }}
-          >
+        <ConfigProvider
+          theme={{
+            algorithm: theme.defaultAlgorithm,
+            token: {
+              wireframe: false,
+              colorPrimary: THEME_CONFIG.colorPrimary,
+              borderRadius: THEME_CONFIG.borderRadius,
+              boxShadow: THEME_CONFIG.boxShadow,
+            },
+          }}
+        >
+          {!didInit ? (
+            <Result
+              status="error"
+              title="SDK init error"
+              subTitle="SDK init function is not yet called."
+              extra={[
+                <Button
+                  type="primary"
+                  key="retry"
+                  size='large'
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
+                  Retry
+                </Button>,
+              ]}
+            >
+              <Paragraph>
+                {errorMessage}
+              </Paragraph>
+            </Result>
+          ) : !components ? (
+            <Spin tip="Loading" size="large">
+              <div className="content" />
+            </Spin>
+          ) : (
             <div className={styles.layoutContainer}>
               <Outlet />
             </div>
-          </ConfigProvider>
-        )}
+          )}
+        </ConfigProvider>
       </WagmiConfig>
     </SDKProvider>
   )
