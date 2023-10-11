@@ -1,20 +1,11 @@
-import { Layout } from 'antd';
-import React, { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
-import './App.scss';
+import { matchRoutes } from "umi";
+import { PROJECT_CONFIG } from "./constants/global";
 
-const { Content } = Layout;
-
-function App() {
-  return (
-    <div className='app'>
-      <Layout>
-        <Content className='content'>
-          <Outlet></Outlet>
-        </Content>
-      </Layout>
-    </div>
-  );
+export function onRouteChange({ clientRoutes, location }: any) {
+  const route: any = matchRoutes(clientRoutes, location.pathname)?.pop()?.route;
+  if (route) {
+    document.title = route.title
+      ? `${route.title} | ${PROJECT_CONFIG.name}`
+      : PROJECT_CONFIG.name;
+  }
 }
-
-export default App;
