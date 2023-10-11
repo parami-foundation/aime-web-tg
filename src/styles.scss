@@ -1,0 +1,59 @@
+$parami-red: #ff5b00;
+
+$parami-red-hover: rgba(255, 91, 0, 0.75);
+
+$card-background: #ffffff1f;
+
+$text-light-color: #848484;
+
+$text-gray-color: rgba(255, 255, 255, 0.5);
+
+@font-face {
+  font-family: 'SFProText-Heavy';
+  src: url('./fonts/SF-Pro-Text-Heavy.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SFProText-Semibold';
+  src: url('./fonts/SF-Pro-Text-Semibold.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SFProText-Bold';
+  src: url('./fonts/SF-Pro-Text-Bold.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SFProText-Regular';
+  src: url('./fonts/SF-Pro-Text-Regular.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SFProText-SemiboldItalic';
+  src: url('./fonts/SF-Pro-Text-SemiboldItalic.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'SFProText-Medium';
+  src: url('./fonts/SF-Pro-Text-Medium.otf') format('opentype');
+}
+
+// @font-face {
+//   font-family: 'Gilroy-Regular';
+//   src: url('./fonts/Gilroy-Regular.ttf') format('truetype');
+// }
+
+@mixin text-overflow($width) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+  white-space: nowrap;
+  max-width: $width;
+}
+
+@mixin flex($justify: flex-start, $align: center) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+  flex-flow: row nowrap;
+}
