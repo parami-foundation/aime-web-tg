@@ -66,9 +66,9 @@ root.render(
           <Routes>
             <Route path='/' element={<App />}>
               <Route path='' element={<AIME />} />
-              <Route path='rewards' element={<Rewards></Rewards>} />
-              <Route path='bid' element={<Bid></Bid>} />
-              <Route path='test' element={<TestPage></TestPage>} />
+              {/* <Route path='rewards' element={<Rewards></Rewards>} /> */}
+              {/* <Route path='bid' element={<Bid></Bid>} /> */}
+              {/* <Route path='test' element={<TestPage></TestPage>} /> */}
               <Route path='*' element={<Navigate to='/' />} />
             </Route>
           </Routes>
