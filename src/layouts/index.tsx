@@ -2,7 +2,7 @@ import { Outlet } from 'umi';
 import styles from './style.less';
 import { WALLETCONNECT_CONFIG } from '@/constants/walletconnect';
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
-import { ConfigProvider, Result, Spin, Typography, notification, theme } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 import { WagmiConfig } from 'wagmi';
 import { THEME_CONFIG } from '@/constants/theme';
 import { SDKProvider } from '@tma.js/sdk-react';
@@ -19,18 +19,19 @@ const Layout: React.FC = () => {
   createWeb3Modal({
     wagmiConfig: wagmiConfig,
     projectId: WALLETCONNECT_CONFIG.projectId,
+    defaultChain: WALLETCONNECT_CONFIG.defaultChain,
     chains: WALLETCONNECT_CONFIG.chains,
   });
 
   return (
-    <SDKProvider
-      initOptions={{
-        debug: true,
-        cssVars: true,
-      }}
+    <WagmiConfig
+      config={wagmiConfig}
     >
-      <WagmiConfig
-        config={wagmiConfig}
+      <SDKProvider
+        initOptions={{
+          debug: true,
+          cssVars: true,
+        }}
       >
         <ConfigProvider
           theme={{
@@ -50,8 +51,8 @@ const Layout: React.FC = () => {
             </div>
           </DisplayGate>
         </ConfigProvider>
-      </WagmiConfig>
-    </SDKProvider>
+      </SDKProvider>
+    </WagmiConfig>
   )
 };
 

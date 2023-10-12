@@ -5,7 +5,7 @@ import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
 import { ReactComponent as LogoWebUrl } from '@/assets/auth/aime_web_url.svg';
 import { Button, notification } from 'antd';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
-import { useAccount, useConnect, useNetwork, useSignMessage, useSwitchNetwork } from 'wagmi';
+import { useAccount, useNetwork, useSignMessage, useSwitchNetwork } from 'wagmi';
 import { BIND_WALLET_MESSAGE } from '@/constants/global';
 
 export interface AuthProps { };
@@ -29,7 +29,6 @@ const Auth: React.FC<AuthProps> = () => {
     }
   });
   const { chain: currentChain } = useNetwork();
-  const { reset } = useConnect();
   const { chains, switchNetworkAsync } = useSwitchNetwork();
 
   useEffect(() => {
