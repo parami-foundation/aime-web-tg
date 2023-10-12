@@ -8,6 +8,6 @@ export const WALLETCONNECT_CONFIG = {
     name: PROJECT_CONFIG.name,
     description: PROJECT_CONFIG.description,
     url: PROJECT_CONFIG.url,
-    icons: [`${PROJECT_CONFIG.url}/icon.svg`],
+    icons: [`${PROJECT_CONFIG.url}/logo.svg`],
   },
 };

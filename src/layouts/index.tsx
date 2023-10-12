@@ -2,7 +2,7 @@ import { Outlet } from 'umi';
 import styles from './style.less';
 import { WALLETCONNECT_CONFIG } from '@/constants/walletconnect';
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
-import { Button, ConfigProvider, Result, Spin, Typography, theme } from 'antd';
+import { Button, ConfigProvider, Result, Spin, Typography, notification, theme } from 'antd';
 import { WagmiConfig } from 'wagmi';
 import { THEME_CONFIG } from '@/constants/theme';
 import { SDKProvider, useInitData, useSDK } from '@tma.js/sdk-react';
@@ -54,6 +54,12 @@ const Layout: React.FC = () => {
         }, null, ' ');
       }, [initData]);
 
+      notification.info({
+        key: 'initData',
+        message: 'TMA Init data',
+        description: initDataJson,
+        duration: 0,
+      });
       console.log('initDataJson', initDataJson);
     }
   }, [didInit]);
