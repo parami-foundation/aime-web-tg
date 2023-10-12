@@ -1,7 +1,7 @@
 export const PROJECT_CONFIG = {
   name: "AIME",
   description: "Parami AIME",
-  url: "https://opswap.io",
+  url: "https://aime.parami.io",
 };
 
 export const BIND_WALLET_MESSAGE = "AIME:bind_wallet";

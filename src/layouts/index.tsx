@@ -79,7 +79,7 @@ const Layout: React.FC = () => {
             },
           }}
         >
-          {!didInit ? (
+          {/* {!didInit ? (
             <Result
               status="error"
               title="SDK init error"
@@ -109,7 +109,10 @@ const Layout: React.FC = () => {
             <div className={styles.layoutContainer}>
               <Outlet />
             </div>
-          )}
+          )} */}
+          <div className={styles.layoutContainer}>
+            <Outlet />
+          </div>
         </ConfigProvider>
       </WagmiConfig>
     </SDKProvider>
