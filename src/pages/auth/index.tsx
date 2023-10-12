@@ -48,23 +48,34 @@ const Auth: React.FC<AuthProps> = () => {
 
       <div className={styles.buttonContainer}>
         {!signature ? (
-          <Button
-            block
-            type="primary"
-            size="large"
-            className={styles.button}
-            onClick={() => {
-              if (!isConnected) {
+          <>
+            <Button
+              block
+              type="primary"
+              size="large"
+              className={styles.button}
+              onClick={() => {
                 open();
-              } else {
-                signMessage({
-                  message: BIND_WALLET_MESSAGE
-                })
-              }
-            }}
-          >
-            Connect Wallet
-          </Button>
+              }}
+            >
+              Connect Wallet
+            </Button>
+            {isConnected && (
+              <Button
+                block
+                type="primary"
+                size="large"
+                className={styles.button}
+                onClick={() => {
+                  signMessage({
+                    message: BIND_WALLET_MESSAGE
+                  })
+                }}
+              >
+                Sign Message
+              </Button>
+            )}
+          </>
         ) : (
           <Button
             block

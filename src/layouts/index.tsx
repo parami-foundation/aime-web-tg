@@ -23,69 +23,69 @@ const Layout: React.FC = () => {
     chains: WALLETCONNECT_CONFIG.chains,
   });
 
-  const { didInit, components, error } = useSDK();
+  // const { didInit, components, error } = useSDK();
 
-  const errorMessage = useMemo<null | string>(() => {
-    if (!error) {
-      return null;
-    }
-    return error instanceof Error ? error.message : 'Unknown error';
-  }, [error]);
+  // const errorMessage = useMemo<null | string>(() => {
+  //   if (!error) {
+  //     return null;
+  //   }
+  //   return error instanceof Error ? error.message : 'Unknown error';
+  // }, [error]);
 
   // Displays current application init data.
-  useEffect(() => {
-    if (!!didInit) {
-      const initData = useInitData();
-      const initDataJson = useMemo(() => {
-        if (!initData) {
-          return 'Init data is empty.';
-        }
-        const { authDate, chat, hash, canSendAfter, queryId, receiver, user, startParam } = initData;
+  // useEffect(() => {
+  //   if (!!didInit) {
+  //     const initData = useInitData();
+  //     const initDataJson = useMemo(() => {
+  //       if (!initData) {
+  //         return 'Init data is empty.';
+  //       }
+  //       const { authDate, chat, hash, canSendAfter, queryId, receiver, user, startParam } = initData;
 
-        return JSON.stringify({
-          authDate,
-          chat,
-          hash,
-          canSendAfter,
-          queryId,
-          receiver,
-          user,
-          startParam,
-        }, null, ' ');
-      }, [initData]);
+  //       return JSON.stringify({
+  //         authDate,
+  //         chat,
+  //         hash,
+  //         canSendAfter,
+  //         queryId,
+  //         receiver,
+  //         user,
+  //         startParam,
+  //       }, null, ' ');
+  //     }, [initData]);
 
-      notification.info({
-        key: 'initData',
-        message: 'TMA Init data',
-        description: initDataJson,
-        duration: 0,
-      });
-      console.log('initDataJson', initDataJson);
-    }
-  }, [didInit]);
+  //     notification.info({
+  //       key: 'initData',
+  //       message: 'TMA Init data',
+  //       description: initDataJson,
+  //       duration: 0,
+  //     });
+  //     console.log('initDataJson', initDataJson);
+  //   }
+  // }, [didInit]);
 
   return (
-    <SDKProvider
-      initOptions={{
-        debug: true,
-        cssVars: true,
-      }}
+    // <SDKProvider
+    //   initOptions={{
+    //     debug: true,
+    //     cssVars: true,
+    //   }}
+    // >
+    <WagmiConfig
+      config={wagmiConfig}
     >
-      <WagmiConfig
-        config={wagmiConfig}
+      <ConfigProvider
+        theme={{
+          algorithm: theme.defaultAlgorithm,
+          token: {
+            wireframe: false,
+            colorPrimary: THEME_CONFIG.colorPrimary,
+            borderRadius: THEME_CONFIG.borderRadius,
+            boxShadow: THEME_CONFIG.boxShadow,
+          },
+        }}
       >
-        <ConfigProvider
-          theme={{
-            algorithm: theme.defaultAlgorithm,
-            token: {
-              wireframe: false,
-              colorPrimary: THEME_CONFIG.colorPrimary,
-              borderRadius: THEME_CONFIG.borderRadius,
-              boxShadow: THEME_CONFIG.boxShadow,
-            },
-          }}
-        >
-          {/* {!didInit ? (
+        {/* {!didInit ? (
             <Result
               status="error"
               title="SDK init error"
@@ -116,12 +116,12 @@ const Layout: React.FC = () => {
               <Outlet />
             </div>
           )} */}
-          <div className={styles.layoutContainer}>
-            <Outlet />
-          </div>
-        </ConfigProvider>
-      </WagmiConfig>
-    </SDKProvider>
+        <div className={styles.layoutContainer}>
+          <Outlet />
+        </div>
+      </ConfigProvider>
+    </WagmiConfig>
+    // </SDKProvider>
   )
 };
 
