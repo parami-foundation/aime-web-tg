@@ -4,7 +4,7 @@ import { ReactComponent as Logo } from '@/assets/logo.svg';
 import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
 import { ReactComponent as LogoWebUrl } from '@/assets/auth/aime_web_url.svg';
 import { Button, notification } from 'antd';
-import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { useWeb3Modal } from '@web3modal/react';
 import { useAccount, useNetwork, useSignMessage, useSwitchNetwork } from 'wagmi';
 import { BIND_WALLET_MESSAGE } from '@/constants/global';
 

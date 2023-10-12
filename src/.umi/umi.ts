@@ -72,5 +72,5 @@ async function render() {
 render();
 
 window.g_umi = {
-  version: '4.0.83',
+  version: '4.0.85',
 };

@@ -157,6 +157,7 @@ interface IConfigTypes {
     failOnHint?: (boolean | undefined);
     patterns?: (Array<string> | undefined);
 };
+    cssPublicPath: string;
     cssMinifierOptions: { [x: string]: any };
     cssMinifier: "cssnano" | "esbuild" | "parcelCSS" | "none";
     cssLoaderModules: { [x: string]: any };
