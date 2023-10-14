@@ -13,3 +13,5 @@ export const WS_Endpoint = "ai.parami.io";
 export const AIME_CONTRACT = "0x37037906bFE3Fa2b2e7375c78Cd17ca8e106d9D4";
 
 export const WAITLIST_LINK = "https://form.typeform.com/to/Q7qTVjQW";
+
+export const TELEGRAM_BOT = "aime_beta_bot";

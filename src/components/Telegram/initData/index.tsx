@@ -1,9 +1,14 @@
-import { useInitData } from "@tma.js/sdk-react";
+import { useInitData, useSDK } from "@tma.js/sdk-react";
 import { notification } from "antd";
 import { useMemo } from "react";
 
 export const InitData = () => {
-  const initData = useInitData();
+  const { didInit, components, error } = useSDK();
+
+  let initData: any = null;
+  if (!error && !!components) {
+    initData = useInitData();
+  }
 
   const initDataJson = useMemo(() => {
     if (!initData) {
@@ -23,9 +28,9 @@ export const InitData = () => {
     }, null, ' ');
   }, [initData]);
 
-  notification.success({
+  notification.info({
     key: 'initData',
-    message: 'Init data success',
+    message: 'Telegram InitData',
     description: initDataJson,
     duration: 0,
   });

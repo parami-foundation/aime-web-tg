@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styles from './style.less';
 import { ReactComponent as Logo } from '@/assets/logo.svg';
 import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
@@ -7,12 +7,15 @@ import { Button, notification } from 'antd';
 import { useWeb3Modal } from '@web3modal/react';
 import { useAccount, useNetwork, useSignMessage, useSwitchNetwork } from 'wagmi';
 import { BIND_WALLET_MESSAGE } from '@/constants/global';
+import TelegramOauth, { TelegramOauthDataOnauthProps } from './components/telegramOauth';
+import { useSDK } from '@tma.js/sdk-react';
 
 export interface AuthProps { };
 
 const Auth: React.FC<AuthProps> = () => {
   const { open } = useWeb3Modal();
   const { data: signature, error: signMsgError, isLoading: signMsgLoading, signMessage } = useSignMessage();
+  const { error: tmaError } = useSDK();
 
   const { isConnected } = useAccount({
     onConnect: () => {
@@ -58,7 +61,36 @@ const Auth: React.FC<AuthProps> = () => {
       <div className={styles.buttonContainer}>
         {!signature ? (
           <>
-            {!isConnected && (
+            {!isConnected && tmaError && (
+              <TelegramOauth
+                dataOnauth={(response: TelegramOauthDataOnauthProps) => {
+                  const initDataJson = useMemo(() => {
+                    if (!response) {
+                      return 'Init data is empty.';
+                    }
+                    const { id, first_name, last_name, username, photo_url, auth_date, hash } = response;
+
+                    return JSON.stringify({
+                      id,
+                      first_name,
+                      last_name,
+                      username,
+                      photo_url,
+                      auth_date,
+                      hash,
+                    }, null, ' ');
+                  }, [response]);
+
+                  notification.info({
+                    key: 'initData',
+                    message: 'Telegram InitData',
+                    description: initDataJson,
+                    duration: 0,
+                  });
+                }}
+              />
+            )}
+            {!isConnected && !tmaError && (
               <Button
                 block
                 type="primary"
@@ -71,7 +103,7 @@ const Auth: React.FC<AuthProps> = () => {
                 Connect Wallet
               </Button>
             )}
-            {isConnected && currentChain?.id !== chains[0]?.id && (
+            {isConnected && currentChain?.id !== chains[0]?.id && !tmaError && (
               <Button
                 block
                 type="primary"
@@ -84,7 +116,7 @@ const Auth: React.FC<AuthProps> = () => {
                 Switch Network
               </Button>
             )}
-            {isConnected && currentChain?.id === chains[0]?.id && (
+            {isConnected && currentChain?.id === chains[0]?.id && !tmaError && (
               <Button
                 block
                 type="primary"
