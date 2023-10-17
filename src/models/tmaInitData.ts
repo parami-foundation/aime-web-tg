@@ -1,5 +1,5 @@
 import { TelegramOauthDataOnauthProps } from "@/pages/auth/components/telegramOauth";
-import { InitData, useInitData, useSDK } from "@tma.js/sdk-react";
+import { InitData } from "@tma.js/sdk-react";
 import { notification } from "antd";
 import { useEffect, useState } from "react";
 

@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { useSwitchNetwork } from "wagmi";
-import { Button, Modal, Tag } from "antd";
+import { Button, Modal, Tag, notification } from "antd";
 import { ReactComponent as StampIcon } from '@/assets/icon/stamp.svg';
 import { BIND_WALLET_MESSAGE } from "@/constants/global";
 import { SignMessageArgs } from "wagmi/actions";
@@ -13,6 +13,16 @@ export interface SignMessageProps {
 };
 
 const SignMessage: React.FC<SignMessageProps> = ({ error, isLoading, signMessage }) => {
+  useEffect(() => {
+    if (!!error) {
+      notification.error({
+        key: 'signMessageError',
+        message: 'Sign message failed',
+        description: error.message,
+      });
+    }
+  }, [error]);
+
   return (
     <Modal
       centered
@@ -31,6 +41,7 @@ const SignMessage: React.FC<SignMessageProps> = ({ error, isLoading, signMessage
       </div>
       <Button
         block
+        loading={isLoading}
         type="primary"
         size="large"
         className={styles.button}
