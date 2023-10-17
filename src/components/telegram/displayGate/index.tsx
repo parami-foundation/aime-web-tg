@@ -1,8 +1,8 @@
 import { type PropsWithChildren } from 'react';
 import { useSDK } from '@tma.js/sdk-react';
-import { Button, Result, Spin, Typography } from 'antd';
+import { Button, Result } from 'antd';
 
-export const DisplayGate = ({ children }: PropsWithChildren<{}>) => {
+export const DisplayGate = ({ children }: PropsWithChildren) => {
   const { didInit } = useSDK();
 
   // There were no calls of SDK's init function. It means, we did not

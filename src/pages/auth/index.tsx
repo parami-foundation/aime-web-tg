@@ -1,45 +1,50 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import styles from './style.less';
 import { ReactComponent as Logo } from '@/assets/logo.svg';
 import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
 import { ReactComponent as LogoWebUrl } from '@/assets/auth/aime_web_url.svg';
-import { Button, notification } from 'antd';
+import { Button, message } from 'antd';
 import { useWeb3Modal } from '@web3modal/react';
 import { useAccount, useNetwork, useSignMessage, useSwitchNetwork } from 'wagmi';
 import { BIND_WALLET_MESSAGE } from '@/constants/global';
 import TelegramOauth, { TelegramOauthDataOnauthProps } from './components/telegramOauth';
 import { useSDK } from '@tma.js/sdk-react';
+import { useModel } from '@umijs/max';
+import SwitchNetwork from './components/switchNetwork';
+import SignMessage from './components/signMessage';
 
 export interface AuthProps { };
 
 const Auth: React.FC<AuthProps> = () => {
+  const { telegramData, setTelegramData } = useModel('tmaInitData');
+
   const { open } = useWeb3Modal();
   const { data: signature, error: signMsgError, isLoading: signMsgLoading, signMessage } = useSignMessage();
   const { error: tmaError } = useSDK();
 
   const { isConnected } = useAccount({
     onConnect: () => {
-      notification.success({
+      message.success({
         key: 'connectWallet',
-        message: 'Connect wallet success'
+        content: 'Connect wallet success'
       })
     },
     onDisconnect: () => {
-      notification.success({
+      message.success({
         key: 'disconnectWallet',
-        message: 'Disconnect wallet success'
+        content: 'Disconnect wallet success'
       })
     }
   });
   const { chain: currentChain } = useNetwork();
-  const { chains, switchNetworkAsync } = useSwitchNetwork();
+  const { chains } = useSwitchNetwork();
 
   useEffect(() => {
     if (!!signature && !signMsgLoading && !signMsgError) {
       console.log('got sig from user', signature);
-      notification.success({
+      message.success({
         key: 'bindWallet',
-        message: 'Bind wallet success'
+        content: 'Bind wallet success'
       })
     }
   }, [signature, signMsgLoading, signMsgError]);
@@ -61,36 +66,14 @@ const Auth: React.FC<AuthProps> = () => {
       <div className={styles.buttonContainer}>
         {!signature ? (
           <>
-            {!isConnected && tmaError && (
+            {!telegramData && tmaError && (
               <TelegramOauth
                 dataOnauth={(response: TelegramOauthDataOnauthProps) => {
-                  const initDataJson = useMemo(() => {
-                    if (!response) {
-                      return 'Init data is empty.';
-                    }
-                    const { id, first_name, last_name, username, photo_url, auth_date, hash } = response;
-
-                    return JSON.stringify({
-                      id,
-                      first_name,
-                      last_name,
-                      username,
-                      photo_url,
-                      auth_date,
-                      hash,
-                    }, null, ' ');
-                  }, [response]);
-
-                  notification.info({
-                    key: 'initData',
-                    message: 'Telegram InitData',
-                    description: initDataJson,
-                    duration: 0,
-                  });
+                  setTelegramData(response);
                 }}
               />
             )}
-            {!isConnected && !tmaError && (
+            {!!telegramData && !isConnected && (
               <Button
                 block
                 type="primary"
@@ -103,33 +86,15 @@ const Auth: React.FC<AuthProps> = () => {
                 Connect Wallet
               </Button>
             )}
-            {isConnected && currentChain?.id !== chains[0]?.id && !tmaError && (
-              <Button
-                block
-                type="primary"
-                size="large"
-                className={styles.button}
-                onClick={() => {
-                  switchNetworkAsync?.(chains[0]?.id);
-                }}
-              >
-                Switch Network
-              </Button>
+            {!!telegramData && isConnected && currentChain?.id !== chains[0]?.id && (
+              <SwitchNetwork />
             )}
-            {isConnected && currentChain?.id === chains[0]?.id && !tmaError && (
-              <Button
-                block
-                type="primary"
-                size="large"
-                className={styles.button}
-                onClick={() => {
-                  signMessage({
-                    message: BIND_WALLET_MESSAGE
-                  })
-                }}
-              >
-                Sign Message
-              </Button>
+            {!!telegramData && isConnected && currentChain?.id === chains[0]?.id && (
+              <SignMessage
+                error={signMsgError}
+                isLoading={signMsgLoading}
+                signMessage={signMessage}
+              />
             )}
           </>
         ) : (

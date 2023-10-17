@@ -1,4 +1,4 @@
-import { matchRoutes } from "umi";
+import { matchRoutes } from "@umijs/max";
 import { PROJECT_CONFIG } from "./constants/global";
 
 export function onRouteChange({ clientRoutes, location }: any) {

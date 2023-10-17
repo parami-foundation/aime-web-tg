@@ -1,11 +1,11 @@
-import { Outlet } from 'umi';
+import { Outlet } from '@umijs/max';
 import styles from './style.less';
 import { WALLETCONNECT_CONFIG } from '@/constants/walletconnect';
 import { ConfigProvider, theme } from 'antd';
 import { THEME_CONFIG } from '@/constants/theme';
 import { SDKProvider } from '@tma.js/sdk-react';
-import { DisplayGate } from '@/components/Telegram/displayGate';
-import { InitData } from '@/components/Telegram/initData';
+import { DisplayGate } from '@/components/telegram/displayGate';
+import { TMAInitData } from '@/components/telegram/initData';
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
 import { Web3Modal } from '@web3modal/react'
 import { configureChains, createConfig, WagmiConfig } from 'wagmi'
@@ -41,7 +41,7 @@ const Layout: React.FC = () => {
           }}
         >
           <DisplayGate>
-            <InitData />
+            <TMAInitData />
             <div className={styles.layoutContainer}>
               <Outlet />
             </div>

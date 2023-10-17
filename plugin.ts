@@ -1,4 +1,4 @@
-import { IApi } from "umi";
+import { IApi } from "@umijs/max";
 
 export default (api: IApi) => {
   api.addHTMLMetas(() => {
