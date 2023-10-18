@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import styles from "./style.less";
-import { useSwitchNetwork } from "wagmi";
 import { Button, Modal, Tag, notification } from "antd";
 import { ReactComponent as StampIcon } from '@/assets/icon/stamp.svg';
 import { BIND_WALLET_MESSAGE } from "@/constants/global";

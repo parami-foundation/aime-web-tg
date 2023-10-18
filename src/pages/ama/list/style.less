@@ -1,0 +1,110 @@
+.amaListContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 100vh;
+
+  .amaListWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 0 var(--spacing);
+
+    .amaListItem {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: var(--spacing) 0;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .amaListItemLeft {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        gap: var(--spacing);
+
+        .amaListItemLeftAvatar {
+          position: relative;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+          }
+
+          .amaListItemLeftAvatarBadge {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: var(--green);
+            border: 2px solid var(--content-bg);
+          }
+        }
+
+        .amaListItemLeftInfo {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+          gap: var(--spacing-min);
+
+          .amaListItemLeftInfoName {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--text-color);
+          }
+
+          .amaListItemLeftInfoDate {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text-color-gray);
+          }
+        }
+      }
+
+      .amaListItemRight {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        gap: var(--spacing-min);
+
+        .amaListItemRightBtn {
+          font-weight: 900;
+          box-shadow: none;
+          border: none;
+          width: 120px;
+          height: 40px;
+        }
+
+        .amaListItemRightBtnNotStarted {
+          background-color: var(--secondary);
+          color: var(--text-color);
+        }
+
+        .amaListItemRightBtnEnded {
+          background-color: var(--third);
+          color: var(--text-color);
+        }
+      }
+    }
+  }
+}

@@ -6,9 +6,8 @@ import { THEME_CONFIG } from '@/constants/theme';
 import { SDKProvider } from '@tma.js/sdk-react';
 import { DisplayGate } from '@/components/telegram/displayGate';
 import { TMAInitData } from '@/components/telegram/initData';
-import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
 import { Web3Modal } from '@web3modal/react'
-import { configureChains, createConfig, WagmiConfig } from 'wagmi'
+import { WagmiConfig } from 'wagmi'
 
 const Layout: React.FC = () => {
   const { wagmiConfig, ethereumClient } = useModel('wagmiClient');

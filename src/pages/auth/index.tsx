@@ -12,11 +12,13 @@ import { useSDK } from '@tma.js/sdk-react';
 import { useModel } from '@umijs/max';
 import SwitchNetwork from './components/switchNetwork';
 import SignMessage from './components/signMessage';
+import { AccessLayout } from '@/layouts/access';
 
 export interface AuthProps { };
 
 const Auth: React.FC<AuthProps> = () => {
   const { telegramData, setTelegramData } = useModel('tmaInitData');
+  const { setBinded, setSignature } = useModel('checkAccess');
 
   const { open } = useWeb3Modal();
   const { data: signature, error: signMsgError, isLoading: signMsgLoading, signMessage } = useSignMessage();
@@ -41,7 +43,10 @@ const Auth: React.FC<AuthProps> = () => {
 
   useEffect(() => {
     if (!!signature && !signMsgLoading && !signMsgError) {
-      console.log('got sig from user', signature);
+      setSignature(signature);
+      setBinded(true);
+
+      // TODO: bind wallet
       message.success({
         key: 'bindWallet',
         content: 'Bind wallet success'
@@ -50,65 +55,67 @@ const Auth: React.FC<AuthProps> = () => {
   }, [signature, signMsgLoading, signMsgError]);
 
   return (
-    <div className={styles.authContainer}>
-      <div className={styles.logoContainer}>
-        <div className={styles.logo}>
-          <Logo />
+    <AccessLayout>
+      <div className={styles.authContainer}>
+        <div className={styles.logoContainer}>
+          <div className={styles.logo}>
+            <Logo />
+          </div>
+          <div className={styles.title}>
+            <LogoTitle />
+          </div>
+          <div className={styles.webUrl}>
+            <LogoWebUrl />
+          </div>
         </div>
-        <div className={styles.title}>
-          <LogoTitle />
-        </div>
-        <div className={styles.webUrl}>
-          <LogoWebUrl />
-        </div>
-      </div>
 
-      <div className={styles.buttonContainer}>
-        {!signature ? (
-          <>
-            {!telegramData && tmaError && (
-              <TelegramOauth
-                dataOnauth={(response: TelegramOauthDataOnauthProps) => {
-                  setTelegramData(response);
-                }}
-              />
-            )}
-            {!!telegramData && !isConnected && (
-              <Button
-                block
-                type="primary"
-                size="large"
-                className={styles.button}
-                onClick={() => {
-                  open();
-                }}
-              >
-                Connect Wallet
-              </Button>
-            )}
-            {!!telegramData && isConnected && currentChain?.id !== chains[0]?.id && (
-              <SwitchNetwork />
-            )}
-            {!!telegramData && isConnected && currentChain?.id === chains[0]?.id && (
-              <SignMessage
-                error={signMsgError}
-                isLoading={signMsgLoading}
-                signMessage={signMessage}
-              />
-            )}
-          </>
-        ) : (
-          <Button
-            block
-            type="primary"
-            size="large"
-            className={styles.button}
-          >
-            Bind Wallet Success
-          </Button>
-        )}
+        <div className={styles.buttonContainer}>
+          {!signature ? (
+            <>
+              {!telegramData && tmaError && (
+                <TelegramOauth
+                  dataOnauth={(response: TelegramOauthDataOnauthProps) => {
+                    setTelegramData(response);
+                  }}
+                />
+              )}
+              {!!telegramData && !isConnected && (
+                <Button
+                  block
+                  type="primary"
+                  size="large"
+                  className={styles.button}
+                  onClick={() => {
+                    open();
+                  }}
+                >
+                  Connect Wallet
+                </Button>
+              )}
+              {!!telegramData && isConnected && currentChain?.id !== chains[0]?.id && (
+                <SwitchNetwork />
+              )}
+              {!!telegramData && isConnected && currentChain?.id === chains[0]?.id && (
+                <SignMessage
+                  error={signMsgError}
+                  isLoading={signMsgLoading}
+                  signMessage={signMessage}
+                />
+              )}
+            </>
+          ) : (
+            <Button
+              block
+              type="primary"
+              size="large"
+              className={styles.button}
+            >
+              Bind Wallet Success
+            </Button>
+          )}
+        </div>
       </div>
-    </div >
+    </AccessLayout>
   );
 };
 
