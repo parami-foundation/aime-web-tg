@@ -1,7 +1,7 @@
 import React from "react";
 import styles from './style.less';
 import TelegramLoginButton from 'react-telegram-login';
-import { TELEGRAM_BOT } from "@/constants/global";
+import { PROJECT_CONFIG, TELEGRAM_BOT } from "@/constants/global";
 import { FaTelegramPlane } from 'react-icons/fa';
 
 export interface TelegramOauthDataOnauthProps {

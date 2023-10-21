@@ -3,7 +3,7 @@ import { useModel } from "@umijs/max";
 import { useMemo } from "react";
 
 export const TMAInitData = () => {
-  const { setTelegramData } = useModel('tmaInitData');
+  const { setTelegramData, setTelegramAuthType } = useModel('tmaInitData');
 
   const { components, error } = useSDK();
 
@@ -21,6 +21,7 @@ export const TMAInitData = () => {
   }, [initData]);
 
   setTelegramData(initDataJson);
+  setTelegramAuthType('tma');
 
   return (
     <></>

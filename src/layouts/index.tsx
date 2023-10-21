@@ -38,7 +38,9 @@ const Layout: React.FC = () => {
               <DisplayGate>
                 <TMAInitData />
                 <div className={styles.layoutContainer}>
-                  <Outlet />
+                  <div className={styles.wrapperContainer}>
+                    <Outlet />
+                  </div>
                 </div>
               </DisplayGate>
             </ConfigProvider>

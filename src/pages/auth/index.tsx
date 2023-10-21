@@ -6,7 +6,6 @@ import { ReactComponent as LogoWebUrl } from '@/assets/auth/aime_web_url.svg';
 import { Button, message } from 'antd';
 import { useWeb3Modal } from '@web3modal/react';
 import { useAccount, useNetwork, useSignMessage, useSwitchNetwork } from 'wagmi';
-import { BIND_WALLET_MESSAGE } from '@/constants/global';
 import TelegramOauth, { TelegramOauthDataOnauthProps } from './components/telegramOauth';
 import { useSDK } from '@tma.js/sdk-react';
 import { useModel } from '@umijs/max';
@@ -17,7 +16,7 @@ import { AccessLayout } from '@/layouts/access';
 export interface AuthProps { };
 
 const Auth: React.FC<AuthProps> = () => {
-  const { telegramData, setTelegramData } = useModel('tmaInitData');
+  const { telegramData, setTelegramData, setTelegramDataString, setTelegramAuthType } = useModel('tmaInitData');
   const { setBinded, setSignature } = useModel('checkAccess');
 
   const { open } = useWeb3Modal();
@@ -76,6 +75,16 @@ const Auth: React.FC<AuthProps> = () => {
                 <TelegramOauth
                   dataOnauth={(response: TelegramOauthDataOnauthProps) => {
                     setTelegramData(response);
+                    setTelegramAuthType('oauth');
+                    let initDataString = "";
+                    for (let key in response) {
+                      if (initDataString != "") {
+                        initDataString += "&";
+                      }
+                      initDataString +=
+                        key + "=" + encodeURIComponent((response as any)[key]);
+                    }
+                    setTelegramDataString(initDataString);
                   }}
                 />
               )}
