@@ -8,8 +8,11 @@ import { DisplayGate } from '@/components/telegram/displayGate';
 import { TMAInitData } from '@/components/telegram/initData';
 import { Web3Modal } from '@web3modal/react'
 import { WagmiConfig } from 'wagmi'
+import LoginModal from '@/components/loginModal';
 
 const Layout: React.FC = () => {
+  const { walletModalOpen, setWalletModalOpen } = useModel('wagmiClient');
+
   const { wagmiConfig, ethereumClient } = useModel('wagmiClient');
 
   return (
@@ -40,6 +43,10 @@ const Layout: React.FC = () => {
                 <div className={styles.layoutContainer}>
                   <div className={styles.wrapperContainer}>
                     <Outlet />
+                    <LoginModal
+                      visible={walletModalOpen}
+                      onClose={() => setWalletModalOpen(false)}
+                    />
                   </div>
                 </div>
               </DisplayGate>

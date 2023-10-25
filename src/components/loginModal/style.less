@@ -1,0 +1,102 @@
+.loginModal {
+  :global(.ant-modal-content) {
+    background: linear-gradient(
+      180deg,
+      #fdfdfd 0%,
+      #f3f5f1 80.12%,
+      #edf4ef 100%
+    );
+  }
+}
+
+.loginModalContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  .loginModalHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    color: #000;
+    text-align: center;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: normal;
+    text-transform: uppercase;
+  }
+
+  .loginModalContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 30px;
+
+    .loginModalContentItem {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 10px 20px;
+      background-color: #fff;
+      border-radius: var(--border-radius);
+
+      &:not(:last-child) {
+        margin-bottom: 15px;
+      }
+
+      .loginModalContentItemLeft {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+
+        .loginModalContentItemIcon {
+          width: 40px;
+          height: 40px;
+          margin-right: 20px;
+        }
+
+        .loginModalContentItemText {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+          color: #000;
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: normal;
+
+          .loginModalContentItemTag {
+            color: #000;
+            font-size: 10px;
+            font-style: normal;
+            font-weight: 900;
+            line-height: normal;
+            margin-left: 5px;
+          }
+        }
+      }
+
+      .loginModalContentItemRight {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .loginModalContentItemRightIcon {
+        font-size: 18px;
+      }
+    }
+  }
+}

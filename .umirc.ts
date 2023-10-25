@@ -9,11 +9,11 @@ export default defineConfig({
       component: "auth",
     },
     {
-      path: "/ama",
+      path: "/chat",
       routes: [
         {
-          path: "/ama/list",
-          component: "ama/list",
+          path: "/chat/:id",
+          component: "chat",
         },
       ],
     },

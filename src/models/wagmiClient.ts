@@ -18,6 +18,7 @@ export default () => {
   const [wagmiConfig, setWagmiConfig] =
     useState<Config<PublicClient<FallbackTransport>, WebSocketPublicClient>>();
   const [ethereumClient, setEthereumClient] = useState<EthereumClient>();
+  const [walletModalOpen, setWalletModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const { publicClient } = configureChains(WALLETCONNECT_CONFIG.chains, [
@@ -36,5 +37,10 @@ export default () => {
     setEthereumClient(ethClient);
   }, []);
 
-  return { wagmiConfig, ethereumClient };
+  return {
+    wagmiConfig,
+    ethereumClient,
+    walletModalOpen,
+    setWalletModalOpen,
+  };
 };
