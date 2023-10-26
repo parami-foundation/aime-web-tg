@@ -1,18 +1,13 @@
 import React from "react";
 import styles from "./style.less";
 import { MdOutlineAnalytics } from "react-icons/md";
-import { RiWalletLine } from "react-icons/ri";
-import { Button } from "antd";
-import { useWeb3Modal } from "@web3modal/react";
 import InputBox from "./inputbox";
-import AiPop from "./pop/ai";
-import MePop from "./pop/me";
+import AiPop from "./pop/me";
+import MePop from "./pop/ai";
 import { useModel } from "@umijs/max";
+import InfoCard from "./infoCard";
 
 const Chat: React.FC = () => {
-  const { setWalletModalOpen } = useModel("wagmiClient");
-  const { open } = useWeb3Modal();
-
   return (
     <div className={styles.chatContainer}>
       <div className={styles.chatWrapper}>
@@ -29,25 +24,7 @@ const Chat: React.FC = () => {
             />
           </div>
           <div className={styles.chatHeaderInfo}>
-            <p>
-              👋 Hi, my friend it’s justinsuntron, let me take you on the path of wealth and freedom. Anyway, please <b>log in your web3 account</b> first.
-            </p>
-            <div className={styles.chatHeaderInfoButtons}>
-              <Button
-                block
-                type="primary"
-                size="large"
-                className={styles.chatHeaderInfoButton}
-                onClick={() => {
-                  setWalletModalOpen(true);
-                }}
-              >
-                <RiWalletLine
-                  className={styles.chatHeaderInfoButtonIcon}
-                />
-                Connect Wallet
-              </Button>
-            </div>
+            <InfoCard />
           </div>
         </div>
         <div className={styles.chatContent}>

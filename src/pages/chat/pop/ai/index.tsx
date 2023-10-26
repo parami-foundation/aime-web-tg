@@ -5,7 +5,7 @@ const AiPop: React.FC = () => {
   return (
     <div className={styles.aiPopContainer}>
       <div className={styles.aiPopWrapper}>
-        Wow, justinsuntron 🎉
+        Are you real?
       </div>
     </div>
   )

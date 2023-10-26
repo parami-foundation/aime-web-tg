@@ -3,6 +3,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
+  transition: all 0.2s ease-in-out;
 
   .inputBoxWrapper {
     display: flex;
@@ -13,6 +14,7 @@
     padding: 16px;
     border-radius: var(--border-radius) var(--border-radius) 0 0;
     background-color: #fff;
+    transition: all 0.2s ease-in-out;
 
     .inputBox {
       display: flex;
@@ -23,15 +25,16 @@
       background: #f7f7f7;
       border-radius: var(--border-radius);
       padding: 12px 16px;
+      transition: all 0.2s ease-in-out;
 
-      .inputBoxMicrophone {
+      .inputBoxSwitch {
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         transition: all 0.2s ease-in-out;
 
-        .inputBoxMicrophoneIcon {
+        .inputBoxSwitchIcon {
           width: 24px;
           height: 24px;
           fill: #000;
@@ -56,6 +59,17 @@
           fill: #000;
           transition: all 0.2s ease-in-out;
         }
+      }
+
+      .inputBoxRecord {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        color: #000;
+        font-weight: 900;
       }
     }
   }
