@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { MdOutlineAnalytics } from "react-icons/md";
 import InputBox from "./inputbox";
@@ -6,8 +6,27 @@ import AiPop from "./pop/me";
 import MePop from "./pop/ai";
 import { useModel } from "@umijs/max";
 import InfoCard from "./infoCard";
+import { characters } from "@/service/typing.d";
+import { MessageType } from "@/models/chat";
 
 const Chat: React.FC = () => {
+  const { connectSocket, setCharacter, messages } = useModel("chat");
+
+  useEffect(() => {
+    console.log(characters[0]);
+    (async () => {
+      const ws = await connectSocket({
+        character: characters[0],
+        onReturn: () => {
+          setCharacter(undefined);
+        }
+      })
+      ws.onopen = () => {
+        ws.send("3");
+      };
+    })();
+  }, []);
+
   return (
     <div className={styles.chatContainer}>
       <div className={styles.chatWrapper}>
@@ -28,8 +47,27 @@ const Chat: React.FC = () => {
           </div>
         </div>
         <div className={styles.chatContent}>
-          <AiPop />
-          <MePop />
+          {!!messages && messages.map((message, index) => {
+            return (
+              <>
+                {console.log(message)}
+                {message.sender === "Justin Sun" && (
+                  <AiPop
+                    type={message.type}
+                    data={message.content}
+                    key={index}
+                  />
+                )}
+                {message.sender === "User" && (
+                  <MePop
+                    type={message.type}
+                    data={message.content}
+                    key={index}
+                  />
+                )}
+              </>
+            )
+          })}
         </div>
         <InputBox />
       </div>

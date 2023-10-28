@@ -2,25 +2,34 @@ import React from "react";
 import styles from "./style.less";
 import { BsSoundwave } from "react-icons/bs";
 
-const MePop: React.FC = () => {
+const MePop: React.FC<{
+  type?: string;
+  data?: any;
+}> = ({ type, data }) => {
   return (
-    <div className={styles.mePopContainer}>
-      <div className={styles.mePopWrapper}>
-        Wow, justinsuntron 🎉
-      </div>
-    </div>
-    // <div className={styles.mePopContainer}>
-    //   <div className={styles.mePopWrapper}>
-    //     <div className={styles.audioMsg}>
-    //       <div className={styles.audioMsgTime}>
-    //         3''
-    //       </div>
-    //       <BsSoundwave
-    //         className={styles.audioMsgIcon}
-    //       />
-    //     </div>
-    //   </div>
-    // </div>
+    <>
+      {type === "message" && (
+        <div className={styles.mePopContainer}>
+          <div className={styles.mePopWrapper}>
+            {data}
+          </div>
+        </div>
+      )}
+      {type === "data" && (
+        <div className={styles.mePopContainer}>
+          <div className={styles.mePopWrapper}>
+            <div className={styles.audioMsg}>
+              <div className={styles.audioMsgTime}>
+                3''
+              </div>
+              <BsSoundwave
+                className={styles.audioMsgIcon}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
 };
 
