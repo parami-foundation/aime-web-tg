@@ -37,8 +37,6 @@ export default () => {
   const [currentAudio, setCurrentAudio] = useState<BinaryData>();
 
   const audioPlayer = useRef<HTMLAudioElement>(null);
-  const msgList = useRef<HTMLDivElement>(null);
-  let ws: WebSocket;
 
   const handleAiMessage = (message: string, character: Character) => {
     setMessages((prev) => {
@@ -79,6 +77,18 @@ export default () => {
     });
   };
 
+  const handleSendMessage = async (message: string) => {
+    setMessages([
+      ...messages,
+      {
+        type: MessageType.MESSAGE,
+        sender: "User",
+        content: message,
+      },
+    ]);
+    socket?.send(message);
+  };
+
   const playAudio = (audio: BinaryData) => {
     let blob = new Blob([audio], { type: "audio/mp3" });
     let url = URL.createObjectURL(blob);
@@ -107,132 +117,115 @@ export default () => {
     });
   };
 
-  const handleSendMessage = async (message: string) => {
-    setMessages([
-      ...messages,
-      {
-        type: MessageType.MESSAGE,
-        sender: "User",
-        content: message,
-      },
-    ]);
-    ws.send(message);
-  };
+  const connectSocket = async (props: ChatbotProps, authToken?: string) => {
+    const { character, onReturn } = props;
+    const clientId = uuidv4();
+    let ws: WebSocket;
+    ws = new WebSocket(
+      `${WEBSOCKET_CONFIG.scheme}://${WEBSOCKET_CONFIG.host}/ws/${clientId}?character=${character?.character_id}&platform=web`
+    );
+    ws.binaryType = "arraybuffer";
+    setSocket(ws);
 
-  const connectSocket = useMemo(
-    () => (props: ChatbotProps, authToken?: string) => {
-      const { character, onReturn } = props;
-      const clientId = uuidv4();
-      ws = new WebSocket(
-        `${WEBSOCKET_CONFIG.scheme}://${WEBSOCKET_CONFIG.host}/ws/${clientId}?character=${character?.character_id}&platform=web`
-      );
-      ws.binaryType = "arraybuffer";
+    ws.onopen = () => {
+      if (DEBUG) {
+        notification.info({
+          key: "debug",
+          message: "WebSocket",
+          description: "WebSocket connected",
+        });
+        console.log("ws connected");
+      }
+    };
 
-      ws.onopen = () => {
-        if (DEBUG) {
-          notification.info({
-            key: "debug",
-            message: "WebSocket",
-            description: "WebSocket connected",
-          });
-          console.log("ws connected");
-        }
-      };
+    ws.onclose = () => {
+      if (DEBUG) {
+        notification.info({
+          key: "debug",
+          message: "WebSocket",
+          description: "WebSocket disconnected",
+        });
+        console.log("ws disconnected");
+      }
+    };
 
-      ws.onclose = () => {
-        if (DEBUG) {
-          notification.info({
-            key: "debug",
-            message: "WebSocket",
-            description: "WebSocket disconnected",
-          });
-          console.log("ws disconnected");
-        }
-      };
+    ws.onerror = (err) => {
+      if (DEBUG) {
+        notification.error({
+          key: "debug",
+          message: "WebSocket",
+          description: err.toString(),
+        });
+        console.log("ws error", err);
+      }
+    };
 
-      ws.onerror = (err) => {
-        if (DEBUG) {
-          notification.error({
-            key: "debug",
-            message: "WebSocket",
-            description: err.toString(),
-          });
-          console.log("ws error", err);
-        }
-      };
+    ws.onmessage = (e) => {
+      if (DEBUG) {
+        notification.info({
+          key: "debug",
+          message: "WebSocket",
+          description: "WebSocket message",
+        });
+        console.log("ws message", e);
+      }
 
-      ws.onmessage = (e) => {
-        if (DEBUG) {
-          notification.info({
-            key: "debug",
-            message: "WebSocket",
-            description: "WebSocket message",
-          });
-          console.log("ws message", e);
-        }
+      switch (typeof e?.data) {
+        case "string":
+          setMessageEnd(false);
+          const message = e?.data;
+          const aiMessage: AIResponse = JSON.parse(message);
 
-        switch (typeof e?.data) {
-          case "string":
-            setMessageEnd(false);
-            const message = e?.data;
-            const aiMessage: AIResponse = JSON.parse(message);
-
-            if (DEBUG) {
-              notification.info({
-                key: "debug",
-                message: "WebSocket",
-                description: JSON.stringify(aiMessage),
-              });
-              console.log("aiMessage", aiMessage);
-            }
-
-            if (!!aiMessage?.data) {
-              switch (aiMessage?.type) {
-                case "text":
-                  handleAiMessage(aiMessage?.data, character);
-                  if (!!aiMessage?.give_token) {
-                    setRewardModal(true);
-                  }
-                  break;
-                case "score":
-                  handleScore(parseInt(aiMessage?.data), character);
-                  break;
-                case "think":
-                  handleThink(aiMessage?.data, character);
-                  break;
-                case "end":
-                  setMessageEnd(true);
-                  break;
-                default:
-                  break;
-              }
-            }
-            break;
-          case "object":
-            if (DEBUG) {
-              notification.info({
-                key: "debug",
-                message: "WebSocket",
-                description: e.data,
-              });
-              console.log("ws message", e.data);
-            }
-
-            setAudioQueue((prev) => {
-              return [...prev, e.data];
+          if (DEBUG) {
+            notification.info({
+              key: "debug",
+              message: "WebSocket",
+              description: JSON.stringify(aiMessage),
             });
-            break;
-          default:
-            break;
-        }
-      };
+            console.log("aiMessage", aiMessage);
+          }
 
-      setSocket(ws);
+          if (!!aiMessage?.data) {
+            switch (aiMessage?.type) {
+              case "text":
+                handleAiMessage(aiMessage?.data, character);
+                if (!!aiMessage?.give_token) {
+                  setRewardModal(true);
+                }
+                break;
+              case "score":
+                handleScore(parseInt(aiMessage?.data), character);
+                break;
+              case "think":
+                handleThink(aiMessage?.data, character);
+                break;
+              case "end":
+                setMessageEnd(true);
+                break;
+              default:
+                break;
+            }
+          }
+          break;
+        case "object":
+          if (DEBUG) {
+            notification.info({
+              key: "debug",
+              message: "WebSocket",
+              description: e.data,
+            });
+            console.log("ws message", e.data);
+          }
 
-      return ws;
-    },
-    []
-  );
+          setAudioQueue((prev) => {
+            return [...prev, e.data];
+          });
+          break;
+        default:
+          break;
+      }
+    };
+  };
 
   useEffect(() => {
     if (!!audioQueue.length && !currentAudio) {
@@ -257,9 +250,9 @@ export default () => {
     character,
     rewardModal,
     audioPlayer,
-    msgList,
     handleSendMessage,
     setCharacter,
     setRewardModal,
+    setMessages,
   };
 };
