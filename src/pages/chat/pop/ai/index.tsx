@@ -9,15 +9,15 @@ const AiPop: React.FC<{
   return (
     <>
       {type === "message" && (
-        <div className={styles.mePopContainer}>
-          <div className={styles.mePopWrapper}>
+        <div className={styles.aiPopContainer}>
+          <div className={styles.aiPopWrapper}>
             {data}
           </div>
         </div>
       )}
       {type === "data" && (
-        <div className={styles.mePopContainer}>
-          <div className={styles.mePopWrapper}>
+        <div className={styles.aiPopContainer}>
+          <div className={styles.aiPopWrapper}>
             <div className={styles.audioMsg}>
               <div className={styles.audioMsgTime}>
                 3''

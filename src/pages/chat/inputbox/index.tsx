@@ -50,6 +50,12 @@ const InputBox: React.FC<{
                   onChange={(e) => {
                     onChange(e.target.value);
                   }}
+                  onKeyDown={async (e) => {
+                    if (e.key === "Enter" && !!value) {
+                      await handleSendMessage(value);
+                      onChange("");
+                    }
+                  }}
                 />
               </div>
               <div

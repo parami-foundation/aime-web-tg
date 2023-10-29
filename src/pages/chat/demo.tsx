@@ -8,7 +8,7 @@ import { useModel } from "@umijs/max";
 import InfoCard from "./infoCard";
 import { characters } from "@/service/typing.d";
 
-const Chat: React.FC = () => {
+const ChatDemo: React.FC = () => {
   const { connectSocket, setCharacter, messages, socket } = useModel("chat");
   const [inputValue, setInputValue] = React.useState<string>();
 
@@ -25,6 +25,14 @@ const Chat: React.FC = () => {
       });
     })();
   }, []);
+
+  useEffect(() => {
+    if (!!socket) {
+      socket.onopen = () => {
+        socket.send("4");
+      };
+    }
+  }, [socket]);
 
   useEffect(() => {
     if (msgList.current) {
@@ -85,4 +93,4 @@ const Chat: React.FC = () => {
   )
 };
 
-export default Chat;
+export default ChatDemo;

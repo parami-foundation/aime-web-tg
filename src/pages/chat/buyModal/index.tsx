@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./style.less";
-import { Modal } from "antd";
-import classNames from "classnames";
+import { InputNumber, Modal } from "antd";
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 
 const Select: React.FC = () => {
   return (
@@ -65,6 +65,19 @@ const Select: React.FC = () => {
         <div className={styles.selectModalContentItemFullRight}>
           <div className={styles.selectModalContentItemFullControl}>
             <div className={styles.selectModalContentItemFullControlMinus}>
+              <AiOutlineMinus />
+            </div>
+            <div className={styles.selectModalContentItemFullControlNumber}>
+              <InputNumber
+                className={styles.selectModalContentItemFullControlNumberInput}
+                bordered={false}
+                min={0}
+                max={100}
+                defaultValue={0}
+              />
+            </div>
+            <div className={styles.selectModalContentItemFullControlPlus}>
+              <AiOutlinePlus />
             </div>
           </div>
         </div>

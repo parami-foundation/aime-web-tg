@@ -15,6 +15,10 @@ export default defineConfig({
           path: "/chat/:id",
           component: "chat",
         },
+        {
+          path: "/chat/demo",
+          component: "chat/demo",
+        },
       ],
     },
   ],
