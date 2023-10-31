@@ -10,7 +10,8 @@ export const AccessLayout = ({ children }: PropsWithChildren) => {
     if (!binded) {
       history.push('/');
     } else {
-      history.push('/home');
+      history.push('/chat/demo');
+      // history.push('/home');
     }
   }, [binded, telegramData]);
 

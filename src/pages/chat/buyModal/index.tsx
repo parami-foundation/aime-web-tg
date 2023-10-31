@@ -1,9 +1,13 @@
 import React from "react";
 import styles from "./style.less";
-import { InputNumber, Modal } from "antd";
-import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import { Button, ConfigProvider, InputNumber, Modal, theme } from "antd";
+import { AiFillCaretDown, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import { RiWalletLine } from "react-icons/ri";
+import { THEME_CONFIG } from "@/constants/theme";
 
 const Select: React.FC = () => {
+  const [inputValue, setInputValue] = React.useState<number>(0);
+
   return (
     <div className={styles.selectModalContainer}>
       <div className={styles.selectModalHeader}>
@@ -21,10 +25,13 @@ const Select: React.FC = () => {
           </div>
         </div>
         <div className={styles.selectModalHeaderTitle}>
-          Buy Power
+          Buy
         </div>
         <div className={styles.selectModalHeaderSubtitle}>
-          Buy <b>1 Power</b> for <b>0.02481875 ETH</b>
+          <b>justinsuntron‘s</b> Power
+        </div>
+        <div className={styles.selectModalHeaderFlat}>
+          1 Power ≈ 0.02481875 ETH
         </div>
       </div>
       <div className={styles.selectModalContent}>
@@ -56,32 +63,176 @@ const Select: React.FC = () => {
       <div className={styles.selectModalContentItemFull}>
         <div className={styles.selectModalContentItemFullLeft}>
           <div className={styles.selectModalContentItemPrice}>
-            All in <span>(1.5 ETH available)</span>
+            All in
           </div>
           <div className={styles.selectModalContentItemPower}>
-            30 Power
+            (1.5 ETH available)
           </div>
         </div>
         <div className={styles.selectModalContentItemFullRight}>
+          <div className={styles.selectModalContentItemFullPrice}>
+            100 Power
+          </div>
           <div className={styles.selectModalContentItemFullControl}>
-            <div className={styles.selectModalContentItemFullControlMinus}>
+            <div
+              className={styles.selectModalContentItemFullControlMinus}
+              onClick={() => {
+                if (inputValue > 0) {
+                  setInputValue(inputValue - 1);
+                }
+              }}
+            >
               <AiOutlineMinus />
             </div>
             <div className={styles.selectModalContentItemFullControlNumber}>
               <InputNumber
                 className={styles.selectModalContentItemFullControlNumberInput}
                 bordered={false}
+                controls={false}
                 min={0}
                 max={100}
                 defaultValue={0}
+                value={inputValue}
+                type="number"
+                onChange={(e) => {
+                  setInputValue(e!);
+                }}
               />
             </div>
-            <div className={styles.selectModalContentItemFullControlPlus}>
+            <div
+              className={styles.selectModalContentItemFullControlPlus}
+              onClick={() => {
+                if (inputValue < 100) {
+                  setInputValue(inputValue + 1);
+                }
+              }}
+            >
               <AiOutlinePlus />
             </div>
           </div>
         </div>
       </div>
+    </div>
+  )
+};
+
+const Detail: React.FC = () => {
+  const [bodyDropdown, setBodyDropdown] = React.useState<boolean>(false);
+
+  return (
+    <div className={styles.detailModalContainer}>
+      <div className={styles.detailModalHeader}>
+        <div className={styles.detailModalHeaderTitle}>
+          Transaction Details
+        </div>
+      </div>
+      <div className={styles.detailModalContent}>
+        <div
+          className={styles.detailModalContentTitle}
+          onClick={() => setBodyDropdown(!bodyDropdown)}
+        >
+          <div className={styles.detailModalContentTitleLeft}>
+            <div className={styles.detailModalContentTitleLeftTitle}>
+              Purchase Details
+            </div>
+          </div>
+          <div className={styles.detailModalContentTitleRight}>
+            <div className={styles.detailModalContentTitleRightValue}>
+              $45.49
+            </div>
+            <AiFillCaretDown
+              className={styles.detailModalContentTitleRightIcon}
+              style={{
+                transform: bodyDropdown ? "rotate(180deg)" : "rotate(0deg)",
+              }}
+            />
+          </div>
+        </div>
+        <div className={styles.detailModalContentLine} />
+        <div
+          className={styles.detailModalContentBody}
+          style={{
+            height: bodyDropdown ? 120 : 0,
+          }}
+        >
+          <div className={styles.detailModalContentBodyItem}>
+            <div className={styles.detailModalContentBodyItemTitle}>
+              From
+            </div>
+            <div className={styles.detailModalContentBodyItemValue}>
+              0x208...439C
+            </div>
+          </div>
+          <div className={styles.detailModalContentBodyItem}>
+            <div className={styles.detailModalContentBodyItemTitle}>
+              To
+            </div>
+            <div className={styles.detailModalContentBodyItemValue}>
+              0xCF2...A4d4
+            </div>
+          </div>
+          <div className={styles.detailModalContentBodyItem}>
+            <div className={styles.detailModalContentBodyItemTitle}>
+              Action
+            </div>
+            <div className={styles.detailModalContentBodyItemValue}>
+              Buy Power
+            </div>
+          </div>
+          <div className={styles.detailModalContentBodyItem}>
+            <div className={styles.detailModalContentBodyItemTitle}>
+              <b>Est. Fees</b> (0 ETH)
+            </div>
+            <div className={styles.detailModalContentBodyItemValue}>
+              USD <b>$0.01</b>
+            </div>
+          </div>
+        </div>
+        <div className={styles.detailModalContentTotal}>
+          <div className={styles.detailModalContentTotalLeft}>
+            <div className={styles.detailModalContentTotalLeftTitle}>
+              Total <span>(including fees)</span>
+            </div>
+            <div className={styles.detailModalContentTotalLeftPrice}>
+              0.024819 ETH
+            </div>
+          </div>
+          <div className={styles.detailModalContentTotalRight}>
+            <div className={styles.detailModalContentTotalRightFlat}>
+              USD <b>$45.49</b>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={styles.detailModalFooter}>
+        <div className={styles.detailModalFooterLeft}>
+          <RiWalletLine />
+          <span>0x208...439C</span>
+        </div>
+        <div className={styles.detailModalFooterRight}>
+          0.450139 ETH available
+        </div>
+      </div>
+      <ConfigProvider
+        theme={{
+          algorithm: theme.defaultAlgorithm,
+          token: {
+            wireframe: false,
+            colorPrimary: THEME_CONFIG.colorSecondary,
+            borderRadius: THEME_CONFIG.borderRadius,
+            boxShadow: THEME_CONFIG.boxShadow,
+          },
+        }}
+      >
+        <Button
+          block
+          type="primary"
+          size="large"
+          className={styles.detailModalFooterButton}
+        >
+          Complete Purchase
+        </Button>
+      </ConfigProvider>
     </div>
   )
 };
@@ -95,11 +246,12 @@ const BuyModal: React.FC<{
       centered
       title={null}
       footer={null}
-      className={styles.selectModal}
+      className={styles.buyModal}
       open={visible}
       onCancel={() => setVisible(false)}
     >
-      <Select />
+      {/* <Select /> */}
+      <Detail />
     </Modal>
   )
 };

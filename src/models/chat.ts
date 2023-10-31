@@ -8,6 +8,7 @@ export enum MessageType {
   MESSAGE = "message",
   SCORE = "score",
   THINK = "think",
+  DATA = "data",
 }
 
 export interface ChatbotProps {
@@ -33,10 +34,6 @@ export default () => {
   const [messages, setMessages] = useState<MessageDisplay[]>([]);
   const [character, setCharacter] = useState<Character>();
   const [rewardModal, setRewardModal] = useState<boolean>(false);
-  const [audioQueue, setAudioQueue] = useState<BinaryData[]>([]);
-  const [currentAudio, setCurrentAudio] = useState<BinaryData>();
-
-  const audioPlayer = useRef<HTMLAudioElement>(null);
 
   const handleAiMessage = (message: string, character: Character) => {
     setMessages((prev) => {
@@ -87,34 +84,6 @@ export default () => {
       },
     ]);
     socket?.send(message);
-  };
-
-  const playAudio = (audio: BinaryData) => {
-    let blob = new Blob([audio], { type: "audio/mp3" });
-    let url = URL.createObjectURL(blob);
-    const player = audioPlayer.current;
-
-    if (!player) return;
-    return new Promise((resolve) => {
-      player.src = url;
-      player.muted = true;
-      player.onended = resolve;
-      player
-        .play()
-        .then(() => {
-          player.muted = false;
-        })
-        .catch((err) => {
-          if (DEBUG) {
-            notification.error({
-              key: "debug",
-              message: "Audio",
-              description: err.toString(),
-            });
-            console.log("audio error", err);
-          }
-        });
-    });
   };
 
   const connectSocket = async (props: ChatbotProps, authToken?: string) => {
@@ -207,7 +176,7 @@ export default () => {
             }
           }
           break;
-        case "object":
+        default:
           if (DEBUG) {
             notification.info({
               key: "debug",
@@ -217,30 +186,21 @@ export default () => {
             console.log("ws message", e.data);
           }
 
-          setAudioQueue((prev) => {
-            return [...prev, e.data];
+          setMessages((prev) => {
+            return [
+              ...prev,
+              {
+                type: MessageType.DATA,
+                sender: character?.name,
+                content: e?.data,
+              },
+            ];
           });
-          break;
-        default:
+
           break;
       }
     };
   };
-
-  useEffect(() => {
-    if (!!audioQueue.length && !currentAudio) {
-      setCurrentAudio(audioQueue[0]);
-      setAudioQueue(audioQueue.slice(1));
-    }
-  }, [audioQueue, currentAudio]);
-
-  useEffect(() => {
-    if (!!currentAudio) {
-      playAudio(currentAudio)?.then(() => {
-        setCurrentAudio(undefined);
-      });
-    }
-  }, [currentAudio]);
 
   return {
     connectSocket,
@@ -249,7 +209,6 @@ export default () => {
     messages,
     character,
     rewardModal,
-    audioPlayer,
     handleSendMessage,
     setCharacter,
     setRewardModal,

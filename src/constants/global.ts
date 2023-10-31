@@ -15,11 +15,12 @@ export const WEBSOCKET_CONFIG = {
   host: "beta-parami.quaere.app",
 };
 
+export const API_CONFIG = {
+  scheme: "https",
+  host: "beta-parami.quaere.app",
+};
+
 export const BIND_WALLET_MESSAGE = "AIME:bind_wallet";
-
-export const PARAMI_AI = "https://ai.parami.io";
-
-export const WS_Endpoint = "ai.parami.io";
 
 export const WAITLIST_LINK = "https://form.typeform.com/to/Q7qTVjQW";
 

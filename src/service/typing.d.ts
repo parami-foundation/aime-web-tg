@@ -34,6 +34,28 @@ export interface ChatHistory {
   user_id?: string;
 }
 
+export declare namespace Req {
+  interface OauthTelegram {
+    init_data: string;
+  }
+}
+
+export declare namespace Resp {
+  interface Body {
+    response?: any;
+    data?: any;
+  }
+
+  interface OauthTelegram extends Body {
+    data: {
+      status?: string;
+      access_token?: string;
+      type?: string;
+      expire?: string;
+    };
+  }
+}
+
 export const characters: CharacterInfo[] = [
   {
     name: "Justin Sun",

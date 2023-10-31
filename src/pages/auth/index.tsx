@@ -12,11 +12,12 @@ import { useModel } from '@umijs/max';
 import SwitchNetwork from './components/switchNetwork';
 import SignMessage from './components/signMessage';
 import { AccessLayout } from '@/layouts/access';
+import { OauthTelegram } from '@/service/api';
 
 export interface AuthProps { };
 
 const Auth: React.FC<AuthProps> = () => {
-  const { telegramData, setTelegramData, setTelegramDataString, setTelegramAuthType } = useModel('tmaInitData');
+  const { telegramData, telegramDataString, setTelegramData, setTelegramDataString, setTelegramAuthType } = useModel('tmaInitData');
   const { setBinded, setSignature } = useModel('checkAccess');
 
   const { open } = useWeb3Modal();
@@ -52,6 +53,25 @@ const Auth: React.FC<AuthProps> = () => {
       })
     }
   }, [signature, signMsgLoading, signMsgError]);
+
+  useEffect(() => {
+    (async () => {
+      if (!!telegramDataString) {
+        OauthTelegram({
+          init_data: telegramDataString,
+        }).then((res) => {
+          if (res?.response?.code === 200 && res?.data?.status === "success") {
+            message.success({
+              key: 'bindTelegram',
+              content: 'Bind telegram success'
+            })
+            !!res?.data?.access_token && localStorage.setItem('aime:accessToken', res?.data?.access_token);
+            !!res?.data?.expire && localStorage.setItem('aime:accessToken:expire', res?.data?.expire);
+          }
+        });
+      }
+    })();
+  }, [telegramDataString]);
 
   return (
     <AccessLayout>

@@ -1,4 +1,4 @@
-.selectModal {
+.buyModal {
   :global(.ant-modal-content) {
     background: var(--background);
   }
@@ -17,6 +17,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
+    padding: var(--spacing) 0;
 
     .selectModalHeaderIcon {
       position: relative;
@@ -59,6 +60,7 @@
       font-weight: 800;
       line-height: normal;
       margin-top: 10px;
+      text-transform: uppercase;
     }
 
     .selectModalHeaderSubtitle {
@@ -69,6 +71,16 @@
       font-weight: 400;
       line-height: normal;
       margin-top: 10px;
+    }
+
+    .selectModalHeaderFlat {
+      color: #999;
+      text-align: center;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin-top: 25px;
     }
   }
 
@@ -101,7 +113,7 @@
       }
 
       .selectModalContentItemPower {
-        color: rgba(0, 0, 0, 0.5);
+        color: #000;
         text-align: center;
         font-size: 12px;
         font-style: normal;
@@ -151,6 +163,23 @@
       margin-top: 5px;
     }
 
+    .selectModalContentItemFullRight {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .selectModalContentItemFullPrice {
+      color: rgba(0, 0, 0, 0.5);
+      font-size: 10px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
     .selectModalContentItemFullControl {
       display: flex;
       flex-direction: row;
@@ -165,6 +194,7 @@
         justify-content: center;
         align-items: center;
         padding: 9px;
+        cursor: pointer;
       }
 
       .selectModalContentItemFullControlNumber {
@@ -191,7 +221,231 @@
         justify-content: center;
         align-items: center;
         padding: 9px;
+        cursor: pointer;
       }
+    }
+  }
+}
+
+.detailModalContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  .detailModalHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: var(--spacing) 0;
+
+    .detailModalHeaderTitle {
+      color: #000;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 800;
+      line-height: normal;
+      text-transform: uppercase;
+    }
+  }
+
+  .detailModalContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 15px;
+    width: 100%;
+
+    .detailModalContentTitle {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      .detailModalContentTitleLeftTitle {
+        color: #000;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        text-transform: capitalize;
+      }
+
+      .detailModalContentTitleRight {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+
+        .detailModalContentTitleRightValue {
+          color: #000;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+          text-transform: capitalize;
+        }
+
+        .detailModalContentTitleRightIcon {
+          margin-left: 5px;
+        }
+      }
+    }
+
+    .detailModalContentLine {
+      width: 100%;
+      height: 0.5px;
+      background: #ddd;
+      margin: 15px 0;
+    }
+
+    .detailModalContentTotal {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      .detailModalContentTotalLeft {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+
+        .detailModalContentTotalLeftTitle {
+          color: #000;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          text-transform: capitalize;
+
+          span {
+            color: #000;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            text-transform: capitalize;
+          }
+        }
+
+        .detailModalContentTotalLeftPrice {
+          color: #999;
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          text-transform: capitalize;
+          margin-top: 5px;
+        }
+      }
+
+      .detailModalContentTotalRight {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+      }
+    }
+
+    .detailModalContentBody {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 10px;
+      transition: all 0.3s ease-in-out;
+      overflow: hidden;
+
+      .detailModalContentBodyItem {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+
+        &:not(:last-child) {
+          margin-bottom: 10px;
+        }
+
+        .detailModalContentBodyItemTitle {
+          color: #999;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          text-transform: capitalize;
+        }
+
+        .detailModalContentBodyItemValue {
+          color: #000;
+          text-align: right;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+
+  .detailModalFooter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 15px;
+    margin-top: 10px;
+
+    .detailModalFooterLeft {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      span {
+        color: #999;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        text-transform: capitalize;
+        margin-left: 5px;
+      }
+    }
+
+    .detailModalFooterRight {
+      color: #000;
+      text-align: right;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      text-transform: capitalize;
+    }
+  }
+
+  .detailModalFooterButton {
+    color: #000;
+    font-weight: 900;
+    margin-top: 15px;
+    height: auto;
+
+    &:hover {
+      color: #000;
     }
   }
 }

@@ -4,7 +4,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   transition: all 0.3s ease-in-out;
 
@@ -14,10 +14,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    min-height: 100vh;
     width: 100%;
     padding: 20px;
     transition: all 0.3s ease-in-out;
+    overflow-y: auto;
 
     .chatHeader {
       display: flex;
@@ -58,6 +58,15 @@
         }
       }
 
+      .chatHeaderName {
+        color: #000;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        margin-top: 10px;
+      }
+
       .chatHeaderInfo {
         display: flex;
         flex-direction: column;
@@ -80,7 +89,6 @@
       justify-content: flex-start;
       width: 100%;
       margin-top: 10px;
-      margin-bottom: 90px;
     }
   }
 }

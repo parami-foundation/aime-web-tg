@@ -29,7 +29,7 @@ const ChatDemo: React.FC = () => {
   useEffect(() => {
     if (!!socket) {
       socket.onopen = () => {
-        socket.send("4");
+        socket.send("3");
       };
     }
   }, [socket]);
@@ -38,7 +38,7 @@ const ChatDemo: React.FC = () => {
     if (msgList.current) {
       window.scrollTo(0, document.body.scrollHeight);
     }
-  }, [messages, msgList.current])
+  }, [messages, msgList.current]);
 
   return (
     <div className={styles.chatContainer}>
@@ -58,6 +58,9 @@ const ChatDemo: React.FC = () => {
               alt="avatar"
             />
           </div>
+          <div className={styles.chatHeaderName}>
+            justinsuntron
+          </div>
           <div className={styles.chatHeaderInfo}>
             <InfoCard />
           </div>
@@ -66,6 +69,7 @@ const ChatDemo: React.FC = () => {
           {!!messages && messages.map((message, index) => {
             return (
               <>
+                {console.log(message)}
                 {message.sender === "Justin Sun" && (
                   <AiPop
                     type={message.type}
@@ -84,11 +88,11 @@ const ChatDemo: React.FC = () => {
             )
           })}
         </div>
-        <InputBox
-          value={inputValue}
-          onChange={setInputValue}
-        />
       </div>
+      <InputBox
+        value={inputValue}
+        onChange={setInputValue}
+      />
     </div>
   )
 };

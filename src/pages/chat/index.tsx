@@ -30,7 +30,7 @@ const Chat: React.FC = () => {
     if (msgList.current) {
       window.scrollTo(0, document.body.scrollHeight);
     }
-  }, [messages, msgList.current])
+  }, [messages, msgList.current, window.scrollY]);
 
   return (
     <div className={styles.chatContainer}>
@@ -49,6 +49,9 @@ const Chat: React.FC = () => {
               src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
               alt="avatar"
             />
+          </div>
+          <div className={styles.chatHeaderName}>
+            justinsuntron
           </div>
           <div className={styles.chatHeaderInfo}>
             <InfoCard />
@@ -76,11 +79,11 @@ const Chat: React.FC = () => {
             )
           })}
         </div>
-        <InputBox
-          value={inputValue}
-          onChange={setInputValue}
-        />
       </div>
+      <InputBox
+        value={inputValue}
+        onChange={setInputValue}
+      />
     </div>
   )
 };

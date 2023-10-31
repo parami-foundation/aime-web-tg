@@ -12,30 +12,31 @@
     "start": "npm run dev"
   },
   "dependencies": {
-    "@tma.js/sdk-react": "^0.4.11",
-    "@types/uuid": "^9.0.4",
-    "@umijs/max": "^4.0.83",
+    "@tma.js/sdk-react": "^0.4.15",
+    "@types/uuid": "^9.0.6",
+    "@umijs/max": "^4.0.87",
     "@web3modal/ethereum": "^2.7.1",
     "@web3modal/react": "^2.7.1",
-    "antd": "^5.10.0",
+    "antd": "^5.10.3",
     "classnames": "^2.3.2",
-    "crypto-js": "^4.1.1",
+    "crypto-js": "^4.2.0",
     "events": "^3.3.0",
     "react-icons": "^4.11.0",
     "react-telegram-login": "^1.1.2",
+    "umi-request": "^1.4.0",
     "uuid": "^9.0.1",
-    "viem": "^1.9.2",
-    "wagmi": "^1.4.1"
+    "viem": "^1.18.1",
+    "wagmi": "^1.4.5"
   },
   "devDependencies": {
-    "@types/react": "^18.2.24",
-    "@types/react-dom": "^18.2.8",
+    "@types/react": "^18.2.33",
+    "@types/react-dom": "^18.2.14",
     "gh-pages": "^6.0.0",
-    "lint-staged": "^14.0.1",
+    "lint-staged": "^15.0.2",
     "prettier": "^3.0.3",
     "prettier-plugin-organize-imports": "^3",
     "prettier-plugin-packagejson": "^2",
-    "stylelint": "^15.10.3",
+    "stylelint": "^15.11.0",
     "typescript": "^5.2.2"
   }
 }

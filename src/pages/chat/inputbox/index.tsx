@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./style.less";
 import { BiMicrophone } from "react-icons/bi";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { CgKeyboard } from "react-icons/cg";
 import { Input } from "antd";
 import { useModel } from "@umijs/max";
-import { MessageType } from "@/models/chat";
 
 const InputBox: React.FC<{
   value?: string;
