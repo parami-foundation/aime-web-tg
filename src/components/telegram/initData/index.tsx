@@ -1,6 +1,6 @@
 import { InitData, useInitData, useSDK } from "@tma.js/sdk-react";
 import { useModel } from "@umijs/max";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 export const TMAInitData = () => {
   const { setTelegramData, setTelegramAuthType } = useModel('tmaInitData');
@@ -12,16 +12,15 @@ export const TMAInitData = () => {
     initData = useInitData();
   }
 
-  const initDataJson = useMemo(() => {
+  useEffect(() => {
     if (!initData) {
-      return null;
+      return;
     }
 
-    return initData;
-  }, [initData]);
+    setTelegramData(initData);
+    setTelegramAuthType('tma');
 
-  setTelegramData(initDataJson);
-  setTelegramAuthType('tma');
+  }, [initData]);
 
   return (
     <></>

@@ -1,3 +1,4 @@
+import { DEBUG } from "@/constants/global";
 import { TelegramOauthDataOnauthProps } from "@/pages/auth/components/telegramOauth";
 import { InitData } from "@tma.js/sdk-react";
 import { notification } from "antd";
@@ -18,12 +19,14 @@ export default () => {
         setTelegramDataString(initDataString || "");
       }
 
-      notification.info({
-        key: "initData",
-        message: "Telegram InitData",
-        description: telegramDataString ? telegramDataString : "No data",
-        duration: 0,
-      });
+      if (DEBUG) {
+        notification.info({
+          key: "initData",
+          message: "Telegram InitData",
+          description: telegramDataString ? telegramDataString : "No data",
+          duration: 0,
+        });
+      }
     }
   }, [telegramData, telegramDataString]);
 

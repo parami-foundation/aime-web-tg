@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import styles from "./style.less";
 import { BsSoundwave } from "react-icons/bs";
-import { notification } from "antd";
-import { DEBUG } from "@/constants/global";
 
 const AiPop: React.FC<{
   type?: string;

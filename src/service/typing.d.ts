@@ -36,7 +36,10 @@ export interface ChatHistory {
 
 export declare namespace Req {
   interface OauthTelegram {
-    init_data: string;
+    init_data?: string;
+    address?: string;
+    message?: string;
+    signature?: string;
   }
 }
 
@@ -50,7 +53,7 @@ export declare namespace Resp {
     status?: string;
     access_token?: string;
     type?: string;
-    expire?: string;
+    expire?: number;
   }
 }
 

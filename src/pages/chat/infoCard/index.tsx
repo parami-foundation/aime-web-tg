@@ -104,17 +104,17 @@ const BuyPower: React.FC = () => {
 };
 
 const InfoCard: React.FC = () => {
-  const { binded, bindedTwitter } = useModel("checkAccess");
+  const { accessToken, twitterBinded } = useModel("checkAccess");
 
-  if (!binded) {
+  if (!accessToken) {
     return (
       <ConnectWallet />
     )
-  } else if (binded && !bindedTwitter) {
+  } else if (!!accessToken && !twitterBinded) {
     return (
       <ConnectTwitter />
     )
-  } else if (binded && bindedTwitter) {
+  } else if (!!accessToken && twitterBinded) {
     return (
       <BuyPower />
     )

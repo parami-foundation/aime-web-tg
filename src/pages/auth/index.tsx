@@ -12,30 +12,29 @@ import { useModel } from '@umijs/max';
 import SwitchNetwork from './components/switchNetwork';
 import SignMessage from './components/signMessage';
 import { AccessLayout } from '@/layouts/access';
-import { OauthTelegram } from '@/service/api';
 
-export interface AuthProps { };
-
-const Auth: React.FC<AuthProps> = () => {
-  const { telegramData, telegramDataString, setTelegramData, setTelegramDataString, setTelegramAuthType } = useModel('tmaInitData');
-  const { setBinded, setSignature } = useModel('checkAccess');
+const Auth: React.FC = () => {
+  const { telegramData, setTelegramData, setTelegramDataString, setTelegramAuthType } = useModel('tmaInitData');
+  const { setSignature, setAddress } = useModel('checkAccess');
 
   const { open } = useWeb3Modal();
   const { data: signature, error: signMsgError, isLoading: signMsgLoading, signMessage } = useSignMessage();
   const { error: tmaError } = useSDK();
 
-  const { isConnected } = useAccount({
+  const { address, isConnected } = useAccount({
     onConnect: () => {
       message.success({
         key: 'connectWallet',
         content: 'Connect wallet success'
-      })
+      });
+      setAddress(address);
     },
     onDisconnect: () => {
       message.success({
         key: 'disconnectWallet',
         content: 'Disconnect wallet success'
-      })
+      });
+      setAddress(undefined);
     }
   });
   const { chain: currentChain } = useNetwork();
@@ -44,13 +43,6 @@ const Auth: React.FC<AuthProps> = () => {
   useEffect(() => {
     if (!!signature && !signMsgLoading && !signMsgError) {
       setSignature(signature);
-      setBinded(true);
-
-      // TODO: bind wallet
-      message.success({
-        key: 'bindWallet',
-        content: 'Bind wallet success'
-      })
     }
   }, [signature, signMsgLoading, signMsgError]);
 
@@ -116,12 +108,11 @@ const Auth: React.FC<AuthProps> = () => {
           ) : (
             <Button
               block
+              loading
               type="primary"
               size="large"
               className={styles.button}
-            >
-              Bind Wallet Success
-            </Button>
+            />
           )}
         </div>
       </div>
