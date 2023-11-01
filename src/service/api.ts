@@ -20,7 +20,7 @@ export async function OauthTelegram(
   options?: { [key: string]: any }
 ) {
   return request<Resp.OauthTelegram>(
-    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/oauth/telegram`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/telegram/authorization`,
     {
       method: "POST",
       headers: {
@@ -28,6 +28,7 @@ export async function OauthTelegram(
       },
       data: data,
       ...(options || {}),
+      getResponse: true,
     }
   );
 }

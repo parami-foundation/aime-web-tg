@@ -17,6 +17,7 @@ const ChatDemo: React.FC = () => {
 
   // Demo
   useEffect(() => {
+    console.log("accessToken", accessToken);
     (async () => {
       if (!!accessToken) {
         await connectSocket({

@@ -47,12 +47,10 @@ export declare namespace Resp {
   }
 
   interface OauthTelegram extends Body {
-    data: {
-      status?: string;
-      access_token?: string;
-      type?: string;
-      expire?: string;
-    };
+    status?: string;
+    access_token?: string;
+    type?: string;
+    expire?: string;
   }
 }
 
