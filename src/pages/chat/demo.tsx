@@ -18,7 +18,6 @@ const ChatDemo: React.FC = () => {
 
   // Demo
   useEffect(() => {
-    console.log("accessToken", accessToken);
     (async () => {
       if (!!accessToken) {
         await connectSocket({
@@ -33,17 +32,14 @@ const ChatDemo: React.FC = () => {
 
   useEffect(() => {
     if (msgList.current) {
-      window.scrollTo(0, document.body.scrollHeight);
+      msgList.current.scrollTop = msgList.current.scrollHeight;
     }
   }, [messages, msgList.current]);
 
   return (
     <AccessLayout>
       <div className={styles.chatContainer}>
-        <div
-          className={styles.chatWrapper}
-          ref={msgList}
-        >
+        <div className={styles.chatWrapper}>
           <div className={styles.chatHeader}>
             <div className={styles.chatHeaderButtons}>
               <div className={styles.chatHeaderButton}>
@@ -59,11 +55,14 @@ const ChatDemo: React.FC = () => {
             <div className={styles.chatHeaderName}>
               justinsuntron
             </div>
-            <div className={styles.chatHeaderInfo}>
+          </div>
+          <div
+            className={styles.chatContent}
+            ref={msgList}
+          >
+            <div className={styles.chatInfo}>
               <InfoCard />
             </div>
-          </div>
-          <div className={styles.chatContent}>
             {!!messages && messages.map((message, index) => {
               return (
                 <>

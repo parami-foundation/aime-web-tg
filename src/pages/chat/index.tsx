@@ -36,10 +36,7 @@ const Chat: React.FC = () => {
   return (
     <AccessLayout >
       <div className={styles.chatContainer}>
-        <div
-          className={styles.chatWrapper}
-          ref={msgList}
-        >
+        <div className={styles.chatWrapper}>
           <div className={styles.chatHeader}>
             <div className={styles.chatHeaderButtons}>
               <div className={styles.chatHeaderButton}>
@@ -55,11 +52,14 @@ const Chat: React.FC = () => {
             <div className={styles.chatHeaderName}>
               justinsuntron
             </div>
-            <div className={styles.chatHeaderInfo}>
+          </div>
+          <div
+            className={styles.chatContent}
+            ref={msgList}
+          >
+            <div className={styles.chatInfo}>
               <InfoCard />
             </div>
-          </div>
-          <div className={styles.chatContent}>
             {!!messages && messages.map((message, index) => {
               return (
                 <>
