@@ -60,7 +60,7 @@ export const characters: CharacterInfo[] = [
   {
     name: "Justin Sun",
     handle: "justinsuntron",
-    character_id: 3,
+    character_id: "justin_sun",
     avatar_url:
       "https://pbs.twimg.com/profile_images/1490173066357342208/MZyfamFE.jpg",
     avatarKey: "MZyfamFE",

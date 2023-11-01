@@ -54,25 +54,6 @@ const Auth: React.FC<AuthProps> = () => {
     }
   }, [signature, signMsgLoading, signMsgError]);
 
-  useEffect(() => {
-    (async () => {
-      if (!!telegramDataString) {
-        OauthTelegram({
-          init_data: telegramDataString,
-        }).then((res) => {
-          if (res?.response?.code === 200 && res?.data?.status === "success") {
-            message.success({
-              key: 'bindTelegram',
-              content: 'Bind telegram success'
-            })
-            !!res?.data?.access_token && localStorage.setItem('aime:accessToken', res?.data?.access_token);
-            !!res?.data?.expire && localStorage.setItem('aime:accessToken:expire', res?.data?.expire);
-          }
-        });
-      }
-    })();
-  }, [telegramDataString]);
-
   return (
     <AccessLayout>
       <div className={styles.authContainer}>

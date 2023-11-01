@@ -9,6 +9,7 @@ import InfoCard from "./infoCard";
 import { characters } from "@/service/typing.d";
 
 const ChatDemo: React.FC = () => {
+  const { accessToken } = useModel("checkAccess");
   const { connectSocket, setCharacter, messages, socket } = useModel("chat");
   const [inputValue, setInputValue] = React.useState<string>();
 
@@ -17,22 +18,16 @@ const ChatDemo: React.FC = () => {
   // Demo
   useEffect(() => {
     (async () => {
-      await connectSocket({
-        character: characters[0],
-        onReturn: () => {
-          setCharacter(undefined);
-        }
-      });
+      if (!!accessToken) {
+        await connectSocket({
+          character: characters[0],
+          onReturn: () => {
+            setCharacter(undefined);
+          }
+        }, accessToken);
+      }
     })();
-  }, []);
-
-  useEffect(() => {
-    if (!!socket) {
-      socket.onopen = () => {
-        socket.send("3");
-      };
-    }
-  }, [socket]);
+  }, [accessToken]);
 
   useEffect(() => {
     if (msgList.current) {

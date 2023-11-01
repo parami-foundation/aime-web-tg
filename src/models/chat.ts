@@ -91,7 +91,7 @@ export default () => {
     const clientId = uuidv4();
     let ws: WebSocket;
     ws = new WebSocket(
-      `${WEBSOCKET_CONFIG.scheme}://${WEBSOCKET_CONFIG.host}/ws/${clientId}?character=${character?.character_id}&platform=web`
+      `${WEBSOCKET_CONFIG.scheme}://${WEBSOCKET_CONFIG.host}/ws/${clientId}?character_id=${character?.character_id}&token=${authToken}&platform=web`
     );
     ws.binaryType = "arraybuffer";
     setSocket(ws);
