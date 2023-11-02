@@ -5,7 +5,7 @@ import { message } from "antd";
 import { useEffect, useState } from "react";
 
 export default () => {
-  const { telegramDataString } = useModel("tmaInitData");
+  const { telegramDataString, telegramAuthType } = useModel("tmaInitData");
   const [address, setAddress] = useState<string>();
   const [signature, setSignature] = useState<string>();
   const [accessToken, setAccessToken] = useState<string>();
@@ -20,6 +20,7 @@ export default () => {
           message: BIND_WALLET_MESSAGE,
           signature: signature,
           address: address,
+          type: telegramAuthType,
         }).then(({ response, data }) => {
           if (response?.status === 200 && data?.status === "success") {
             message.success({

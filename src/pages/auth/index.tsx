@@ -68,7 +68,7 @@ const Auth: React.FC = () => {
                 <TelegramOauth
                   dataOnauth={(response: TelegramOauthDataOnauthProps) => {
                     setTelegramData(response);
-                    setTelegramAuthType('oauth');
+                    setTelegramAuthType('oauth2');
                     let initDataString = "";
                     for (let key in response) {
                       if (initDataString != "") {

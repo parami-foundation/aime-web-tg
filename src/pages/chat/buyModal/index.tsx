@@ -4,10 +4,13 @@ import { Button, ConfigProvider, InputNumber, Modal, theme } from "antd";
 import { AiFillCaretDown, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { RiWalletLine } from "react-icons/ri";
 import { THEME_CONFIG } from "@/constants/theme";
+import PurchaseSuccess from "@/components/purchase/success";
+import PurchaseFailed from "@/components/purchase/failed";
 
-const Select: React.FC = () => {
-  const [inputValue, setInputValue] = React.useState<number>(0);
-
+const Select: React.FC<{
+  powerValue: number;
+  setPowerValue: (powerValue: number) => void;
+}> = ({ powerValue, setPowerValue }) => {
   return (
     <div className={styles.selectModalContainer}>
       <div className={styles.selectModalHeader}>
@@ -35,7 +38,12 @@ const Select: React.FC = () => {
         </div>
       </div>
       <div className={styles.selectModalContent}>
-        <div className={styles.selectModalContentItem}>
+        <div
+          className={styles.selectModalContentItem}
+          onClick={() => {
+            setPowerValue!(1);
+          }}
+        >
           <div className={styles.selectModalContentItemPrice}>
             0.03 ETH
           </div>
@@ -43,7 +51,12 @@ const Select: React.FC = () => {
             1 Power
           </div>
         </div>
-        <div className={styles.selectModalContentItem}>
+        <div
+          className={styles.selectModalContentItem}
+          onClick={() => {
+            setPowerValue!(10);
+          }}
+        >
           <div className={styles.selectModalContentItemPrice}>
             0.24 ETH
           </div>
@@ -51,7 +64,12 @@ const Select: React.FC = () => {
             10 Power
           </div>
         </div>
-        <div className={styles.selectModalContentItem}>
+        <div
+          className={styles.selectModalContentItem}
+          onClick={() => {
+            setPowerValue!(30);
+          }}
+        >
           <div className={styles.selectModalContentItemPrice}>
             0.5 ETH
           </div>
@@ -77,8 +95,8 @@ const Select: React.FC = () => {
             <div
               className={styles.selectModalContentItemFullControlMinus}
               onClick={() => {
-                if (inputValue > 0) {
-                  setInputValue(inputValue - 1);
+                if (powerValue > 0) {
+                  setPowerValue(powerValue - 1);
                 }
               }}
             >
@@ -92,18 +110,18 @@ const Select: React.FC = () => {
                 min={0}
                 max={100}
                 defaultValue={0}
-                value={inputValue}
+                value={powerValue}
                 type="number"
                 onChange={(e) => {
-                  setInputValue(e!);
+                  setPowerValue(e!);
                 }}
               />
             </div>
             <div
               className={styles.selectModalContentItemFullControlPlus}
               onClick={() => {
-                if (inputValue < 100) {
-                  setInputValue(inputValue + 1);
+                if (powerValue < 100) {
+                  setPowerValue(powerValue + 1);
                 }
               }}
             >
@@ -116,7 +134,10 @@ const Select: React.FC = () => {
   )
 };
 
-const Detail: React.FC = () => {
+const Detail: React.FC<{
+  setPurchaseSuccessVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  setPurchaseFailedVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ setPurchaseSuccessVisible, setPurchaseFailedVisible }) => {
   const [bodyDropdown, setBodyDropdown] = React.useState<boolean>(false);
 
   return (
@@ -229,6 +250,9 @@ const Detail: React.FC = () => {
           type="primary"
           size="large"
           className={styles.detailModalFooterButton}
+          onClick={() => {
+            setPurchaseSuccessVisible(true);
+          }}
         >
           Complete Purchase
         </Button>
@@ -241,18 +265,41 @@ const BuyModal: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
 }> = ({ visible, setVisible }) => {
+  const [powerValue, setPowerValue] = React.useState<number>(0);
+  const [purchaseSuccessVisible, setPurchaseSuccessVisible] = React.useState<boolean>(false);
+  const [purchaseFailedVisible, setPurchaseFailedVisible] = React.useState<boolean>(false);
+
   return (
-    <Modal
-      centered
-      title={null}
-      footer={null}
-      className={styles.buyModal}
-      open={visible}
-      onCancel={() => setVisible(false)}
-    >
-      {/* <Select /> */}
-      <Detail />
-    </Modal>
+    <>
+      <Modal
+        centered
+        title={null}
+        footer={null}
+        className={styles.buyModal}
+        open={visible}
+        onCancel={() => setVisible(false)}
+      >
+        {powerValue === 0 ? (
+          <Select
+            powerValue={powerValue}
+            setPowerValue={setPowerValue}
+          />
+        ) : (
+          <Detail
+            setPurchaseSuccessVisible={setPurchaseSuccessVisible}
+            setPurchaseFailedVisible={setPurchaseFailedVisible}
+          />
+        )}
+      </Modal>
+      <PurchaseSuccess
+        visible={purchaseSuccessVisible}
+        setVisible={setPurchaseSuccessVisible}
+      />
+      <PurchaseFailed
+        visible={purchaseFailedVisible}
+        setVisible={setPurchaseFailedVisible}
+      />
+    </>
   )
 };
 

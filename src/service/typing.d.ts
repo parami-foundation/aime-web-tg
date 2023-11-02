@@ -40,6 +40,7 @@ export declare namespace Req {
     address?: string;
     message?: string;
     signature?: string;
+    type?: string;
   }
 }
 

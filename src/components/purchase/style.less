@@ -1,0 +1,84 @@
+.purchaseModal {
+  :global(.ant-modal-content) {
+    background: var(--background);
+  }
+}
+
+.purchaseContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  .purchaseHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+
+    .purchaseHeaderIconSuccess {
+      width: 146px;
+      height: 146px;
+      background-color: #deffdb;
+      border-radius: 100%;
+      padding: 15px;
+
+      .purchaseHeaderIconImg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .purchaseHeaderIconFailed {
+      width: 146px;
+      height: 146px;
+      background-color: #f8f3f4;
+      border-radius: 100%;
+      padding: 15px;
+
+      .purchaseHeaderIconImg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .purchaseHeaderTitle {
+      color: #000;
+      text-align: center;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 800;
+      line-height: normal;
+      margin-top: 20px;
+    }
+  }
+
+  .purchaseContent {
+    color: rgba(0, 0, 0, 0.7997);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.5;
+    margin-top: 10px;
+  }
+
+  .purchaseFooter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+
+    .purchaseFooterBtn {
+      height: auto;
+      font-weight: 900;
+    }
+  }
+}

@@ -18,7 +18,7 @@ export const TMAInitData = () => {
     }
 
     setTelegramData(initData);
-    setTelegramAuthType('tma');
+    setTelegramAuthType('webapp');
 
   }, [initData]);
 
