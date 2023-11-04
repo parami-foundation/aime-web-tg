@@ -17,7 +17,7 @@
     "@umijs/max": "^4.0.87",
     "@web3modal/ethereum": "^2.7.1",
     "@web3modal/react": "^2.7.1",
-    "antd": "^5.10.3",
+    "antd": "^5.11.0",
     "classnames": "^2.3.2",
     "crypto-js": "^4.2.0",
     "events": "^3.3.0",
@@ -25,11 +25,11 @@
     "react-telegram-login": "^1.1.2",
     "umi-request": "^1.4.0",
     "uuid": "^9.0.1",
-    "viem": "^1.18.1",
+    "viem": "^1.18.4",
     "wagmi": "^1.4.5"
   },
   "devDependencies": {
-    "@types/react": "^18.2.33",
+    "@types/react": "^18.2.34",
     "@types/react-dom": "^18.2.14",
     "gh-pages": "^6.0.0",
     "lint-staged": "^15.0.2",

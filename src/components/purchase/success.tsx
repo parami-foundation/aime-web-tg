@@ -5,7 +5,8 @@ import { Button, Modal } from "antd";
 const PurchaseSuccess: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
-}> = ({ visible, setVisible }) => {
+  transactionHash: string;
+}> = ({ visible, setVisible, transactionHash }) => {
   return (
     <Modal
       centered
@@ -29,7 +30,7 @@ const PurchaseSuccess: React.FC<{
           </div>
         </div>
         <div className={styles.purchaseContent}>
-          Successfully purchased justinsuntron’s 1 power for 0.03 ETH.
+          Transaction: {transactionHash}
         </div>
         <div className={styles.purchaseFooter}>
           <Button

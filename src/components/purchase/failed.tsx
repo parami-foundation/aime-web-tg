@@ -5,7 +5,8 @@ import { Button, Modal } from "antd";
 const PurchaseFailed: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
-}> = ({ visible, setVisible }) => {
+  error: Error;
+}> = ({ visible, setVisible, error }) => {
   return (
     <Modal
       centered
@@ -29,7 +30,7 @@ const PurchaseFailed: React.FC<{
           </div>
         </div>
         <div className={styles.purchaseContent}>
-          Something went wrong, please try again.
+          {error.message}
         </div>
         <div className={styles.purchaseFooter}>
           <Button

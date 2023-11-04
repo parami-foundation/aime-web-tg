@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { Button, ConfigProvider, InputNumber, Modal, theme } from "antd";
 import { AiFillCaretDown, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
@@ -6,11 +6,31 @@ import { RiWalletLine } from "react-icons/ri";
 import { THEME_CONFIG } from "@/constants/theme";
 import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
+import { useAccount, useBalance, useContractWrite } from "wagmi";
+import { AIME_CONTRACT, DEMO_CONFIG } from "@/constants/global";
+import { getBuyPrice } from "@/hooks/useGetPrice";
+import { formatEther } from "viem";
 
 const Select: React.FC<{
   powerValue: number;
   setPowerValue: (powerValue: number) => void;
 }> = ({ powerValue, setPowerValue }) => {
+  const [unitPrice, setUnitPrice] = React.useState<bigint>(BigInt(0));
+
+  const { address } = useAccount();
+  const { data: balance, isError: balanceError, isLoading: balanceLoading } = useBalance({
+    address: address,
+  });
+
+  getBuyPrice({
+    powerAddress: `0x${DEMO_CONFIG.Sun}`,
+    amount: 1,
+  }).then((res) => {
+    if (res.price) {
+      setUnitPrice(res.price)
+    }
+  });
+
   return (
     <div className={styles.selectModalContainer}>
       <div className={styles.selectModalHeader}>
@@ -34,7 +54,7 @@ const Select: React.FC<{
           <b>justinsuntron‘s</b> Power
         </div>
         <div className={styles.selectModalHeaderFlat}>
-          1 Power ≈ 0.02481875 ETH
+          1 Power ≈ {formatEther(unitPrice ?? 0n)} ETH
         </div>
       </div>
       <div className={styles.selectModalContent}>
@@ -45,7 +65,7 @@ const Select: React.FC<{
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
-            0.03 ETH
+            {formatEther(unitPrice ?? 0n)} ETH
           </div>
           <div className={styles.selectModalContentItemPower}>
             1 Power
@@ -58,7 +78,7 @@ const Select: React.FC<{
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
-            0.24 ETH
+            {formatEther(unitPrice * 10n ?? 0n)} ETH
           </div>
           <div className={styles.selectModalContentItemPower}>
             10 Power
@@ -71,7 +91,7 @@ const Select: React.FC<{
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
-            0.5 ETH
+            {formatEther(unitPrice * 30n ?? 0n)} ETH
           </div>
           <div className={styles.selectModalContentItemPower}>
             30 Power
@@ -84,12 +104,22 @@ const Select: React.FC<{
             All in
           </div>
           <div className={styles.selectModalContentItemPower}>
-            (1.5 ETH available)
+            ({balanceError && balanceLoading ? (
+              <span>0.00 ETH available</span>
+            ) : (
+              <span>{balance?.formatted} {balance?.symbol} available</span>
+            )})
           </div>
         </div>
         <div className={styles.selectModalContentItemFullRight}>
           <div className={styles.selectModalContentItemFullPrice}>
-            100 Power
+            {!!balance?.value ? (
+              <span>
+                {(balance?.value / unitPrice).toString()} Power
+              </span>
+            ) : (
+              <span>Influence Balance</span>
+            )}
           </div>
           <div className={styles.selectModalContentItemFullControl}>
             <div
@@ -135,10 +165,45 @@ const Select: React.FC<{
 };
 
 const Detail: React.FC<{
+  powerValue: number;
   setPurchaseSuccessVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setPurchaseFailedVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ setPurchaseSuccessVisible, setPurchaseFailedVisible }) => {
+  setError: React.Dispatch<React.SetStateAction<Error>>;
+  setTransactionHash: React.Dispatch<React.SetStateAction<string>>;
+}> = ({ powerValue, setPurchaseSuccessVisible, setPurchaseFailedVisible, setError, setTransactionHash }) => {
   const [bodyDropdown, setBodyDropdown] = React.useState<boolean>(false);
+  const [totalPrice, setTotalPrice] = React.useState<bigint>(BigInt(0));
+
+  const { address } = useAccount();
+  const { data: balance, isError: balanceError, isLoading: balanceLoading } = useBalance({
+    address: address,
+  });
+
+  getBuyPrice({
+    powerAddress: `0x${DEMO_CONFIG.Sun}`,
+    amount: powerValue,
+  }).then((res) => {
+    if (res.price) {
+      setTotalPrice(res.price)
+    }
+  });
+
+  const { data, isLoading, isSuccess, error, write } = useContractWrite({
+    address: `0x${AIME_CONTRACT.Powers}`,
+    abi: require("@/abis/AIMePowersV3.json"),
+    functionName: 'buyPowers',
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setPurchaseSuccessVisible(true);
+      setTransactionHash(JSON.stringify(data));
+    }
+    if (!!error) {
+      setPurchaseFailedVisible(true);
+      setError(error);
+    }
+  }, [data, isLoading, isSuccess, error]);
 
   return (
     <div className={styles.detailModalContainer}>
@@ -181,7 +246,7 @@ const Detail: React.FC<{
               From
             </div>
             <div className={styles.detailModalContentBodyItemValue}>
-              0x208...439C
+              {address?.slice(0, 6)}...{address?.slice(-4)}
             </div>
           </div>
           <div className={styles.detailModalContentBodyItem}>
@@ -189,7 +254,7 @@ const Detail: React.FC<{
               To
             </div>
             <div className={styles.detailModalContentBodyItemValue}>
-              0xCF2...A4d4
+              0x{DEMO_CONFIG.Sun?.slice(0, 5)}...{DEMO_CONFIG.Sun?.slice(-4)}
             </div>
           </div>
           <div className={styles.detailModalContentBodyItem}>
@@ -215,7 +280,7 @@ const Detail: React.FC<{
               Total <span>(including fees)</span>
             </div>
             <div className={styles.detailModalContentTotalLeftPrice}>
-              0.024819 ETH
+              {formatEther(totalPrice).toString()} ETH
             </div>
           </div>
           <div className={styles.detailModalContentTotalRight}>
@@ -228,10 +293,16 @@ const Detail: React.FC<{
       <div className={styles.detailModalFooter}>
         <div className={styles.detailModalFooterLeft}>
           <RiWalletLine />
-          <span>0x208...439C</span>
+          <span>
+            {address?.slice(0, 6)}...{address?.slice(-4)}
+          </span>
         </div>
         <div className={styles.detailModalFooterRight}>
-          0.450139 ETH available
+          {balanceLoading ?? balanceError ? (
+            <span>0.00 ETH</span>
+          ) : (
+            <span>{balance?.formatted} {balance?.symbol}</span>
+          )}
         </div>
       </div>
       <ConfigProvider
@@ -250,8 +321,15 @@ const Detail: React.FC<{
           type="primary"
           size="large"
           className={styles.detailModalFooterButton}
-          onClick={() => {
-            setPurchaseSuccessVisible(true);
+          loading={isLoading}
+          onClick={async () => {
+            await write({
+              args: [
+                totalPrice,
+                `0x${DEMO_CONFIG.Sun}`,
+                powerValue,
+              ],
+            })
           }}
         >
           Complete Purchase
@@ -268,6 +346,8 @@ const BuyModal: React.FC<{
   const [powerValue, setPowerValue] = React.useState<number>(0);
   const [purchaseSuccessVisible, setPurchaseSuccessVisible] = React.useState<boolean>(false);
   const [purchaseFailedVisible, setPurchaseFailedVisible] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<Error>(new Error(""));
+  const [transactionHash, setTransactionHash] = React.useState<string>("");
 
   return (
     <>
@@ -286,18 +366,23 @@ const BuyModal: React.FC<{
           />
         ) : (
           <Detail
+            powerValue={powerValue}
             setPurchaseSuccessVisible={setPurchaseSuccessVisible}
             setPurchaseFailedVisible={setPurchaseFailedVisible}
+            setError={setError}
+            setTransactionHash={setTransactionHash}
           />
         )}
       </Modal>
       <PurchaseSuccess
         visible={purchaseSuccessVisible}
         setVisible={setPurchaseSuccessVisible}
+        transactionHash={transactionHash}
       />
       <PurchaseFailed
         visible={purchaseFailedVisible}
         setVisible={setPurchaseFailedVisible}
+        error={error}
       />
     </>
   )

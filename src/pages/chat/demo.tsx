@@ -66,7 +66,6 @@ const ChatDemo: React.FC = () => {
             {!!messages && messages.map((message, index) => {
               return (
                 <>
-                  {console.log(message)}
                   {message.sender === "Justin Sun" && (
                     <AiPop
                       type={message.type}

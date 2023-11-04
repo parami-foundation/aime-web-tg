@@ -8,6 +8,7 @@ export const PROJECT_CONFIG = {
 
 export const AIME_CONTRACT = {
   AMA: "3Dca99872504BA875f2E66dE624A3Cca50433CD8",
+  Powers: "968665c68b3B347c9E9553a87F4a84620718ca07",
 };
 
 export const WEBSOCKET_CONFIG = {
@@ -18,6 +19,10 @@ export const WEBSOCKET_CONFIG = {
 export const API_CONFIG = {
   scheme: "https",
   host: "beta-parami.quaere.app",
+};
+
+export const DEMO_CONFIG = {
+  Sun: "CecB7683E1Fa399Ff2457dE8B33D9110939547d6",
 };
 
 export const BIND_WALLET_MESSAGE = "AIME:bind_wallet";
