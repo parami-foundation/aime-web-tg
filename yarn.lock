@@ -2614,17 +2614,17 @@
     "@tanstack/query-core" "4.36.1"
     use-sync-external-store "^1.2.0"
 
-"@tma.js/bridge@1.3.10":
-  version "1.3.10"
-  resolved "https://registry.npmmirror.com/@tma.js/bridge/-/bridge-1.3.10.tgz#eb7ff6a41d325cafb77f5c8f3bb43fc5a89bbc61"
-  integrity sha512-tr48T8vkX99yCKJIT5k/6+RrL6z0+G5s9o0mnGZzZ1ikasCNpMfEphvcu6YEAa7QSl8qwBFt2ed1ONFtcTClog==
+"@tma.js/bridge@1.3.11":
+  version "1.3.11"
+  resolved "https://registry.npmmirror.com/@tma.js/bridge/-/bridge-1.3.11.tgz#82582e984de07432c611207bb087e1e404a791c7"
+  integrity sha512-BBgXsfpVqS6pU1T9ZNchnDGQuvIcRp4AYIrEn7wU5a0g5EyJG6pkqleojmeYXvritD5pmcPifqKxLrOY6wULxw==
   dependencies:
     "@tma.js/colors" "0.0.5"
     "@tma.js/event-emitter" "0.1.0"
     "@tma.js/logger" "0.0.5"
-    "@tma.js/parsing" "0.1.2"
+    "@tma.js/parsing" "0.1.3"
     "@tma.js/util-types" "0.0.3"
-    "@tma.js/utils" "0.5.5"
+    "@tma.js/utils" "0.5.6"
 
 "@tma.js/colors@0.0.5":
   version "0.0.5"
@@ -2638,77 +2638,77 @@
   dependencies:
     "@tma.js/util-types" "0.0.3"
 
-"@tma.js/init-data@0.2.19":
-  version "0.2.19"
-  resolved "https://registry.npmmirror.com/@tma.js/init-data/-/init-data-0.2.19.tgz#86d5218c42767da98b4a25357065bc357795dfb7"
-  integrity sha512-rrYM2QrVnvndDlCe+pXzNChx8WLLDX9i89ASuskRte/oH5fGnzC/qpC4gIsc1vQn4IyzEoyoOzHZ1ElMTt8nqw==
+"@tma.js/init-data@0.2.20":
+  version "0.2.20"
+  resolved "https://registry.npmmirror.com/@tma.js/init-data/-/init-data-0.2.20.tgz#13c83ef1d37b1a3fcd05d22b44226369c953153b"
+  integrity sha512-owXoAe0R/a37ppGOF3xu/We2QrkptnVGGkQhrW7cMYwfSTfzBjBs5lRVkBtPqCIrhel1i1I8u0kgasCfdhwOAg==
   dependencies:
-    "@tma.js/parsing" "0.1.2"
+    "@tma.js/parsing" "0.1.3"
 
-"@tma.js/launch-params@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.npmmirror.com/@tma.js/launch-params/-/launch-params-0.0.5.tgz#9e52535f8dc80c3f9674232dc4a251578b115f03"
-  integrity sha512-l+6xTIOm4xbBFeoP6YSViQzEWJw+hEppf6j+9daGxtqLeBKTCUx1ccogjrIhVSiVeXyr8pD9c1Az5E/zYly4fA==
+"@tma.js/launch-params@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.npmmirror.com/@tma.js/launch-params/-/launch-params-0.0.6.tgz#469a1aa9c1048fde2727504087c00e616e4403c5"
+  integrity sha512-jogO0BI5k+KDckEX+LaPQS0xlZIzMNmACNliuNJwB0KVBhAnzh09VEPeFtOvjgzofHbBdtWydI5VJIU1Bwhj3w==
   dependencies:
-    "@tma.js/init-data" "0.2.19"
-    "@tma.js/parsing" "0.1.2"
-    "@tma.js/theme-params" "0.0.5"
+    "@tma.js/init-data" "0.2.20"
+    "@tma.js/parsing" "0.1.3"
+    "@tma.js/theme-params" "0.0.6"
 
 "@tma.js/logger@0.0.5":
   version "0.0.5"
   resolved "https://registry.npmmirror.com/@tma.js/logger/-/logger-0.0.5.tgz#520fc2ce740b608f862f113f087bc43d9e84244a"
   integrity sha512-9Nb1ODh27oJZ5XaajhLibu41elarRVuweEV8TTDmuOzLFL0C0fOlUu9FsETqor88+UOBKlKjvnbMnjMj/An9jw==
 
-"@tma.js/parsing@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.npmmirror.com/@tma.js/parsing/-/parsing-0.1.2.tgz#b09c362e1d9da819021bbc79043208acd15517d2"
-  integrity sha512-ifKZAyRA1uT8PERwuSWRqu547lTcTzn/6j71w/fL29yeyhR/Bnt0jJ9R5tzlvacxc4j+lh8SvGzrcbnOhAwzYg==
+"@tma.js/parsing@0.1.3":
+  version "0.1.3"
+  resolved "https://registry.npmmirror.com/@tma.js/parsing/-/parsing-0.1.3.tgz#b1f59cccb63fdf810c4ed23313c60029d95af492"
+  integrity sha512-pANGNtLfN19AMcL8eJlBEYPoY8sWr1T+62Z/FWu15YQLzZa2qfIXwBaJmCwoWCuO8aKCf2TzHh6OXKpuxiERBw==
   dependencies:
     "@tma.js/colors" "0.0.5"
     "@tma.js/util-types" "0.0.3"
 
-"@tma.js/sdk-react@^0.4.15":
-  version "0.4.15"
-  resolved "https://registry.npmmirror.com/@tma.js/sdk-react/-/sdk-react-0.4.15.tgz#3321cfb6173d4e7e9fc3ca6fe2d5c80a2b36c86d"
-  integrity sha512-HL0sGcLis2YNHL3arBNGv0sRJYRal2hp9AHw8CoiH4yN8/h5GDgibTqcSHPd6RbfxbqYD28tfhZWjTw/5aQepQ==
+"@tma.js/sdk-react@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.npmmirror.com/@tma.js/sdk-react/-/sdk-react-0.5.0.tgz#f0ce3862c8a71577a8b99c5b2732cb46493ffd02"
+  integrity sha512-2aE6t4klGoYad0kky3582nKqnRZeSe9Ug365WiE+ewZR+xQ1bPb2CcSBg0p6Nvwc2ohq2IT83xO/G7MaFG8PHQ==
   dependencies:
-    "@tma.js/bridge" "1.3.10"
-    "@tma.js/launch-params" "0.0.5"
-    "@tma.js/sdk" "0.12.7"
-    "@tma.js/theme-params" "0.0.5"
+    "@tma.js/bridge" "1.3.11"
+    "@tma.js/launch-params" "0.0.6"
+    "@tma.js/sdk" "0.12.9"
+    "@tma.js/theme-params" "0.0.6"
 
-"@tma.js/sdk@0.12.7":
-  version "0.12.7"
-  resolved "https://registry.npmmirror.com/@tma.js/sdk/-/sdk-0.12.7.tgz#c3743002c3d92ada6aab2c7344c8ffd98daf85d7"
-  integrity sha512-WKrAkPoxf9+1ToZT02Rss30AegB2b6LOSWr3VsNB7n4mHlA3bjoy0Fw6dc4/1sAwmibAoGMJIAkghTwdeqCd7A==
+"@tma.js/sdk@0.12.9":
+  version "0.12.9"
+  resolved "https://registry.npmmirror.com/@tma.js/sdk/-/sdk-0.12.9.tgz#12b60fb5c7862d6c961066650a2533b4e5023f09"
+  integrity sha512-XtGPJwtRqv2+f65QCziObyaULYnmr9B9gN+++uAuLatuqBWThN2RPEvCNKnufliH8N4ezOzmjA1euu3eAZa/8w==
   dependencies:
-    "@tma.js/bridge" "1.3.10"
+    "@tma.js/bridge" "1.3.11"
     "@tma.js/colors" "0.0.5"
     "@tma.js/event-emitter" "0.1.0"
-    "@tma.js/init-data" "0.2.19"
-    "@tma.js/launch-params" "0.0.5"
-    "@tma.js/parsing" "0.1.2"
-    "@tma.js/theme-params" "0.0.5"
+    "@tma.js/init-data" "0.2.20"
+    "@tma.js/launch-params" "0.0.6"
+    "@tma.js/parsing" "0.1.3"
+    "@tma.js/theme-params" "0.0.6"
     "@tma.js/util-types" "0.0.3"
-    "@tma.js/utils" "0.5.5"
+    "@tma.js/utils" "0.5.6"
 
-"@tma.js/theme-params@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.npmmirror.com/@tma.js/theme-params/-/theme-params-0.0.5.tgz#07c39f367ca0e1ad77683d9f609fa2086f90cdd8"
-  integrity sha512-BAhUc1fj7TraLFUO3Hi1nYKyXfBsLXZYvCxPG6hR2wlqjv1zHyrsjd+N+r3lVypEN8xvsMVXczzVqnFbiLfM4Q==
+"@tma.js/theme-params@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.npmmirror.com/@tma.js/theme-params/-/theme-params-0.0.6.tgz#b1279be5b68e16a12b819f3305c51d0f1a3f898c"
+  integrity sha512-58ERJzBTtiGOWRO99WGsmq0ygAC1LftHqAzFnLAnHLfBRI0T0OnOsHXBt+Ceb7KRq9+sEnySfUd+pf8YmX+CZw==
   dependencies:
     "@tma.js/colors" "0.0.5"
-    "@tma.js/parsing" "0.1.2"
+    "@tma.js/parsing" "0.1.3"
 
 "@tma.js/util-types@0.0.3":
   version "0.0.3"
   resolved "https://registry.npmmirror.com/@tma.js/util-types/-/util-types-0.0.3.tgz#1f8ca7867c56ca4dbf46014564767b998a61ade0"
   integrity sha512-9hYutR7Ee4F3dgZlztTL31w8ljs3loRQ0pnzox0EG/Ey2CmbXTbLc9UIJuXzyKBiJKNJEoB3NNoAIy7mBaLRIQ==
 
-"@tma.js/utils@0.5.5":
-  version "0.5.5"
-  resolved "https://registry.npmmirror.com/@tma.js/utils/-/utils-0.5.5.tgz#7fbafed386308b7adade6e892cb9561a773c6737"
-  integrity sha512-YaOXviR/Cw8hVa2pLUveIjSCrw4AcKtA90jocwj0XVktS0vEpiKLEyL1K655TrRszPFu6s/F30GDkN4G2QBpmQ==
+"@tma.js/utils@0.5.6":
+  version "0.5.6"
+  resolved "https://registry.npmmirror.com/@tma.js/utils/-/utils-0.5.6.tgz#e2d8787aee95523508e550c97780f8f724a42c9e"
+  integrity sha512-aNn3w6uzHNmqET9g4CRRtazOmMrdwboWrIXKdkNMMlC5hrNwV+Z09dPeZzQmaqUS7hvbwI9lMF9cUW4bJCaeGw==
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
