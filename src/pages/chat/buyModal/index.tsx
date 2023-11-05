@@ -14,14 +14,13 @@ const Select: React.FC<{
   powerValue: number;
   setPowerValue: (powerValue: number) => void;
 }> = ({ powerValue, setPowerValue }) => {
-  const [unitPrice, setUnitPrice] = React.useState<bigint>(BigInt(0));
 
   const { address } = useAccount();
   const { data: balance, isError: balanceError, isLoading: balanceLoading } = useBalance({
     address: address,
   });
 
-  const { data: price }: {
+  const { data: unitPrice }: {
     data?: bigint;
     isError: boolean;
     isLoading: boolean;
@@ -31,7 +30,6 @@ const Select: React.FC<{
     functionName: "getBuyPrice",
     args: [`0x${DEMO_CONFIG.Sun}`, 1],
   });
-  setUnitPrice(price ?? 0n);
 
   return (
     <div className={styles.selectModalContainer}>
@@ -80,7 +78,7 @@ const Select: React.FC<{
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
-            {formatEther(unitPrice * 10n ?? 0n)} ETH
+            {formatEther((unitPrice ?? 0n) * 10n ?? 0n)} ETH
           </div>
           <div className={styles.selectModalContentItemPower}>
             10 Power
@@ -93,7 +91,7 @@ const Select: React.FC<{
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
-            {formatEther(unitPrice * 30n ?? 0n)} ETH
+            {formatEther((unitPrice ?? 0n) * 30n ?? 0n)} ETH
           </div>
           <div className={styles.selectModalContentItemPower}>
             30 Power
@@ -117,7 +115,7 @@ const Select: React.FC<{
           <div className={styles.selectModalContentItemFullPrice}>
             {!!balance?.value ? (
               <span>
-                {(balance?.value / unitPrice).toString()} Power
+                {(balance?.value / (unitPrice ?? 0n)).toString()} Power
               </span>
             ) : (
               <span>Influence Balance</span>
@@ -174,14 +172,13 @@ const Detail: React.FC<{
   setTransactionHash: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ powerValue, setPurchaseSuccessVisible, setPurchaseFailedVisible, setError, setTransactionHash }) => {
   const [bodyDropdown, setBodyDropdown] = React.useState<boolean>(false);
-  const [totalPrice, setTotalPrice] = React.useState<bigint>(BigInt(0));
 
   const { address } = useAccount();
   const { data: balance, isError: balanceError, isLoading: balanceLoading } = useBalance({
     address: address,
   });
 
-  const { data: price }: {
+  const { data: totalPrice }: {
     data?: bigint;
     isError: boolean;
     isLoading: boolean;
@@ -191,13 +188,13 @@ const Detail: React.FC<{
     functionName: "getBuyPrice",
     args: [`0x${DEMO_CONFIG.Sun}`, powerValue],
   });
-  setTotalPrice(price ?? 0n);
 
   const { data, isLoading, isSuccess, error, write } = useContractWrite({
     address: `0x${AIME_CONTRACT.Powers}`,
     abi: require("@/abis/AIMePowersV3.json"),
     functionName: 'buyPowers',
   });
+
 
   useEffect(() => {
     if (isSuccess) {
@@ -285,7 +282,7 @@ const Detail: React.FC<{
               Total <span>(including fees)</span>
             </div>
             <div className={styles.detailModalContentTotalLeftPrice}>
-              {formatEther(totalPrice).toString()} ETH
+              {formatEther(totalPrice ?? 0n).toString()} ETH
             </div>
           </div>
           <div className={styles.detailModalContentTotalRight}>
@@ -330,7 +327,6 @@ const Detail: React.FC<{
           onClick={async () => {
             await write({
               args: [
-                totalPrice,
                 `0x${DEMO_CONFIG.Sun}`,
                 powerValue,
               ],

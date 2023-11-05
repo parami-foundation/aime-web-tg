@@ -15,7 +15,8 @@ const Auth: React.FC = () => {
       setWalletModalOpen(true);
     } else {
       setWalletModalOpen(false);
-      history.push('/home');
+      // TODO: DEMO
+      history.push('/chat/demo');
     }
   }, [accessToken, address]);
 

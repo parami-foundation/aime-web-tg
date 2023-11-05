@@ -29,6 +29,9 @@ const ConnectWallet: React.FC = () => {
       </div>
       <div className={styles.loginModalContent}>
         {connectors.map((connector) => {
+          if (!connector.ready) {
+            return null;
+          }
           return (
             <ConfigProvider
               theme={{

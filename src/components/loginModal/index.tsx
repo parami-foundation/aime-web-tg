@@ -74,10 +74,10 @@ const LoginModal: React.FC<{
             }}
           />
         )}
-        {!isConnected && (
+        {!!telegramData && !isConnected && (
           <ConnectWallet />
         )}
-        {isConnected && currentChain?.id !== chains[0]?.id && (
+        {!!telegramData && isConnected && currentChain?.id !== chains[0]?.id && (
           <SwitchNetwork />
         )}
         {!!telegramData && isConnected && currentChain?.id === chains[0]?.id && (
