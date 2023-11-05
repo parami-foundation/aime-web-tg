@@ -5,12 +5,13 @@ import { message } from "antd";
 import { useEffect, useState } from "react";
 
 export default () => {
-  const { telegramDataString, telegramAuthType } = useModel("tmaInitData");
+  const { telegramDataString, telegramAuthType } = useModel("useTelegram");
   const [address, setAddress] = useState<string>();
   const [signature, setSignature] = useState<string>();
   const [accessToken, setAccessToken] = useState<string>();
   const [accessTokenExpire, setAccessTokenExpire] = useState<number>(0);
   const [twitterBinded, setTwitterBinded] = useState<boolean>(true);
+  const [walletModalOpen, setWalletModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -65,10 +66,12 @@ export default () => {
     accessTokenExpire,
     address,
     twitterBinded,
+    walletModalOpen,
     setAccessToken,
     setSignature,
     setAccessTokenExpire,
     setAddress,
     setTwitterBinded,
+    setWalletModalOpen,
   };
 };

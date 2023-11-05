@@ -10,7 +10,7 @@ const InputBox: React.FC<{
   value?: string;
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
-  const { handleSendMessage, socket, messages, setMessages } = useModel("chat");
+  const { handleSendMessage } = useModel("useChat");
   const [type, setType] = useState<string>("text");
   const [recording, setRecording] = useState<boolean>(false);
 

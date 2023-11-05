@@ -6,9 +6,8 @@ import { RiWalletLine } from "react-icons/ri";
 import { THEME_CONFIG } from "@/constants/theme";
 import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
-import { useAccount, useBalance, useContractWrite } from "wagmi";
+import { useAccount, useBalance, useContractRead, useContractWrite } from "wagmi";
 import { AIME_CONTRACT, DEMO_CONFIG } from "@/constants/global";
-import { getBuyPrice } from "@/hooks/useGetPrice";
 import { formatEther } from "viem";
 
 const Select: React.FC<{
@@ -22,14 +21,17 @@ const Select: React.FC<{
     address: address,
   });
 
-  getBuyPrice({
-    powerAddress: `0x${DEMO_CONFIG.Sun}`,
-    amount: 1,
-  }).then((res) => {
-    if (res.price) {
-      setUnitPrice(res.price)
-    }
+  const { data: price }: {
+    data?: bigint;
+    isError: boolean;
+    isLoading: boolean;
+  } = useContractRead({
+    address: `0x${AIME_CONTRACT.Powers}`,
+    abi: require("@/abis/AIMePowersV3.json"),
+    functionName: "getBuyPrice",
+    args: [`0x${DEMO_CONFIG.Sun}`, 1],
   });
+  setUnitPrice(price ?? 0n);
 
   return (
     <div className={styles.selectModalContainer}>
@@ -179,14 +181,17 @@ const Detail: React.FC<{
     address: address,
   });
 
-  getBuyPrice({
-    powerAddress: `0x${DEMO_CONFIG.Sun}`,
-    amount: powerValue,
-  }).then((res) => {
-    if (res.price) {
-      setTotalPrice(res.price)
-    }
+  const { data: price }: {
+    data?: bigint;
+    isError: boolean;
+    isLoading: boolean;
+  } = useContractRead({
+    address: `0x${AIME_CONTRACT.Powers}`,
+    abi: require("@/abis/AIMePowersV3.json"),
+    functionName: "getBuyPrice",
+    args: [`0x${DEMO_CONFIG.Sun}`, powerValue],
   });
+  setTotalPrice(price ?? 0n);
 
   const { data, isLoading, isSuccess, error, write } = useContractWrite({
     address: `0x${AIME_CONTRACT.Powers}`,

@@ -87,7 +87,7 @@ export default () => {
   };
 
   const connectSocket = async (props: ChatbotProps, authToken?: string) => {
-    const { character, onReturn } = props;
+    const { character } = props;
     const clientId = uuidv4();
     let ws: WebSocket;
     ws = new WebSocket(

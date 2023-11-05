@@ -10,8 +10,8 @@ import { characters } from "@/service/typing.d";
 import { AccessLayout } from "@/layouts/access";
 
 const ChatDemo: React.FC = () => {
-  const { accessToken } = useModel("checkAccess");
-  const { connectSocket, setCharacter, messages, socket } = useModel("chat");
+  const { accessToken } = useModel("useAccess");
+  const { connectSocket, setCharacter, messages, socket } = useModel("useChat");
   const [inputValue, setInputValue] = React.useState<string>();
 
   const msgList = useRef<HTMLDivElement>(null);

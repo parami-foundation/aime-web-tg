@@ -1,6 +1,7 @@
 export const THEME_CONFIG = {
   colorPrimary: "#000",
   colorSecondary: "#edfe71",
+  colorWhite: "#fff",
   colorThird: "#eeeeee",
   colorBackground: "#fff",
   borderRadius: 12,

@@ -24,6 +24,13 @@
     font-weight: 800;
     line-height: normal;
     text-transform: uppercase;
+
+    .loginModalHeaderDescription {
+      font-size: 14px;
+      font-weight: 400;
+      text-align: center;
+      margin-top: var(--spacing-min);
+    }
   }
 
   .loginModalContent {
@@ -35,14 +42,16 @@
     margin-top: 30px;
 
     .loginModalContentItem {
+      position: relative;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
       width: 100%;
+      height: auto;
       padding: 10px 20px;
-      background-color: #fff;
-      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
 
       &:not(:last-child) {
         margin-bottom: 15px;
@@ -94,4 +103,12 @@
       }
     }
   }
+}
+
+.telegramLoginBtn {
+  position: absolute;
+  width: calc(100% - 40px);
+  height: calc(100% - 20px);
+  z-index: 1;
+  opacity: 0.01;
 }

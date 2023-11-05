@@ -1,5 +1,5 @@
 import { DEBUG } from "@/constants/global";
-import { TelegramOauthDataOnauthProps } from "@/pages/auth/components/telegramOauth";
+import { TelegramOauthDataOnauthProps } from "@/components/loginModal/telegramOauth";
 import { InitData } from "@tma.js/sdk-react";
 import { notification } from "antd";
 import { useEffect, useState } from "react";

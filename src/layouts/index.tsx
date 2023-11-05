@@ -1,19 +1,14 @@
 import { Outlet, useModel } from '@umijs/max';
 import styles from './style.less';
-import { WALLETCONNECT_CONFIG } from '@/constants/walletconnect';
 import { ConfigProvider, theme } from 'antd';
 import { THEME_CONFIG } from '@/constants/theme';
 import { SDKProvider } from '@tma.js/sdk-react';
 import { DisplayGate } from '@/components/telegram/displayGate';
 import { TMAInitData } from '@/components/telegram/initData';
-import { Web3Modal } from '@web3modal/react'
-import { WagmiConfig } from 'wagmi'
-import LoginModal from '@/components/loginModal';
+import { WagmiConfig } from 'wagmi';
 
 const Layout: React.FC = () => {
-  const { walletModalOpen, setWalletModalOpen } = useModel('wagmiClient');
-
-  const { wagmiConfig, ethereumClient } = useModel('wagmiClient');
+  const { wagmiConfig } = useModel('useWagmi');
 
   return (
     <SDKProvider
@@ -22,7 +17,7 @@ const Layout: React.FC = () => {
         cssVars: true,
       }}
     >
-      {!!wagmiConfig && !!ethereumClient && (
+      {!!wagmiConfig && (
         <>
           <WagmiConfig
             config={wagmiConfig}
@@ -43,17 +38,11 @@ const Layout: React.FC = () => {
                 <div className={styles.layoutContainer}>
                   <div className={styles.wrapperContainer}>
                     <Outlet />
-                    <LoginModal
-                      visible={walletModalOpen}
-                      onClose={() => setWalletModalOpen(false)}
-                    />
                   </div>
                 </div>
               </DisplayGate>
             </ConfigProvider>
           </WagmiConfig>
-
-          <Web3Modal projectId={WALLETCONNECT_CONFIG.projectId} ethereumClient={ethereumClient} />
         </>
       )}
     </SDKProvider>

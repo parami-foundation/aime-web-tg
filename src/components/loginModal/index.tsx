@@ -1,16 +1,50 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
-import { Modal, Tag } from "antd";
-import { ReactComponent as MetamaskIcon } from "@/assets/brand/metamask.svg";
-import { ReactComponent as TonIcon } from "@/assets/brand/ton.svg";
-import { ReactComponent as WalletConnectIcon } from "@/assets/brand/walletconnect.svg";
-import { FaAngleRight } from "react-icons/fa";
-import { THEME_CONFIG } from "@/constants/theme";
+import { Modal, message } from "antd";
+import { useAccount, useNetwork, useSignMessage, useSwitchNetwork } from 'wagmi';
+import { useModel } from "@umijs/max";
+import { useSDK } from "@tma.js/sdk-react";
+import TelegramOauth, { TelegramOauthDataOnauthProps } from "./telegramOauth";
+import ConnectWallet from "./connectWallet";
+import SwitchNetwork from "./switchNetwork";
+import SignMessage from "./signMessage";
 
 const LoginModal: React.FC<{
   visible: boolean;
-  onClose: () => void;
-}> = ({ visible, onClose }) => {
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  closeable?: boolean;
+}> = ({ visible, setVisible, closeable }) => {
+  const { telegramData, setTelegramData, setTelegramDataString, setTelegramAuthType } = useModel('useTelegram');
+  const { setSignature, setAddress } = useModel('useAccess');
+
+  const { data: signature, error: signMsgError, isLoading: signMsgLoading, signMessage } = useSignMessage();
+  const { chain: currentChain } = useNetwork();
+  const { chains } = useSwitchNetwork();
+  const { error: tmaError } = useSDK();
+
+  const { address, isConnected } = useAccount({
+    onConnect: () => {
+      message.success({
+        key: 'connectWallet',
+        content: 'Connect wallet success'
+      });
+      setAddress(address);
+    },
+    onDisconnect: () => {
+      message.success({
+        key: 'disconnectWallet',
+        content: 'Disconnect wallet success'
+      });
+      setAddress(undefined);
+    }
+  });
+
+  useEffect(() => {
+    if (!!signature && !signMsgLoading && !signMsgError) {
+      setSignature(signature);
+    }
+  }, [signature, signMsgLoading, signMsgError]);
+
   return (
     <Modal
       centered
@@ -18,65 +52,41 @@ const LoginModal: React.FC<{
       footer={null}
       className={styles.loginModal}
       open={visible}
-      onCancel={onClose}
+      onCancel={() => setVisible(false)}
+      closable={closeable ?? false}
+      maskClosable={closeable ?? false}
     >
       <div className={styles.loginModalContainer}>
-        <div className={styles.loginModalHeader}>
-          Log in with wallet
-        </div>
-        <div className={styles.loginModalContent}>
-          <div className={styles.loginModalContentItem}>
-            <div className={styles.loginModalContentItemLeft}>
-              <MetamaskIcon
-                className={styles.loginModalContentItemIcon}
-              />
-              <div className={styles.loginModalContentItemText}>
-                MetaMask
-              </div>
-            </div>
-            <div className={styles.loginModalContentItemRight}>
-              <FaAngleRight
-                className={styles.loginModalContentItemRightIcon}
-              />
-            </div>
-          </div>
-          <div className={styles.loginModalContentItem}>
-            <div className={styles.loginModalContentItemLeft}>
-              <TonIcon
-                className={styles.loginModalContentItemIcon}
-              />
-              <div className={styles.loginModalContentItemText}>
-                Ton Wallet
-                <Tag
-                  color={THEME_CONFIG.colorSecondary}
-                  className={styles.loginModalContentItemTag}
-                >
-                  HOT
-                </Tag>
-              </div>
-            </div>
-            <div className={styles.loginModalContentItemRight}>
-              <FaAngleRight
-                className={styles.loginModalContentItemRightIcon}
-              />
-            </div>
-          </div>
-          <div className={styles.loginModalContentItem}>
-            <div className={styles.loginModalContentItemLeft}>
-              <WalletConnectIcon
-                className={styles.loginModalContentItemIcon}
-              />
-              <div className={styles.loginModalContentItemText}>
-                WalletConnect
-              </div>
-            </div>
-            <div className={styles.loginModalContentItemRight}>
-              <FaAngleRight
-                className={styles.loginModalContentItemRightIcon}
-              />
-            </div>
-          </div>
-        </div>
+        {!telegramData && !!tmaError && (
+          <TelegramOauth
+            dataOnauth={(response: TelegramOauthDataOnauthProps) => {
+              setTelegramData(response);
+              setTelegramAuthType('oauth2');
+              let initDataString = "";
+              for (let key in response) {
+                if (initDataString != "") {
+                  initDataString += "&";
+                }
+                initDataString +=
+                  key + "=" + encodeURIComponent((response as any)[key]);
+              }
+              setTelegramDataString(initDataString);
+            }}
+          />
+        )}
+        {!isConnected && (
+          <ConnectWallet />
+        )}
+        {isConnected && currentChain?.id !== chains[0]?.id && (
+          <SwitchNetwork />
+        )}
+        {!!telegramData && isConnected && currentChain?.id === chains[0]?.id && (
+          <SignMessage
+            error={signMsgError}
+            isLoading={signMsgLoading}
+            signMessage={signMessage}
+          />
+        )}
       </div>
     </Modal>
   )

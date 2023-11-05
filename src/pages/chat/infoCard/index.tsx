@@ -7,7 +7,7 @@ import { THEME_CONFIG } from "@/constants/theme";
 import BuyModal from "../buyModal";
 
 const ConnectWallet: React.FC = () => {
-  const { setWalletModalOpen } = useModel("wagmiClient");
+  const { setWalletModalOpen } = useModel("useAccess");
 
   return (
     <div className={styles.infoCardContainer}>
@@ -104,7 +104,7 @@ const BuyPower: React.FC = () => {
 };
 
 const InfoCard: React.FC = () => {
-  const { accessToken, twitterBinded } = useModel("checkAccess");
+  const { accessToken, twitterBinded } = useModel("useAccess");
 
   if (!accessToken) {
     return (
