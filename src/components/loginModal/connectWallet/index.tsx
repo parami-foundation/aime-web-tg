@@ -8,11 +8,8 @@ import { ReactComponent as CoinbaseIcon } from "@/assets/brand/coinbase.svg";
 import { ReactComponent as WalletConnectIcon } from "@/assets/brand/walletconnect.svg";
 import { ReactComponent as InjectedIcon } from "@/assets/brand/injected.svg";
 import { THEME_CONFIG } from "@/constants/theme";
-import { useModel } from "@umijs/max";
 
 const ConnectWallet: React.FC = () => {
-  const { telegramWebApp } = useModel('useTelegram');
-
   const { connect, connectors, error } = useConnect();
 
   useEffect(() => {
@@ -72,14 +69,14 @@ const ConnectWallet: React.FC = () => {
                       className={styles.loginModalContentItemIcon}
                     />
                   )}
-                  {connector.id === 'injected' && (
+                  {connector.id === 'eip6963' && (
                     <InjectedIcon
                       className={styles.loginModalContentItemIcon}
                     />
                   )}
                   <div className={styles.loginModalContentItemText}>
                     {connector.name}
-                    {connector.id === 'metaMask' && (
+                    {connector.id === 'walletConnect' && (
                       <Tag
                         color={THEME_CONFIG.colorSecondary}
                         className={styles.loginModalContentItemTag}

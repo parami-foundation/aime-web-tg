@@ -28,6 +28,10 @@ export const ALCHEMY_CONFIG = {
   Georli: "bZy6cqaLUxCMRw2BJn76qNSK6gX7Ioij",
 };
 
+export const INFURA_CONFIG = {
+  apiKey: "912a4876d6f449dea2143b0c6cf07e13",
+};
+
 export const BIND_WALLET_MESSAGE = "AIME:bind_wallet";
 
 export const WAITLIST_LINK = "https://form.typeform.com/to/Q7qTVjQW";

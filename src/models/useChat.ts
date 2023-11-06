@@ -113,6 +113,7 @@ export default () => {
           key: "debug",
           message: "WebSocket",
           description: "WebSocket disconnected",
+          duration: 0,
         });
         console.log("ws disconnected");
       }
