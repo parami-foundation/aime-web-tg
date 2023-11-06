@@ -42,6 +42,11 @@ export declare namespace Req {
     signature?: string;
     type?: string;
   }
+
+  interface GetTokenPrice {
+    token: string;
+    currency: string;
+  }
 }
 
 export declare namespace Resp {
@@ -55,6 +60,10 @@ export declare namespace Resp {
     access_token?: string;
     type?: string;
     expire?: number;
+  }
+
+  interface GetTokenPrice extends Body {
+    [key: string]: any;
   }
 }
 

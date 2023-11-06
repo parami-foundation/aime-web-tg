@@ -10,7 +10,7 @@ const errorHandler = (error: any) => {
   } as Resp.Body;
 };
 
-const request = extend({
+export const request = extend({
   errorHandler,
   credentials: "same-origin",
 });

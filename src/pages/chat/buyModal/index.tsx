@@ -9,6 +9,9 @@ import PurchaseFailed from "@/components/purchase/failed";
 import { useAccount, useBalance, useContractRead, useContractWrite } from "wagmi";
 import { AIME_CONTRACT, DEMO_CONFIG } from "@/constants/global";
 import { formatEther } from "viem";
+import { GetTokenPrice } from "@/service/third";
+import { prepareWriteContract } from "@wagmi/core";
+import { useModel } from "@umijs/max";
 
 const Select: React.FC<{
   powerValue: number;
@@ -61,7 +64,7 @@ const Select: React.FC<{
         <div
           className={styles.selectModalContentItem}
           onClick={() => {
-            setPowerValue!(1);
+            setPowerValue(1);
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
@@ -74,7 +77,7 @@ const Select: React.FC<{
         <div
           className={styles.selectModalContentItem}
           onClick={() => {
-            setPowerValue!(10);
+            setPowerValue(10);
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
@@ -87,7 +90,7 @@ const Select: React.FC<{
         <div
           className={styles.selectModalContentItem}
           onClick={() => {
-            setPowerValue!(30);
+            setPowerValue(30);
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
@@ -171,14 +174,18 @@ const Detail: React.FC<{
   setError: React.Dispatch<React.SetStateAction<Error>>;
   setTransactionHash: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ powerValue, setPurchaseSuccessVisible, setPurchaseFailedVisible, setError, setTransactionHash }) => {
+  const { publicClient } = useModel("useWagmi");
+
   const [bodyDropdown, setBodyDropdown] = React.useState<boolean>(false);
+  const [tokenPrice, setTokenPrice] = React.useState<number>(0);
+  const [gas, setGas] = React.useState<bigint>(0n);
 
   const { address } = useAccount();
   const { data: balance, isError: balanceError, isLoading: balanceLoading } = useBalance({
     address: address,
   });
 
-  const { data: totalPrice }: {
+  const { data: unitPrice }: {
     data?: bigint;
     isError: boolean;
     isLoading: boolean;
@@ -186,7 +193,7 @@ const Detail: React.FC<{
     address: `0x${AIME_CONTRACT.Powers}`,
     abi: require("@/abis/AIMePowersV3.json"),
     functionName: "getBuyPrice",
-    args: [`0x${DEMO_CONFIG.Sun}`, powerValue],
+    args: [`0x${DEMO_CONFIG.Sun}`, 1],
   });
 
   const { data, isLoading, isSuccess, error, write } = useContractWrite({
@@ -195,6 +202,21 @@ const Detail: React.FC<{
     functionName: 'buyPowers',
   });
 
+  useEffect(() => {
+    (async () => {
+      const gas = await publicClient?.estimateContractGas({
+        address: `0x${AIME_CONTRACT.Powers}`,
+        abi: require("@/abis/AIMePowersV3.json"),
+        functionName: 'buyPowers',
+        args: [
+          `0x${DEMO_CONFIG.Sun}`,
+          powerValue,
+        ],
+        account: address as `0x${string}`,
+      });
+      setGas(gas ?? 0n);
+    })();
+  }, [publicClient]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -206,6 +228,17 @@ const Detail: React.FC<{
       setError(error);
     }
   }, [data, isLoading, isSuccess, error]);
+
+  useEffect(() => {
+    GetTokenPrice({
+      token: "ethereum",
+      currency: "usd",
+    }).then(({ response, data }) => {
+      if (response.status === 200) {
+        setTokenPrice(data.ethereum.usd);
+      }
+    });
+  }, [powerValue]);
 
   return (
     <div className={styles.detailModalContainer}>
@@ -226,7 +259,7 @@ const Detail: React.FC<{
           </div>
           <div className={styles.detailModalContentTitleRight}>
             <div className={styles.detailModalContentTitleRightValue}>
-              $45.49
+              ${(tokenPrice * Number(formatEther((unitPrice ?? 0n) * BigInt(powerValue)))).toFixed(2) ?? 0}
             </div>
             <AiFillCaretDown
               className={styles.detailModalContentTitleRightIcon}
@@ -269,10 +302,10 @@ const Detail: React.FC<{
           </div>
           <div className={styles.detailModalContentBodyItem}>
             <div className={styles.detailModalContentBodyItemTitle}>
-              <b>Est. Fees</b> (0 ETH)
+              <b>Est. Fees</b> ({formatEther(gas ?? 0n)} ETH)
             </div>
             <div className={styles.detailModalContentBodyItemValue}>
-              USD <b>$0.01</b>
+              USD <b>${tokenPrice * Number(formatEther(gas ?? 0n))}</b>
             </div>
           </div>
         </div>
@@ -282,12 +315,12 @@ const Detail: React.FC<{
               Total <span>(including fees)</span>
             </div>
             <div className={styles.detailModalContentTotalLeftPrice}>
-              {formatEther(totalPrice ?? 0n).toString()} ETH
+              {formatEther((unitPrice ?? 0n) * BigInt(powerValue)).toString()} ETH
             </div>
           </div>
           <div className={styles.detailModalContentTotalRight}>
             <div className={styles.detailModalContentTotalRightFlat}>
-              USD <b>$45.49</b>
+              USD <b>${(tokenPrice * Number(formatEther((unitPrice ?? 0n) * BigInt(powerValue)))).toFixed(2) ?? 0}</b>
             </div>
           </div>
         </div>
@@ -324,6 +357,7 @@ const Detail: React.FC<{
           size="large"
           className={styles.detailModalFooterButton}
           loading={isLoading}
+          disabled={parseInt(balance?.formatted ?? "0") === 0}
           onClick={async () => {
             await write({
               args: [
@@ -333,7 +367,11 @@ const Detail: React.FC<{
             })
           }}
         >
-          Complete Purchase
+          {parseInt(balance?.formatted ?? "0") === 0 ? (
+            <span>Insufficient Balance</span>
+          ) : (
+            <span>Confirm Purchase</span>
+          )}
         </Button>
       </ConfigProvider>
     </div>
@@ -349,6 +387,16 @@ const BuyModal: React.FC<{
   const [purchaseFailedVisible, setPurchaseFailedVisible] = React.useState<boolean>(false);
   const [error, setError] = React.useState<Error>(new Error(""));
   const [transactionHash, setTransactionHash] = React.useState<string>("");
+
+  useEffect(() => {
+    if (!visible) {
+      setPowerValue(0);
+      setPurchaseSuccessVisible(false);
+      setPurchaseFailedVisible(false);
+      setError(new Error(""));
+      setTransactionHash("");
+    }
+  }, [visible]);
 
   return (
     <>

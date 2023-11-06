@@ -17,7 +17,8 @@ import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { ALCHEMY_CONFIG, PROJECT_CONFIG } from "@/constants/global";
 import { useEffect, useState } from "react";
 import { WALLETCONNECT_CONFIG } from "@/constants/walletconnect";
-import { FallbackTransport } from "viem";
+import { FallbackTransport, createPublicClient, http } from "viem";
+import { EthereumClient } from "@web3modal/ethereum";
 
 export default () => {
   const [wagmiConfig, setWagmiConfig] =
@@ -27,6 +28,7 @@ export default () => {
         WebSocketPublicClient<FallbackTransport>
       >
     >();
+  const [ethereumClient, setEthereumClient] = useState<EthereumClient>();
 
   useEffect(() => {
     const { chains, publicClient, webSocketPublicClient } = configureChains(
@@ -68,10 +70,20 @@ export default () => {
       webSocketPublicClient,
     });
 
+    const ethClient = new EthereumClient(config, WALLETCONNECT_CONFIG.chains);
+    setEthereumClient(ethClient);
+
     setWagmiConfig(config);
   }, []);
 
+  const publicClient = createPublicClient({
+    chain: goerli,
+    transport: http(),
+  });
+
   return {
     wagmiConfig,
+    ethereumClient,
+    publicClient,
   };
 };
