@@ -8,8 +8,11 @@ import { ReactComponent as CoinbaseIcon } from "@/assets/brand/coinbase.svg";
 import { ReactComponent as WalletConnectIcon } from "@/assets/brand/walletconnect.svg";
 import { ReactComponent as InjectedIcon } from "@/assets/brand/injected.svg";
 import { THEME_CONFIG } from "@/constants/theme";
+import { useModel } from "@umijs/max";
 
 const ConnectWallet: React.FC = () => {
+  const { telegramWebApp } = useModel('useTelegram');
+
   const { connect, connectors, error } = useConnect();
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { DEBUG } from "@/constants/global";
 import { TelegramOauthDataOnauthProps } from "@/components/loginModal/telegramOauth";
-import { InitData } from "@tma.js/sdk-react";
+import { InitData, WebApp } from "@tma.js/sdk-react";
 import { notification } from "antd";
 import { useEffect, useState } from "react";
 
@@ -10,6 +10,8 @@ export default () => {
   >(null);
   const [telegramDataString, setTelegramDataString] = useState<string>();
   const [telegramAuthType, setTelegramAuthType] = useState<string>();
+  const [telegramMiniAppHeight, setTelegramMiniAppHeight] = useState<number>();
+  const [telegramWebApp, setTelegramWebApp] = useState<WebApp>();
 
   useEffect(() => {
     if (!!telegramData) {
@@ -37,5 +39,9 @@ export default () => {
     setTelegramDataString,
     telegramAuthType,
     setTelegramAuthType,
+    telegramMiniAppHeight,
+    setTelegramMiniAppHeight,
+    telegramWebApp,
+    setTelegramWebApp,
   };
 };

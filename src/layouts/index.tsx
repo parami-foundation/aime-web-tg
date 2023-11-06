@@ -9,12 +9,14 @@ import { WagmiConfig } from 'wagmi';
 
 const Layout: React.FC = () => {
   const { wagmiConfig } = useModel('useWagmi');
+  const { telegramMiniAppHeight } = useModel('useTelegram');
 
   return (
     <SDKProvider
       initOptions={{
         debug: true,
         cssVars: true,
+        acceptCustomStyles: true,
       }}
     >
       {!!wagmiConfig && (
@@ -34,12 +36,18 @@ const Layout: React.FC = () => {
               }}
             >
               <DisplayGate>
-                <TMAInitData />
-                <div className={styles.layoutContainer}>
-                  <div className={styles.wrapperContainer}>
-                    <Outlet />
+                <TMAInitData>
+                  <div
+                    className={styles.layoutContainer}
+                    style={{
+                      height: telegramMiniAppHeight ?? '100%',
+                    }}
+                  >
+                    <div className={styles.wrapperContainer}>
+                      <Outlet />
+                    </div>
                   </div>
-                </div>
+                </TMAInitData>
               </DisplayGate>
             </ConfigProvider>
           </WagmiConfig>

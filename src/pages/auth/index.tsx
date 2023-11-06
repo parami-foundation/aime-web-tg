@@ -4,11 +4,12 @@ import { ReactComponent as Logo } from '@/assets/logo.svg';
 import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
 import { ReactComponent as LogoWebUrl } from '@/assets/auth/aime_web_url.svg';
 import { Button } from 'antd';
-import { AccessLayout } from '@/layouts/access';
 import { useModel, history } from '@umijs/max';
+import LoginModal from '@/components/loginModal';
 
 const Auth: React.FC = () => {
-  const { setWalletModalOpen, accessToken, address } = useModel('useAccess');
+  const { accessToken, address } = useModel('useAccess');
+  const [walletModalOpen, setWalletModalOpen] = React.useState<boolean>(false);
 
   useEffect(() => {
     if (!accessToken || !address) {
@@ -21,7 +22,7 @@ const Auth: React.FC = () => {
   }, [accessToken, address]);
 
   return (
-    <AccessLayout>
+    <>
       <div className={styles.authContainer}>
         <div className={styles.logoContainer}>
           <div className={styles.logo}>
@@ -49,7 +50,11 @@ const Auth: React.FC = () => {
           </Button>
         </div>
       </div>
-    </AccessLayout>
+      <LoginModal
+        visible={walletModalOpen}
+        setVisible={setWalletModalOpen}
+      />
+    </>
   );
 };
 
