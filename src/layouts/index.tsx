@@ -6,10 +6,21 @@ import { SDKProvider } from '@tma.js/sdk-react';
 import { DisplayGate } from '@/components/telegram/displayGate';
 import { TMAInitData } from '@/components/telegram/initData';
 import { WagmiConfig } from 'wagmi';
+import { DEBUG } from '@/constants/global';
+import eruda from 'eruda';
 
 const Layout: React.FC = () => {
   const { wagmiConfig } = useModel('useWagmi');
   const { telegramMiniAppHeight } = useModel('useTelegram');
+
+  if (DEBUG) {
+    let el = document.createElement('div');
+    document.body.appendChild(el);
+    eruda.init({
+      container: el,
+      tool: ['console', 'elements'],
+    });
+  }
 
   return (
     <SDKProvider

@@ -19,6 +19,7 @@
     "antd": "^5.11.0",
     "classnames": "^2.3.2",
     "crypto-js": "^4.2.0",
+    "eruda": "^3.0.1",
     "events": "^3.3.0",
     "react-icons": "^4.11.0",
     "react-telegram-login": "^1.1.2",

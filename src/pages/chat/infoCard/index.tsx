@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { Button, ConfigProvider, theme } from "antd";
 import { useModel } from "@umijs/max";
 import { RiTwitterXFill, RiWalletLine } from "react-icons/ri";
 import { THEME_CONFIG } from "@/constants/theme";
 import BuyModal from "../buyModal";
+import { useMainButton, useSDK } from "@tma.js/sdk-react";
 
 const ConnectWallet: React.FC = () => {
   const { setWalletModalOpen } = useModel("useAccess");
@@ -61,6 +62,28 @@ const ConnectTwitter: React.FC = () => {
 
 const BuyPower: React.FC = () => {
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
+
+  const { components, error } = useSDK();
+
+  if (!error && !!components) {
+    const mainButton = useMainButton();
+
+    useEffect(() => {
+      mainButton?.setText('Buy AIME Power');
+      mainButton?.enable().show();
+      mainButton?.on('click', () => {
+        setBuyModalVisible(true);
+      });
+
+      return () => {
+        mainButton?.hide();
+        mainButton?.hideProgress();
+        mainButton?.off('click', () => {
+          setBuyModalVisible(false);
+        });
+      };
+    }, [mainButton]);
+  }
 
   return (
     <>

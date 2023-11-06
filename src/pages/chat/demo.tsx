@@ -11,7 +11,7 @@ import { AccessLayout } from "@/layouts/access";
 
 const ChatDemo: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { connectSocket, setCharacter, messages, socket } = useModel("useChat");
+  const { connectSocket, setCharacter, messages } = useModel("useChat");
   const [inputValue, setInputValue] = React.useState<string>();
 
   const msgList = useRef<HTMLDivElement>(null);
