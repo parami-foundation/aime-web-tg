@@ -1,10 +1,9 @@
 import LoginModal from '@/components/loginModal';
-import { history, useModel } from '@umijs/max';
-import { useEffect, type PropsWithChildren, useState } from 'react';
+import { useModel } from '@umijs/max';
+import { useEffect, type PropsWithChildren } from 'react';
 
 export const AccessLayout = ({ children }: PropsWithChildren) => {
-  const { accessToken, address } = useModel('useAccess');
-  const { walletModalOpen, setWalletModalOpen } = useModel('useAccess');
+  const { accessToken, address, walletModalOpen, setWalletModalOpen } = useModel('useAccess');
 
   useEffect(() => {
     if (!accessToken || !address) {

@@ -5,55 +5,49 @@ import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
 import { ReactComponent as LogoWebUrl } from '@/assets/auth/aime_web_url.svg';
 import { Button } from 'antd';
 import { useModel, history } from '@umijs/max';
-import LoginModal from '@/components/loginModal';
+import { AccessLayout } from '@/layouts/access';
 
 const Auth: React.FC = () => {
-  const { accessToken, address } = useModel('useAccess');
-  const [walletModalOpen, setWalletModalOpen] = React.useState<boolean>(false);
+  const { accessToken, setWalletModalOpen } = useModel('useAccess');
 
   useEffect(() => {
-    if (!accessToken || !address) {
-      setWalletModalOpen(true);
-    } else {
-      setWalletModalOpen(false);
+    if (!!accessToken) {
       // TODO: DEMO
       history.push('/chat/demo');
     }
-  }, [accessToken, address]);
+  }, [accessToken]);
 
   return (
     <>
-      <div className={styles.authContainer}>
-        <div className={styles.logoContainer}>
-          <div className={styles.logo}>
-            <Logo />
+      <AccessLayout>
+        <div className={styles.authContainer}>
+          <div className={styles.logoContainer}>
+            <div className={styles.logo}>
+              <Logo />
+            </div>
+            <div className={styles.title}>
+              <LogoTitle />
+            </div>
+            <div className={styles.webUrl}>
+              <LogoWebUrl />
+            </div>
           </div>
-          <div className={styles.title}>
-            <LogoTitle />
-          </div>
-          <div className={styles.webUrl}>
-            <LogoWebUrl />
-          </div>
-        </div>
 
-        <div className={styles.buttonContainer}>
-          <Button
-            block
-            type="primary"
-            size="large"
-            className={styles.button}
-            onClick={() => {
-              setWalletModalOpen(true);
-            }}
-          >
-            Connect Wallet
-          </Button>
+          <div className={styles.buttonContainer}>
+            <Button
+              block
+              type="primary"
+              size="large"
+              className={styles.button}
+              onClick={() => {
+                setWalletModalOpen(true);
+              }}
+            >
+              Connect Wallet
+            </Button>
+          </div>
         </div>
-      </div>
-      <LoginModal
-        visible={walletModalOpen}
-        setVisible={setWalletModalOpen}
-      />
+      </AccessLayout>
     </>
   );
 };
