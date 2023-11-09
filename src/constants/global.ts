@@ -1,3 +1,5 @@
+import { arbitrum } from "wagmi/chains";
+
 export const DEBUG = false;
 
 export const PROJECT_CONFIG = {
@@ -6,8 +8,17 @@ export const PROJECT_CONFIG = {
   url: "https://aime-tg.parami.io",
 };
 
+export const NETWORK_CONFIG = {
+  chains: [arbitrum],
+};
+
 export const AIME_CONTRACT = {
-  Powers: "968665c68b3B347c9E9553a87F4a84620718ca07",
+  Goerli: {
+    Powers: "968665c68b3B347c9E9553a87F4a84620718ca07",
+  },
+  Arbitrum: {
+    Powers: "D21881a9b32509fC0C042682E8a61f57d8B57C11",
+  },
 };
 
 export const WEBSOCKET_CONFIG = {

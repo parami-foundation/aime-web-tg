@@ -9,6 +9,10 @@ export default defineConfig({
       component: "auth",
     },
     {
+      path: "/home",
+      component: "home",
+    },
+    {
       path: "/chat",
       routes: [
         {

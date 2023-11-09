@@ -27,7 +27,7 @@ const Select: React.FC<{
     isError: boolean;
     isLoading: boolean;
   } = useContractRead({
-    address: `0x${AIME_CONTRACT.Powers}`,
+    address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
     abi: require("@/abis/AIMePowersV3.json"),
     functionName: "getBuyPrice",
     args: [`0x${DEMO_CONFIG.Sun}`, 1],
@@ -189,14 +189,14 @@ const Detail: React.FC<{
     isError: boolean;
     isLoading: boolean;
   } = useContractRead({
-    address: `0x${AIME_CONTRACT.Powers}`,
+    address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
     abi: require("@/abis/AIMePowersV3.json"),
     functionName: "getBuyPrice",
     args: [`0x${DEMO_CONFIG.Sun}`, 1],
   });
 
   const { data, isLoading, isSuccess, error, write } = useContractWrite({
-    address: `0x${AIME_CONTRACT.Powers}`,
+    address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
     abi: require("@/abis/AIMePowersV3.json"),
     functionName: 'buyPowers',
   });
@@ -204,7 +204,7 @@ const Detail: React.FC<{
   useEffect(() => {
     (async () => {
       const gas = await publicClient?.estimateContractGas({
-        address: `0x${AIME_CONTRACT.Powers}`,
+        address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
         abi: require("@/abis/AIMePowersV3.json"),
         functionName: 'buyPowers',
         args: [

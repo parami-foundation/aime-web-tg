@@ -11,7 +11,7 @@ export default () => {
 
   useEffect(() => {
     const aimePowersV3 = getContract({
-      address: `0x${AIME_CONTRACT.Powers}`,
+      address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
       abi: require("@/abis/AIMePowersV3.json"),
       walletClient: ethereumClient,
     });

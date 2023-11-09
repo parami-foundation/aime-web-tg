@@ -6,11 +6,11 @@ export const AccessLayout = ({ children }: PropsWithChildren) => {
   const { accessToken, address, walletModalOpen, setWalletModalOpen } = useModel('useAccess');
 
   useEffect(() => {
-    if (!accessToken || !address) {
-      setWalletModalOpen(true);
-    } else {
-      setWalletModalOpen(false);
-    }
+    // if (!accessToken || !address) {
+    //   setWalletModalOpen(true);
+    // } else {
+    //   setWalletModalOpen(false);
+    // }
   }, [accessToken, address]);
 
   return (

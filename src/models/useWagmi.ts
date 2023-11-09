@@ -1,4 +1,3 @@
-import { goerli } from "wagmi/chains";
 import {
   createConfig,
   configureChains,
@@ -17,6 +16,7 @@ import { walletConnectProvider, EIP6963Connector } from "@web3modal/wagmi";
 import {
   ALCHEMY_CONFIG,
   INFURA_CONFIG,
+  NETWORK_CONFIG,
   PROJECT_CONFIG,
 } from "@/constants/global";
 import { useEffect, useState } from "react";
@@ -38,7 +38,7 @@ export default () => {
 
   useEffect(() => {
     const { chains, publicClient, webSocketPublicClient } = configureChains(
-      [goerli],
+      NETWORK_CONFIG.chains,
       [
         walletConnectProvider({ projectId: WALLETCONNECT_CONFIG.projectId }),
         infuraProvider({ apiKey: INFURA_CONFIG.apiKey }),
@@ -88,7 +88,7 @@ export default () => {
   }, []);
 
   const publicClient = createPublicClient({
-    chain: goerli,
+    chain: NETWORK_CONFIG.chains[0],
     transport: http(),
   });
 
