@@ -1,0 +1,88 @@
+.navBarContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  .navBarWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 85px;
+    max-width: 1200px;
+    background-color: #fff;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    box-shadow: var(--box-shadow);
+
+    .navBarItem {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+
+      &:hover,
+      .navBarIconActive {
+        .navBarIcon {
+          :global(.home_svg__vector) {
+            fill: #eafd53;
+          }
+
+          :global(.home_svg__backgrond) {
+            fill: #f8fbe5;
+          }
+
+          :global(.portfolio_svg__vector) {
+            fill: #eafd53;
+          }
+
+          :global(.portfolio_svg__backgrond) {
+            fill: #f8fbe5;
+          }
+
+          :global(.chat_svg__vector) {
+            fill: #eafd53;
+          }
+
+          :global(.chat_svg__backgrond) {
+            fill: #f8fbe5;
+          }
+
+          :global(.me_svg__vector) {
+            fill: #eafd53;
+          }
+
+          :global(.me_svg__backgrond) {
+            fill: #f8fbe5;
+          }
+        }
+
+        .navBarText {
+          font-weight: 900;
+        }
+      }
+
+      .navBarIcon {
+        width: 40px;
+        height: 40px;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .navBarText {
+        color: #000;
+        text-align: center;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: normal;
+        line-height: normal;
+        margin-top: 5px;
+        transition: all 0.3s ease-in-out;
+      }
+    }
+  }
+}
