@@ -3,12 +3,11 @@ import styles from "./style.less";
 import { Modal, message } from "antd";
 import { useAccount, useNetwork, useSignMessage, useSwitchNetwork } from 'wagmi';
 import { useModel } from "@umijs/max";
-import { useSDK, useWebApp } from "@tma.js/sdk-react";
+import { useSDK } from "@tma.js/sdk-react";
 import TelegramOauth, { TelegramOauthDataOnauthProps } from "./telegramOauth";
 import ConnectWallet from "./connectWallet";
 import SwitchNetwork from "./switchNetwork";
 import SignMessage from "./signMessage";
-import { PROJECT_CONFIG } from "@/constants/global";
 
 const LoginModal: React.FC<{
   visible: boolean;

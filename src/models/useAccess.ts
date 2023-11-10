@@ -15,43 +15,50 @@ export default () => {
 
   useEffect(() => {
     (async () => {
-      if (!!telegramDataString && !!signature && !!address) {
-        OauthTelegram({
+      if (!!telegramDataString && !accessToken) {
+        const { response, data } = await OauthTelegram({
           init_data: telegramDataString,
           message: BIND_WALLET_MESSAGE,
           signature: signature,
           address: address,
           type: telegramAuthType,
-        }).then(({ response, data }) => {
-          if (response?.status === 200 && data?.status === "success") {
-            message.success({
-              key: "bindTelegram",
-              content: "Bind telegram success",
-            });
-            !!data?.access_token &&
-              localStorage.setItem("aime:accessToken", data?.access_token);
-            !!data?.access_token && setAccessToken(data?.access_token);
-
-            !!data?.expire &&
-              localStorage.setItem(
-                "aime:accessToken:expire",
-                data?.expire.toString()
-              );
-            !!data?.expire && setAccessTokenExpire(data?.expire);
-          } else {
-            message.error({
-              key: "bindTelegram",
-              content: "Bind telegram failed",
-            });
-          }
         });
+
+        if (response?.status === 200 && data?.status === "success") {
+          message.success({
+            key: "bindTelegram",
+            content: "Bind telegram success",
+          });
+          !!data?.access_token &&
+            localStorage.setItem("aime:accessToken", data?.access_token);
+          !!data?.access_token && setAccessToken(data?.access_token);
+
+          !!data?.expire &&
+            localStorage.setItem(
+              "aime:accessToken:expire",
+              data?.expire.toString()
+            );
+          !!data?.expire && setAccessTokenExpire(data?.expire);
+        } else {
+          message.error({
+            key: "bindTelegram",
+            content: "Bind telegram failed",
+          });
+        }
       }
     })();
-  }, [telegramDataString, signature, address]);
+  }, [telegramDataString, accessToken]);
 
   useEffect(() => {
     const accessToken = localStorage.getItem("aime:accessToken");
     const accessTokenExpire = localStorage.getItem("aime:accessToken:expire");
+    const now = new Date().getTime();
+    if (!!accessTokenExpire && parseInt(accessTokenExpire) < now) {
+      setAccessToken(undefined);
+      setAccessTokenExpire(0);
+      localStorage.removeItem("aime:accessToken");
+      localStorage.removeItem("aime:accessToken:expire");
+    }
     if (!!accessToken) {
       setAccessToken(accessToken);
     }

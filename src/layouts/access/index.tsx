@@ -3,15 +3,15 @@ import { useModel } from '@umijs/max';
 import { useEffect, type PropsWithChildren } from 'react';
 
 export const AccessLayout = ({ children }: PropsWithChildren) => {
-  const { accessToken, address, walletModalOpen, setWalletModalOpen } = useModel('useAccess');
+  const { accessToken, walletModalOpen, setWalletModalOpen } = useModel('useAccess');
 
   useEffect(() => {
-    // if (!accessToken || !address) {
-    //   setWalletModalOpen(true);
-    // } else {
-    //   setWalletModalOpen(false);
-    // }
-  }, [accessToken, address]);
+    if (!accessToken) {
+      setWalletModalOpen(true);
+    } else {
+      setWalletModalOpen(false);
+    }
+  }, [accessToken]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { arbitrum } from "wagmi/chains";
+import { goerli } from "wagmi/chains";
 
 export const DEBUG = false;
 
@@ -9,7 +9,7 @@ export const PROJECT_CONFIG = {
 };
 
 export const NETWORK_CONFIG = {
-  chains: [arbitrum],
+  chains: [goerli],
 };
 
 export const AIME_CONTRACT = {

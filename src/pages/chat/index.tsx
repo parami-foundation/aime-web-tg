@@ -4,10 +4,12 @@ import { MdOutlineAnalytics } from "react-icons/md";
 import InputBox from "./inputbox";
 import AiPop from "./pop/ai";
 import MePop from "./pop/me";
-import { useModel } from "@umijs/max";
+import { useModel, history } from "@umijs/max";
 import InfoCard from "./infoCard";
 import { characters } from "@/service/typing.d";
 import { AccessLayout } from "@/layouts/access";
+import { BiHomeAlt } from "react-icons/bi";
+import { AiOutlineStar } from "react-icons/ai";
 
 const Chat: React.FC = () => {
   const { connectSocket, setCharacter, messages, socket } = useModel("useChat");
@@ -39,8 +41,26 @@ const Chat: React.FC = () => {
         <div className={styles.chatWrapper}>
           <div className={styles.chatHeader}>
             <div className={styles.chatHeaderButtons}>
-              <div className={styles.chatHeaderButton}>
-                <MdOutlineAnalytics />
+              <div className={styles.chatHeaderLeft}>
+                <div
+                  className={styles.chatHeaderHome}
+                  onClick={() => {
+                    history.push("/home");
+                  }}
+                >
+                  <BiHomeAlt
+                    classNmame={styles.chatHeaderHomeIcon}
+                  />
+                  <span>Home</span>
+                </div>
+              </div>
+              <div className={styles.chatHeaderRight}>
+                <div className={styles.chatHeaderButton}>
+                  <MdOutlineAnalytics />
+                </div>
+                <div className={styles.chatHeaderButton}>
+                  <AiOutlineStar />
+                </div>
               </div>
             </div>
             <div className={styles.chatHeaderAvatar}>

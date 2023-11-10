@@ -25,24 +25,71 @@
       align-items: center;
       justify-content: flex-start;
       width: 100%;
+      margin-bottom: 20px;
 
       .chatHeaderButtons {
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: space-between;
         width: 100%;
         margin-bottom: 20px;
 
-        .chatHeaderButton {
+        .chatHeaderLeft {
           display: flex;
           flex-direction: row;
           align-items: center;
-          justify-content: center;
-          width: 30px;
-          height: 30px;
-          background-color: rgba(0, 0, 0, 0.04);
-          border-radius: 100%;
+          justify-content: flex-start;
+
+          .chatHeaderHome {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+            background-color: rgba(0, 0, 0, 0.04);
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            margin-left: -20px;
+            cursor: pointer;
+            padding: 0 15px;
+
+            .chatHeaderHomeIcon {
+              width: 12px;
+              height: 12px;
+            }
+
+            span {
+              color: #000;
+              text-align: center;
+              font-size: 13px;
+              font-style: normal;
+              font-weight: 900;
+              line-height: normal;
+              margin-left: 5px;
+            }
+          }
+        }
+
+        .chatHeaderRight {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-end;
+
+          .chatHeaderButton {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(0, 0, 0, 0.04);
+            border-radius: 100%;
+
+            &:not(:last-child) {
+              margin-right: 10px;
+            }
+          }
         }
       }
 
