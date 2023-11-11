@@ -2,8 +2,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
   height: 100vh;
   width: 100%;
   transition: all 0.3s ease-in-out;
@@ -15,132 +15,17 @@
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    height: calc(100vh - 82px);
-    padding: 20px 20px 0 20px;
+    min-height: calc(100vh - 85px);
+    padding: 15px;
     transition: all 0.3s ease-in-out;
-
-    .chatHeader {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      width: 100%;
-      margin-bottom: 20px;
-
-      .chatHeaderButtons {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        margin-bottom: 20px;
-
-        .chatHeaderLeft {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: flex-start;
-
-          .chatHeaderHome {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            height: 30px;
-            background-color: rgba(0, 0, 0, 0.04);
-            border-radius: 0 var(--border-radius) var(--border-radius) 0;
-            margin-left: -20px;
-            cursor: pointer;
-            padding: 0 15px;
-
-            .chatHeaderHomeIcon {
-              width: 12px;
-              height: 12px;
-            }
-
-            span {
-              color: #000;
-              text-align: center;
-              font-size: 13px;
-              font-style: normal;
-              font-weight: 900;
-              line-height: normal;
-              margin-left: 5px;
-            }
-          }
-        }
-
-        .chatHeaderRight {
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          justify-content: flex-end;
-
-          .chatHeaderButton {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            width: 30px;
-            height: 30px;
-            background-color: rgba(0, 0, 0, 0.04);
-            border-radius: 100%;
-
-            &:not(:last-child) {
-              margin-right: 10px;
-            }
-          }
-        }
-      }
-
-      .chatHeaderAvatar {
-        width: 180px;
-        height: 180px;
-        flex-shrink: 0;
-
-        img {
-          width: 100%;
-          height: 100%;
-          border-radius: 100%;
-        }
-      }
-
-      .chatHeaderName {
-        color: #000;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: normal;
-        margin-top: 10px;
-      }
-    }
+    overflow-y: auto;
 
     .chatContent {
-      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       width: 100%;
-      height: 100%;
-      margin-top: 10px;
-      overflow-y: auto;
-      transition: all 0.3s ease-in-out;
-
-      .chatInfo {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin-top: 20px;
-        padding: 15px;
-        width: 100%;
-        background-color: #fff;
-        border-radius: 0 var(--border-radius) var(--border-radius)
-          var(--border-radius);
-        box-shadow: var(--box-shadow);
-        margin-bottom: 10px;
-      }
     }
   }
 }

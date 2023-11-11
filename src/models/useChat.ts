@@ -87,11 +87,12 @@ export default () => {
   };
 
   const connectSocket = async (props: ChatbotProps, authToken?: string) => {
+    const language = window.navigator.languages;
     const { character } = props;
     const clientId = uuidv4();
     let ws: WebSocket;
     ws = new WebSocket(
-      `${WEBSOCKET_CONFIG.scheme}://${WEBSOCKET_CONFIG.host}/ws/${clientId}?character_id=${character?.character_id}&token=${authToken}&platform=web`
+      `${WEBSOCKET_CONFIG.scheme}://${WEBSOCKET_CONFIG.host}/ws/${clientId}?language=${language}&character_id=${character?.character_id}&token=${authToken}&platform=web`
     );
     ws.binaryType = "arraybuffer";
     setSocket(ws);
