@@ -18,6 +18,12 @@ const CardItem: React.FC = () => {
             />
           </div>
           <div className={styles.cardItemContentText}>
+            <div className={styles.cardItemContentTextName}>
+              justinsuntron
+            </div>
+            <div className={styles.cardItemContentTextMessage}>
+              You’re wasting my time. I literally...
+            </div>
           </div>
         </div>
       </div>

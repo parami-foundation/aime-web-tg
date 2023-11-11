@@ -11,6 +11,7 @@ const Chat: React.FC = () => {
         <div className={styles.chatWrapper}>
           <div className={styles.chatContent}>
             <CardItem />
+            <CardItem />
           </div>
         </div>
         <NavBar />
