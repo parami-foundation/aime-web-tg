@@ -1,0 +1,112 @@
+.cardItemContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: var(--border-radius);
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: var(--box-shadow);
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:not(:last-child) {
+    margin-bottom: 15px;
+  }
+
+  &:hover {
+    transform: scale(1.02);
+  }
+
+  .cardItemWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+
+    .cardItemContent {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+
+      .cardItemContentAvatar {
+        width: 80px;
+        border-radius: 100%;
+
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .cardItemContentText {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        margin-left: 15px;
+        width: calc(100% - 85px);
+
+        .cardItemContentTextName {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+          color: #000;
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 900;
+          line-height: normal;
+
+          .cardItemContentTextNameVerified {
+            width: 25px;
+            height: 25px;
+            color: #38acff;
+            margin-left: 5px;
+          }
+        }
+
+        .cardItemContentTextX {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+          color: #000;
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          margin: 5px 0;
+
+          .cardItemContentTextXIcon {
+            margin-left: 5px;
+          }
+        }
+
+        .cardItemContentTextMessage {
+          color: rgba(0, 0, 0, 0.7);
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          margin-top: 5px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 100%;
+
+          span {
+            margin: 0 5px;
+            font-weight: 900;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-.homeContainer {
+.portfolioContainer {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -8,7 +8,7 @@
   width: 100%;
   transition: all 0.3s ease-in-out;
 
-  .homeWrapper {
+  .portfolioWrapper {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -18,9 +18,51 @@
     min-height: calc(100vh - 85px);
     padding: 15px;
     transition: all 0.3s ease-in-out;
+    background: linear-gradient(
+      203deg,
+      rgba(234, 253, 83, 0.5) -13.26%,
+      rgba(234, 253, 83, 0) 54.92%
+    );
     overflow-y: auto;
 
-    .homeTabs {
+    .portfolioHeader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      padding: 30px 0;
+
+      .portfolioTitle {
+        color: rgba(0, 0, 0, 0.4);
+        text-align: center;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        text-transform: uppercase;
+      }
+
+      .portfolioValue {
+        color: #000;
+        text-align: center;
+        font-size: 38px;
+        font-style: normal;
+        font-weight: 900;
+        line-height: normal;
+        padding: 16px 0;
+      }
+
+      .portfolioFlat {
+        color: rgba(0, 0, 0, 0.7);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 900;
+        line-height: normal;
+      }
+    }
+
+    .portfolioTabs {
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -29,7 +71,7 @@
       background: rgba(0, 0, 0, 0.04);
       padding: 3px;
 
-      .homeTab {
+      .portfolioTab {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -50,7 +92,7 @@
         }
       }
 
-      .homeTabActive {
+      .portfolioTabActive {
         background: #fff;
 
         span {
@@ -59,10 +101,13 @@
       }
     }
 
-    .homeContent {
+    .portfolioContent {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
       width: 100%;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      margin-top: 20px;
     }
   }
 }

@@ -13,6 +13,10 @@ export default defineConfig({
       component: "home",
     },
     {
+      path: "/portfolio",
+      component: "portfolio",
+    },
+    {
       path: "/chat",
       routes: [
         {
@@ -32,6 +36,15 @@ export default defineConfig({
     {
       path: "/share",
       component: "share",
+    },
+    {
+      path: "/me",
+      routes: [
+        {
+          path: "/me",
+          component: "me",
+        },
+      ],
     }
   ],
   manifest: {
