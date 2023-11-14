@@ -10,6 +10,7 @@ import { characters } from "@/service/typing.d";
 import { AccessLayout } from "@/layouts/access";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineStar } from "react-icons/ai";
+import { PiShareFatLight } from "react-icons/pi";
 
 const ChatDetail: React.FC = () => {
   const { connectSocket, setCharacter, messages, socket } = useModel("useChat");
@@ -60,6 +61,11 @@ const ChatDetail: React.FC = () => {
                 </div>
                 <div className={styles.chatHeaderButton}>
                   <AiOutlineStar />
+                </div>
+                <div className={styles.chatHeaderButton} onClick={() => {
+                  window.open("https://t.me/share/url?url=https://t.me/aime_beta_bot/aimeapp", "_blank");
+                }}>
+                  <PiShareFatLight />
                 </div>
               </div>
             </div>
