@@ -13,6 +13,10 @@ export default defineConfig({
       component: "home",
     },
     {
+      path: "/portfolio",
+      component: "portfolio",
+    },
+    {
       path: "/chat",
       routes: [
         {
@@ -26,6 +30,15 @@ export default defineConfig({
         {
           path: "/chat/demo",
           component: "chat/detail/demo",
+        },
+      ],
+    },
+    {
+      path: "/me",
+      routes: [
+        {
+          path: "/me",
+          component: "me",
         },
       ],
     },
