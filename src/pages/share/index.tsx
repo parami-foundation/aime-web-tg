@@ -4,7 +4,9 @@ import { ReactComponent as LogoAndUrl } from '@/assets/share/logo_n_url.svg';
 import { ReactComponent as AvatarRing } from '@/assets/share/avatar_ring.svg';
 import { ReactComponent as MsgFrame } from '@/assets/share/msg_frame.svg';
 import { ReactComponent as FooterBg } from '@/assets/share/footer_bg.svg';
+import sunAvatar from '@/assets/share/sun_avatar.jpeg';
 import styles from './style.less';
+import { QRCodeSVG } from 'qrcode.react';
 
 const Share: React.FC = () => {
 
@@ -40,15 +42,15 @@ const Share: React.FC = () => {
   return (
     <div>
       <h1>Share Now</h1>
-      <hr></hr>
+
       <div id="shareImage">
         <MsgFrame></MsgFrame>
-        <img
-          src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
-          alt="avatar"
-        />
+        <img src={sunAvatar}></img>
+        <QRCodeSVG value="https://reactjs.org/" />
       </div>
-      <hr></hr>
+
+      <h2>Share Image</h2>
+
       <div className={styles.shareContentContainer}>
         <div className={styles.logoContainer}>
           <LogoAndUrl></LogoAndUrl>
@@ -62,14 +64,18 @@ const Share: React.FC = () => {
           <div className={styles.avatarContainer}>
             <img
               className={styles.avatarImage}
-              src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
+              src={sunAvatar}
               alt="avatar"
             />
-            <AvatarRing className={styles.avatarRing}></AvatarRing>
+            <div className={styles.avatarRingContainer}>
+              <AvatarRing></AvatarRing>
+            </div>
           </div>
 
           <div className={styles.msgContainer}>
-            <MsgFrame className={styles.msgFrame}></MsgFrame>
+            <div className={styles.msgFrameContainer}>
+              <MsgFrame></MsgFrame>
+            </div>
             <div className={styles.msgTitle}>
               {aimeName}'s AIME:
             </div>
@@ -81,7 +87,23 @@ const Share: React.FC = () => {
         </div>
 
         <div className={styles.footer}>
-          <FooterBg></FooterBg>
+
+          <div className={styles.footerContent}>
+            <div className={styles.referInfo}>
+              <div className={styles.referTitle}>Referral Code</div>
+              <div className={styles.referCode}>6a5c34</div>
+              <div className={styles.referDesc}>
+                Purchase AIME Powers of influencers and share the growth profits.
+              </div>
+            </div>
+            <div className={styles.qrCodeContainer}>
+              <QRCodeSVG value="https://t.me/aime_beta_bot/aimeapp" bgColor="#EAFD53" width={84} height={84} />
+            </div>
+          </div>
+
+          <div className={styles.footerBgContainer}>
+            <FooterBg></FooterBg>
+          </div>
         </div>
 
         <div className={styles.bgContainer}>
