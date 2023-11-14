@@ -29,6 +29,10 @@ export default defineConfig({
         },
       ],
     },
+    {
+      path: "/share",
+      component: "share",
+    }
   ],
   manifest: {
     basePath: "/",
