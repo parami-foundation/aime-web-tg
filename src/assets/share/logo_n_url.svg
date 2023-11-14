@@ -1,0 +1,40 @@
+<svg width="115" height="28" viewBox="0 0 115 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="28" height="28" rx="8" fill="#EAFD53"/>
+<mask id="mask0_282_1590" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="14" y="3" width="11" height="11">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M24.9375 14C24.9375 7.95939 20.0406 3.0625 14 3.0625V14H24.9375Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_282_1590)">
+<rect x="17.4819" y="-1.56226" width="2.1875" height="12.1875" transform="rotate(45 17.4819 -1.56226)" fill="black"/>
+<rect x="19.1516" y="2.83496" width="2.1875" height="9.6875" transform="rotate(45 19.1516 2.83496)" fill="black"/>
+<rect x="22.3904" y="5.53369" width="2.1875" height="12.1875" transform="rotate(45 22.3904 5.53369)" fill="black"/>
+<rect x="25.9929" y="8.03369" width="2.1875" height="12.1875" transform="rotate(45 25.9929 8.03369)" fill="black"/>
+</g>
+<mask id="mask1_282_1590" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="3" y="14" width="11" height="11">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3.0625 14C3.0625 20.0406 7.95939 24.9375 14 24.9375V14H3.0625Z" fill="white"/>
+</mask>
+<g mask="url(#mask1_282_1590)">
+<rect x="10.5181" y="29.5623" width="2.1875" height="12.1875" transform="rotate(-135 10.5181 29.5623)" fill="black"/>
+<rect x="8.84839" y="25.165" width="2.1875" height="9.6875" transform="rotate(-135 8.84839 25.165)" fill="black"/>
+<rect x="5.70312" y="22.4663" width="2.1875" height="12.1875" transform="rotate(-135 5.70312 22.4663)" fill="black"/>
+<rect x="2.17212" y="19.9663" width="2.1875" height="12.1875" transform="rotate(-135 2.17212 19.9663)" fill="black"/>
+</g>
+<mask id="mask2_282_1590" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="3" y="3" width="11" height="11">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M3.0625 14C3.0625 7.95939 7.95939 3.0625 14 3.0625V14H3.0625Z" fill="white"/>
+</mask>
+<g mask="url(#mask2_282_1590)">
+<rect width="2.1875" height="12.1875" transform="matrix(-0.707107 0.707107 0.707107 0.707107 9.35962 0.3125)" fill="black"/>
+<rect width="2.1875" height="12.1875" transform="matrix(-0.707107 0.707107 0.707107 0.707107 7.46875 4.375)" fill="black"/>
+<rect width="2.1875" height="12.1875" transform="matrix(-0.707107 0.707107 0.707107 0.707107 4.58057 7.50024)" fill="black"/>
+<rect width="1.875" height="12.1875" transform="matrix(-0.707107 0.707107 0.707107 0.707107 1.85962 10.8462)" fill="black"/>
+</g>
+<mask id="mask3_282_1590" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="14" y="14" width="11" height="11">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M24.9375 14C24.9375 20.0406 20.0406 24.9375 14 24.9375V14H24.9375Z" fill="white"/>
+</mask>
+<g mask="url(#mask3_282_1590)">
+<rect width="2.1875" height="12.1875" transform="matrix(0.707107 -0.707107 -0.707107 -0.707107 18.6404 27.6875)" fill="black"/>
+<rect width="2.1875" height="12.1875" transform="matrix(0.707107 -0.707107 -0.707107 -0.707107 20.5312 23.5)" fill="black"/>
+<rect width="2.1875" height="12.1875" transform="matrix(0.707107 -0.707107 -0.707107 -0.707107 23.4194 20.4998)" fill="black"/>
+<rect width="1.875" height="12.1875" transform="matrix(0.707107 -0.707107 -0.707107 -0.707107 26.2429 17.1538)" fill="black"/>
+</g>
+<path d="M38.7031 21L43.5957 6.9082H47.0625L51.9648 21H48.8594L47.8145 17.582H42.8438L41.7988 21H38.7031ZM45.2461 9.7207L43.5176 15.375H47.1406L45.4219 9.7207H45.2461ZM54.3574 21V6.9082H57.3066V21H54.3574ZM60.7246 21V6.9082H64.1035L68 17.2207H68.1758L72.0625 6.9082H75.4414V21H72.8145V11.4102H72.6191L69.0059 21H67.1602L63.5469 11.4102H63.3516V21H60.7246ZM78.8691 21V6.9082H88.2051V9.33984H81.8184V12.7383H87.8438V15.0039H81.8184V18.5684H88.2051V21H78.8691ZM93.0781 21.2441C92.082 21.2441 91.3594 20.5117 91.3594 19.5449C91.3594 18.5781 92.082 17.8555 93.0781 17.8555C94.084 17.8555 94.7969 18.5781 94.7969 19.5449C94.7969 20.5117 94.084 21.2441 93.0781 21.2441ZM99.4355 8.59766C98.5566 8.59766 97.8242 7.89453 97.8242 7.01562C97.8242 6.12695 98.5566 5.42383 99.4355 5.42383C100.314 5.42383 101.037 6.12695 101.037 7.01562C101.037 7.89453 100.314 8.59766 99.4355 8.59766ZM98 21V10.248H100.852V21H98ZM108.498 21.2246C105.188 21.2246 103.195 19.125 103.195 15.6289V15.6094C103.195 12.1426 105.217 10.0137 108.498 10.0137C111.779 10.0137 113.801 12.1328 113.801 15.6094V15.6289C113.801 19.1348 111.809 21.2246 108.498 21.2246ZM108.498 18.9883C110.012 18.9883 110.881 17.748 110.881 15.6289V15.6094C110.881 13.5098 110.002 12.25 108.498 12.25C106.984 12.25 106.115 13.5098 106.115 15.6094V15.6289C106.115 17.748 106.975 18.9883 108.498 18.9883Z" fill="white"/>
+</svg>

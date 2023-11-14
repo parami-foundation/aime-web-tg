@@ -34,6 +34,10 @@ export default defineConfig({
       ],
     },
     {
+      path: "/share",
+      component: "share",
+    },
+    {
       path: "/me",
       routes: [
         {
@@ -41,7 +45,7 @@ export default defineConfig({
           component: "me",
         },
       ],
-    },
+    }
   ],
   manifest: {
     basePath: "/",
