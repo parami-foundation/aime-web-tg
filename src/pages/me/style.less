@@ -16,10 +16,12 @@
     justify-content: flex-start;
     width: 100%;
     min-height: calc(100vh - 85px);
-    padding: 15px;
+    padding: 30px;
     transition: all 0.3s ease-in-out;
+    overflow-y: auto;
 
     .meAvatar {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -28,13 +30,359 @@
       height: 280px;
       border-radius: 50%;
       margin-top: 30px;
+      padding: 5px;
       background: linear-gradient(222deg, #eafd53 15.77%, #fffee1 84.16%);
+      border: 2px solid #fff;
+      box-shadow: var(--box-shadow);
 
-      .meAvatarImage {
+      .meAvatarWrapper {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         width: 100%;
         height: 100%;
+        padding: 30px;
+
+        .meAvatarCircle {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        .meAvatarCirclePoint {
+          position: absolute;
+          right: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 25px;
+          height: 25px;
+          border-radius: 100%;
+          background: #fff;
+          filter: drop-shadow(0px 2px 10px rgba(230, 248, 89, 0.6));
+
+          .meAvatarCirclePointWrapper {
+            width: 10px;
+            height: 10px;
+            background-color: #e1f53f;
+            border-radius: 100%;
+          }
+        }
+
+        .meAvatarImage {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background: #fff;
+          box-shadow: var(--box-shadow);
+        }
+
+        .meAvatarToken {
+          position: absolute;
+          bottom: 20px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          background-color: #000;
+          border-radius: var(--border-radius);
+          border: 1px solid #fff;
+          padding: 5px 15px;
+
+          .meAvatarTokenIcon {
+            color: #e1f53f;
+          }
+
+          span {
+            color: #fff;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 900;
+            line-height: normal;
+            margin-left: 5px;
+          }
+        }
+      }
+
+      .meAvatarPop {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 8px 15px;
+        background-color: #fff;
+        border-radius: var(--border-radius) var(--border-radius)
+          var(--border-radius) 0;
+        box-shadow: var(--box-shadow);
+
+        &::before {
+          content: "";
+          position: absolute;
+          bottom: -15px;
+          left: 0;
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 35px 35px 0 0px;
+          border-color: #fff transparent transparent transparent;
+        }
+
+        .meAvatarPopWrapper {
+          white-space: pre;
+          color: #000;
+          font-size: 20px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+          z-index: 2;
+        }
+      }
+    }
+
+    .meInfo {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      margin-top: 25px;
+      margin-bottom: 25px;
+
+      .meInfoAvatar {
+        position: relative;
+        width: 70px;
+        height: 70px;
         border-radius: 50%;
-        object-fit: cover;
+
+        .meInfoAvatarImage {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+
+        .meInfoAvatarBadge {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+
+          .meInfoAvatarBadgeIcon {
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
+
+      .meInfoText {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        margin-left: 15px;
+
+        .meInfoTextName {
+          color: #000;
+          font-size: 25px;
+          font-style: normal;
+          font-weight: 900;
+          line-height: normal;
+        }
+
+        .meInfoTextDesc {
+          color: rgba(0, 0, 0, 0.7);
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          margin-top: 5px;
+        }
+      }
+    }
+
+    .meBalance {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+
+      .meBalanceTitle {
+        color: #000;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 900;
+        line-height: normal;
+        text-transform: uppercase;
+      }
+
+      .meBalanceContent {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        margin-top: 20px;
+
+        .meBalanceContentIcon {
+          width: 60px;
+          height: 60px;
+        }
+
+        .meBalanceContentRight {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+          margin-left: 15px;
+
+          .meBalanceContentValue {
+            color: #000;
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 900;
+            line-height: normal;
+          }
+
+          .meBalanceContentFlat {
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            margin-top: 5px;
+          }
+        }
+      }
+
+      .meBalanceAddress {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px 15px;
+        background-color: #eee;
+        border-radius: var(--border-radius);
+        margin-top: 15px;
+
+        .meBalanceAddressTitle {
+          color: #000;
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+          text-transform: uppercase;
+        }
+
+        .meBalanceAddressContent {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-end;
+          color: #999;
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          text-transform: capitalize;
+
+          .meBalanceAddressContentIcon {
+            margin-left: 5px;
+          }
+        }
+      }
+    }
+
+    .meBalanceButtons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 20px;
+
+      .meBalanceButtonsButton {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+
+        .meBalanceButtonsButtonLeft {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+
+          .meBalanceButtonsButtonLeftIcon {
+            width: 40px;
+            height: 40px;
+            background-color: #e8f1ff;
+            border-radius: 100%;
+            padding: 5px;
+
+            .meBalanceButtonsButtonLeftIconImage {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+
+          .meBalanceButtonsButtonLeftText {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            margin-left: 15px;
+
+            .meBalanceButtonsButtonLeftTextTitle {
+              color: #000;
+              font-size: 16px;
+              font-style: normal;
+              font-weight: 900;
+              line-height: normal;
+            }
+
+            .meBalanceButtonsButtonLeftTextDesc {
+              color: #999;
+              font-size: 12px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+              margin-top: 5px;
+            }
+          }
+        }
+
+        .meBalanceButtonsButtonRight {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-end;
+
+          .meBalanceButtonsButtonRightIcon {
+            width: 25px;
+            height: 25px;
+          }
+        }
       }
     }
   }

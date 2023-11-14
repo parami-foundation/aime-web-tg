@@ -6,9 +6,14 @@ import { FaEthereum } from "react-icons/fa";
 import { Tag } from "antd";
 import { THEME_CONFIG } from "@/constants/theme";
 
-const CardItem: React.FC = () => {
+const CardItem: React.FC<{
+  onClick: () => void;
+}> = ({ onClick }) => {
   return (
-    <div className={styles.cardItemContainer}>
+    <div
+      className={styles.cardItemContainer}
+      onClick={onClick}
+    >
       <div className={styles.cardItemWrapper}>
         <div className={styles.cardItemBadges}>
           <div className={styles.cardItemBadge}>

@@ -5,6 +5,7 @@ import classNames from "classnames";
 import CardItem from "./cardItem";
 import { Col, Row } from "antd";
 import NavBar from "@/components/navBar";
+import { history } from "@umijs/max";
 
 const Home: React.FC = () => {
   const [tab, setTab] = React.useState<string>("trend");
@@ -30,7 +31,11 @@ const Home: React.FC = () => {
           <div className={styles.homeContent}>
             <Row gutter={[15, 15]}>
               <Col xs={12} sm={12} md={8} lg={6} xl={4}>
-                <CardItem />
+                <CardItem
+                  onClick={() => {
+                    history.push('/chat/demo');
+                  }}
+                />
               </Col>
             </Row>
           </div>

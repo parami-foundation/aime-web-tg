@@ -4,7 +4,7 @@ import { ReactComponent as HomeIcon } from '@/assets/icon/navbar/home.svg';
 import { ReactComponent as PortfolioIcon } from '@/assets/icon/navbar/portfolio.svg';
 import { ReactComponent as ChatIcon } from '@/assets/icon/navbar/chat.svg';
 import { ReactComponent as MeIcon } from '@/assets/icon/navbar/me.svg';
-import { useLocation } from "@umijs/max";
+import { useLocation, history } from "@umijs/max";
 import classNames from "classnames";
 
 const NavBar: React.FC = () => {
@@ -20,7 +20,12 @@ const NavBar: React.FC = () => {
   return (
     <div className={styles.navBarContainer}>
       <div className={styles.navBarWrapper}>
-        <div className={classNames(styles.navBarItem, menu === 'home' && styles.navBarIconActive)}>
+        <div
+          className={classNames(styles.navBarItem, menu === 'home' && styles.navBarIconActive)}
+          onClick={() => {
+            history.push('/home');
+          }}
+        >
           <HomeIcon
             className={styles.navBarIcon}
           />
@@ -28,7 +33,12 @@ const NavBar: React.FC = () => {
             Home
           </div>
         </div>
-        <div className={classNames(styles.navBarItem, menu === 'portfolio' && styles.navBarIconActive)}>
+        <div
+          className={classNames(styles.navBarItem, menu === 'portfolio' && styles.navBarIconActive)}
+          onClick={() => {
+            history.push('/portfolio');
+          }}
+        >
           <PortfolioIcon
             className={styles.navBarIcon}
           />
@@ -36,7 +46,12 @@ const NavBar: React.FC = () => {
             Portfolio
           </div>
         </div>
-        <div className={classNames(styles.navBarItem, menu === 'chat' && styles.navBarIconActive)}>
+        <div
+          className={classNames(styles.navBarItem, menu === 'chat' && styles.navBarIconActive)}
+          onClick={() => {
+            history.push('/chat');
+          }}
+        >
           <ChatIcon
             className={styles.navBarIcon}
           />
@@ -44,7 +59,12 @@ const NavBar: React.FC = () => {
             Chat
           </div>
         </div>
-        <div className={classNames(styles.navBarItem, menu === 'me' && styles.navBarIconActive)}>
+        <div
+          className={classNames(styles.navBarItem, menu === 'me' && styles.navBarIconActive)}
+          onClick={() => {
+            history.push('/me');
+          }}
+        >
           <MeIcon
             className={styles.navBarIcon}
           />
