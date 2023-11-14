@@ -24,7 +24,7 @@ const Share: React.FC = () => {
           // 创建一个下载链接
           const downloadLink = document.createElement('a');
           downloadLink.href = dataURL;
-          downloadLink.download = 'generated_image.png';
+          downloadLink.download = 'AIME_Share.png';
 
           // 模拟点击下载链接
           downloadLink.click();
@@ -41,17 +41,7 @@ const Share: React.FC = () => {
 
   return (
     <div>
-      <h1>Share Now</h1>
-
-      <div id="shareImage">
-        <MsgFrame></MsgFrame>
-        <img src={sunAvatar}></img>
-        <QRCodeSVG value="https://reactjs.org/" />
-      </div>
-
-      <h2>Share Image</h2>
-
-      <div className={styles.shareContentContainer}>
+      <div className={styles.shareContentContainer} id="shareImage">
         <div className={styles.logoContainer}>
           <LogoAndUrl></LogoAndUrl>
         </div>
@@ -87,13 +77,12 @@ const Share: React.FC = () => {
         </div>
 
         <div className={styles.footer}>
-
           <div className={styles.footerContent}>
             <div className={styles.referInfo}>
               <div className={styles.referTitle}>Referral Code</div>
               <div className={styles.referCode}>6a5c34</div>
               <div className={styles.referDesc}>
-                Purchase AIME Powers of influencers and share the growth profits.
+                Purchase <span className={styles.referDescBold}>AIME Powers</span> of influencers and share the growth profits.
               </div>
             </div>
             <div className={styles.qrCodeContainer}>
