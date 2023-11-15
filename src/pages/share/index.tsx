@@ -4,9 +4,9 @@ import { ReactComponent as LogoAndUrl } from '@/assets/share/logo_n_url.svg';
 import { ReactComponent as AvatarRing } from '@/assets/share/avatar_ring.svg';
 import { ReactComponent as MsgFrame } from '@/assets/share/msg_frame.svg';
 import { ReactComponent as FooterBg } from '@/assets/share/footer_bg.svg';
-import sunAvatar from '@/assets/share/sun_avatar.jpeg';
 import styles from './style.less';
 import { QRCodeSVG } from 'qrcode.react';
+import { Button } from 'antd';
 
 const Share: React.FC = () => {
 
@@ -54,7 +54,7 @@ const Share: React.FC = () => {
           <div className={styles.avatarContainer}>
             <img
               className={styles.avatarImage}
-              src={sunAvatar}
+              src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
               alt="avatar"
             />
             <div className={styles.avatarRingContainer}>
@@ -100,7 +100,14 @@ const Share: React.FC = () => {
         </div>
       </div>
 
-      <button onClick={generateImage}>Generate Image</button>
+      <Button
+        block
+        type='primary'
+        size='large'
+        onClick={generateImage}
+      >
+        Generate Image
+      </Button>
     </div>
   );
 }
