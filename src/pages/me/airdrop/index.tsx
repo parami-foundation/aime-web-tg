@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./style.less";
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 
 const Pending: React.FC = () => {
   return (
@@ -38,6 +38,17 @@ const AirDrop: React.FC<{
       closeIcon={null}
     >
       <Pending />
+      <div className={styles.airdropFooter}>
+        <Button
+          block
+          type="primary"
+          className={styles.airdroFooterBtn}
+          size="large"
+          onClick={() => setVisible(false)}
+        >
+          OK
+        </Button>
+      </div>
     </Modal>
   )
 };
