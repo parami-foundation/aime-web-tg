@@ -22,10 +22,20 @@ export interface AIResponse {
   give_token?: boolean;
 }
 
+export interface SendMessage {
+  text?: string;
+  context?: {
+    buypower?: string;
+    login?: {
+      wallet_address?: string;
+    };
+  };
+}
+
 export interface MessageDisplay {
   type?: MessageType;
   sender?: string;
-  content?: string;
+  content?: SendMessage;
 }
 
 export default () => {
@@ -35,7 +45,7 @@ export default () => {
   const [character, setCharacter] = useState<Character>();
   const [rewardModal, setRewardModal] = useState<boolean>(false);
 
-  const handleAiMessage = (message: string, character: Character) => {
+  const handleAiMessage = (message: SendMessage, character: Character) => {
     setMessages((prev) => {
       return [
         ...prev,
@@ -48,7 +58,7 @@ export default () => {
     });
   };
 
-  const handleThink = (message: string, character: Character) => {
+  const handleThink = (message: SendMessage, character: Character) => {
     setMessages((prev) => {
       return [
         ...prev,
@@ -68,13 +78,15 @@ export default () => {
         {
           type: MessageType.SCORE,
           sender: character?.name,
-          content: score.toString(),
+          content: {
+            text: score.toString(),
+          },
         },
       ];
     });
   };
 
-  const handleSendMessage = async (message: string) => {
+  const handleSendMessage = async (message: SendMessage) => {
     setMessages([
       ...messages,
       {
@@ -83,7 +95,7 @@ export default () => {
         content: message,
       },
     ]);
-    socket?.send(message);
+    socket?.send(JSON.stringify(message));
   };
 
   const connectSocket = async (props: ChatbotProps, authToken?: string) => {
@@ -159,7 +171,12 @@ export default () => {
           if (!!aiMessage?.data) {
             switch (aiMessage?.type) {
               case "text":
-                handleAiMessage(aiMessage?.data, character);
+                handleAiMessage(
+                  {
+                    text: aiMessage?.data,
+                  },
+                  character
+                );
                 if (!!aiMessage?.give_token) {
                   setRewardModal(true);
                 }
@@ -168,7 +185,12 @@ export default () => {
                 handleScore(parseInt(aiMessage?.data), character);
                 break;
               case "think":
-                handleThink(aiMessage?.data, character);
+                handleThink(
+                  {
+                    text: aiMessage?.data,
+                  },
+                  character
+                );
                 break;
               case "end":
                 setMessageEnd(true);

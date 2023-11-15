@@ -11,6 +11,7 @@ const InputBox: React.FC<{
   onChange: (value: string) => void;
 }> = ({ value, onChange }) => {
   const { handleSendMessage } = useModel("useChat");
+  const { address } = useModel("useAccess");
   const [type, setType] = useState<string>("text");
   const [recording, setRecording] = useState<boolean>(false);
 
@@ -51,7 +52,16 @@ const InputBox: React.FC<{
                   }}
                   onKeyDown={async (e) => {
                     if (e.key === "Enter" && !!value) {
-                      await handleSendMessage(value);
+                      await handleSendMessage({
+                        text: value,
+                        context: {
+                          // TODO: get from context
+                          buypower: 'hash',
+                          login: {
+                            wallet_address: address,
+                          },
+                        }
+                      });
                       onChange("");
                     }
                   }}
@@ -61,7 +71,16 @@ const InputBox: React.FC<{
                 className={styles.inputBoxSend}
                 onClick={async () => {
                   if (!!value) {
-                    await handleSendMessage(value);
+                    await handleSendMessage({
+                      text: value,
+                      context: {
+                        // TODO: get from context
+                        buypower: 'hash',
+                        login: {
+                          wallet_address: address,
+                        },
+                      }
+                    });
                     onChange("");
                   }
                 }}

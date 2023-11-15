@@ -91,15 +91,15 @@ const ChatDetail: React.FC = () => {
                 <>
                   {message.sender === "Justin Sun" && (
                     <AiPop
-                      type={message.type}
-                      data={message.content}
+                      type={message?.type}
+                      data={message?.content?.text}
                       key={index}
                     />
                   )}
                   {message.sender === "User" && (
                     <MePop
-                      type={message.type}
-                      data={message.content}
+                      type={message?.type}
+                      data={message?.content?.text}
                       key={index}
                     />
                   )}
