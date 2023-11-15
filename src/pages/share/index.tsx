@@ -43,7 +43,7 @@ const Share: React.FC = () => {
     <div>
       <div className={styles.shareContentContainer} id="shareImage">
         <div className={styles.logoContainer}>
-          <LogoAndUrl></LogoAndUrl>
+          <LogoAndUrl />
         </div>
 
         <div className={styles.aimeContainer}>
@@ -58,13 +58,13 @@ const Share: React.FC = () => {
               alt="avatar"
             />
             <div className={styles.avatarRingContainer}>
-              <AvatarRing></AvatarRing>
+              <AvatarRing />
             </div>
           </div>
 
           <div className={styles.msgContainer}>
             <div className={styles.msgFrameContainer}>
-              <MsgFrame></MsgFrame>
+              <MsgFrame />
             </div>
             <div className={styles.msgTitle}>
               {aimeName}'s AIME:
@@ -91,7 +91,7 @@ const Share: React.FC = () => {
           </div>
 
           <div className={styles.footerBgContainer}>
-            <FooterBg></FooterBg>
+            <FooterBg />
           </div>
         </div>
 
