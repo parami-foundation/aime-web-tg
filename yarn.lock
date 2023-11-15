@@ -2924,6 +2924,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/crypto-js@^4.2.1":
+  version "4.2.1"
+  resolved "https://registry.npmmirror.com/@types/crypto-js/-/crypto-js-4.2.1.tgz#480edd76991a63050cb88db1a8840758c55a7135"
+  integrity sha512-FSPGd9+OcSok3RsM0UZ/9fcvMOXJ1ENE/ZbLfOPlBWj7BgXtEAM8VYfTtT760GiLbQIMoVozwVuisjvsVwqYWw==
+
 "@types/debug@^4.1.7":
   version "4.1.11"
   resolved "https://registry.npmmirror.com/@types/debug/-/debug-4.1.11.tgz#b20d24098288f19e48fdf776c5d9ccd024629e4e"

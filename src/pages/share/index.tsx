@@ -8,13 +8,16 @@ import styles from './style.less';
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from 'antd';
 import { useEffect, useState } from 'react';
+import sha256 from 'crypto-js/sha256';
 
 const Share: React.FC = () => {
-
   const aimeName = 'justinsun';
   const avatarUrl = 'https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw';
+  const userId = 'kai123';
+  const aimeMessage = `Come with me, let's make money together. I will take you to new heights of earning money.`
 
   const [imageData, setImageData] = useState<string>();
+  const [referCode, setReferCode] = useState<string>();
 
   const loadImage = () => {
     const imageUrl = avatarUrl;
@@ -38,8 +41,15 @@ const Share: React.FC = () => {
     image.src = imageUrl;
   };
 
+  const getReferCode = (userId: string) => {
+    const hash = sha256(userId);
+    const referCode = hash.toString().substring(0, 6);
+    setReferCode(referCode);
+  }
+
   useEffect(() => {
     loadImage();
+    getReferCode(userId);
   }, []);
 
   const generateImage = () => {
@@ -100,8 +110,7 @@ const Share: React.FC = () => {
               {aimeName}'s AIME:
             </div>
             <div className={styles.msg}>
-              “ Come with me, let's make money together.
-              I will take you to new heights of earning money.”
+              “ {aimeMessage}”
             </div>
           </div>
         </div>
@@ -110,7 +119,7 @@ const Share: React.FC = () => {
           <div className={styles.footerContent}>
             <div className={styles.referInfo}>
               <div className={styles.referTitle}>Referral Code</div>
-              <div className={styles.referCode}>6a5c34</div>
+              <div className={styles.referCode}>{referCode}</div>
               <div className={styles.referDesc}>
                 Purchase <span className={styles.referDescBold}>AIME Powers</span> of influencers and share the growth profits.
               </div>
