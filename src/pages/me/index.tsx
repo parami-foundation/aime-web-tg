@@ -7,8 +7,11 @@ import { FaEthereum } from "react-icons/fa";
 import { PiCopySimple } from "react-icons/pi";
 import { ReactComponent as FirstIcon } from '@/assets/icon/1st.svg';
 import { BiChevronRight } from "react-icons/bi";
+import Airdrop from "./airdrop";
 
 const Me: React.FC = () => {
+  const [airdropVisible, setAirdropVisible] = React.useState<boolean>(false);
+
   return (
     <AccessLayout>
       <div className={styles.meContainer}>
@@ -93,7 +96,10 @@ const Me: React.FC = () => {
             </div>
           </div>
           <div className={styles.meBalanceButtons}>
-            <div className={styles.meBalanceButtonsButton}>
+            <div
+              className={styles.meBalanceButtonsButton}
+              onClick={() => setAirdropVisible(true)}
+            >
               <div className={styles.meBalanceButtonsButtonLeft}>
                 <div className={styles.meBalanceButtonsButtonLeftIcon}>
                   <img
@@ -121,6 +127,10 @@ const Me: React.FC = () => {
         </div>
         <NavBar />
       </div>
+      <Airdrop
+        visible={airdropVisible}
+        setVisible={setAirdropVisible}
+      />
     </AccessLayout>
   )
 };
