@@ -7,8 +7,40 @@ import { ReactComponent as FooterBg } from '@/assets/share/footer_bg.svg';
 import styles from './style.less';
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from 'antd';
+import { useEffect, useState } from 'react';
 
 const Share: React.FC = () => {
+
+  const aimeName = 'justinsun';
+  const avatarUrl = 'https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw';
+
+  const [imageData, setImageData] = useState<string>();
+
+  const loadImage = () => {
+    const imageUrl = avatarUrl;
+    const image = new Image();
+    image.crossOrigin = 'Anonymous';
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+
+      if (context) {
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        context.drawImage(image, 0, 0);
+        const dataURL = canvas.toDataURL('image/png');
+
+        setImageData(dataURL);
+      }
+    };
+
+    image.src = imageUrl;
+  };
+
+  useEffect(() => {
+    loadImage();
+  }, []);
 
   const generateImage = () => {
     // 获取要生成图像的DOM元素
@@ -37,8 +69,6 @@ const Share: React.FC = () => {
     }
   }
 
-  const aimeName = 'justinsun';
-
   return (
     <div>
       <div className={styles.shareContentContainer} id="shareImage">
@@ -54,7 +84,7 @@ const Share: React.FC = () => {
           <div className={styles.avatarContainer}>
             <img
               className={styles.avatarImage}
-              src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
+              src={imageData}
               alt="avatar"
             />
             <div className={styles.avatarRingContainer}>
