@@ -33,6 +33,20 @@
       }
     }
 
+    .airdropHeaderSuccessIcon {
+      width: 146px;
+      height: 146px;
+      background-color: #f4eeff;
+      border-radius: 100%;
+      padding: 15px;
+
+      .airdropHeaderSuccessIconImg {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
     .airdropHeaderTitle {
       color: #000;
       text-align: center;
@@ -52,6 +66,57 @@
     font-weight: 500;
     line-height: 1.5;
     margin-top: 10px;
+  }
+
+  .airdropTable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: var(--border-radius);
+    margin-top: 10px;
+
+    .airdropTableItem {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 10px 15px;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      }
+
+      .airdropTableItemTitle {
+        color: #000;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+      }
+
+      .airdropTableItemValue {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        color: #000;
+        text-align: right;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 900;
+        line-height: normal;
+
+        .airdropTableItemValueRankIcon {
+          width: 16px;
+          height: 16px;
+          margin-right: 5px;
+        }
+      }
+    }
   }
 }
 
