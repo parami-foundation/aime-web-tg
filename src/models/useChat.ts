@@ -1,7 +1,8 @@
 import { DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
 import { Character } from "@/service/typing";
+import { useModel } from "@umijs/max";
 import { notification } from "antd";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export enum MessageType {
@@ -19,7 +20,9 @@ export interface ChatbotProps {
 export interface AIResponse {
   type?: string;
   data?: string;
+  sentence_id?: string;
   give_token?: boolean;
+  end?: boolean;
 }
 
 export interface SendMessage {
@@ -39,11 +42,15 @@ export interface MessageDisplay {
 }
 
 export default () => {
+  const { accessToken } = useModel("useAccess");
   const [socket, setSocket] = useState<WebSocket>();
   const [messageEnd, setMessageEnd] = useState<boolean>(false);
   const [messages, setMessages] = useState<MessageDisplay[]>([]);
   const [character, setCharacter] = useState<Character>();
   const [rewardModal, setRewardModal] = useState<boolean>(false);
+  const [storedMessageSession, setStoredMessageSession] = useState<
+    Map<string, Character>
+  >(new Map());
 
   const handleAiMessage = (message: SendMessage, character: Character) => {
     setMessages((prev) => {
@@ -98,17 +105,34 @@ export default () => {
     socket?.send(JSON.stringify(message));
   };
 
-  const connectSocket = async (props: ChatbotProps, authToken?: string) => {
+  let ws: WebSocket;
+  let chara: Character;
+  let session_Id: string;
+
+  const connectSocket = async (
+    props: ChatbotProps,
+    sessionId?: string,
+    authToken?: string
+  ) => {
     const language = window.navigator.languages;
     const { character } = props;
-    const clientId = uuidv4();
-    let ws: WebSocket;
+    chara = character;
+
+    session_Id = sessionId ?? uuidv4();
+
+    setStoredMessageSession((prev) => {
+      return new Map(prev).set(session_Id, character);
+    });
+
     ws = new WebSocket(
-      `${WEBSOCKET_CONFIG.scheme}://${WEBSOCKET_CONFIG.host}/ws/${clientId}?language=${language}&character_id=${character?.character_id}&token=${authToken}&platform=web`
+      `${WEBSOCKET_CONFIG.scheme}://${WEBSOCKET_CONFIG.host}/ws/${session_Id}?language=${language}&character_id=${character?.character_id}&token=${authToken}&platform=web`
     );
     ws.binaryType = "arraybuffer";
     setSocket(ws);
+  };
 
+  useEffect(() => {
+    if (!socket) return;
     ws.onopen = () => {
       if (DEBUG) {
         notification.info({
@@ -120,7 +144,22 @@ export default () => {
       }
     };
 
-    ws.onclose = () => {
+    ws.onclose = async () => {
+      const aiSession = storedMessageSession.get(session_Id);
+
+      if (!!aiSession) {
+        await connectSocket(
+          {
+            character: aiSession,
+            onReturn: () => {
+              setCharacter(undefined);
+            },
+          },
+          session_Id,
+          accessToken
+        );
+      }
+
       if (DEBUG) {
         notification.info({
           key: "debug",
@@ -175,21 +214,21 @@ export default () => {
                   {
                     text: aiMessage?.data,
                   },
-                  character
+                  chara
                 );
                 if (!!aiMessage?.give_token) {
                   setRewardModal(true);
                 }
                 break;
               case "score":
-                handleScore(parseInt(aiMessage?.data), character);
+                handleScore(parseInt(aiMessage?.data), chara);
                 break;
               case "think":
                 handleThink(
                   {
                     text: aiMessage?.data,
                   },
-                  character
+                  chara
                 );
                 break;
               case "end":
@@ -224,7 +263,23 @@ export default () => {
           break;
       }
     };
-  };
+  }, [socket]);
+
+  // Store messages session in local storage
+  useEffect(() => {
+    localStorage.setItem(
+      "aime:chat:sessions",
+      JSON.stringify(Array.from(storedMessageSession))
+    );
+  }, [storedMessageSession]);
+
+  // Load messages session from local storage
+  useEffect(() => {
+    const sessions = localStorage.getItem("aime:chat:sessions");
+    if (!!sessions) {
+      setStoredMessageSession(new Map(JSON.parse(sessions)));
+    }
+  }, []);
 
   return {
     connectSocket,
@@ -233,9 +288,11 @@ export default () => {
     messages,
     character,
     rewardModal,
+    storedMessageSession,
     handleSendMessage,
     setCharacter,
     setRewardModal,
     setMessages,
+    setStoredMessageSession,
   };
 };

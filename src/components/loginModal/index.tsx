@@ -8,6 +8,7 @@ import TelegramOauth, { TelegramOauthDataOnauthProps } from "./telegramOauth";
 import ConnectWallet from "./connectWallet";
 import SwitchNetwork from "./switchNetwork";
 import SignMessage from "./signMessage";
+import Loading from "./loading";
 
 const LoginModal: React.FC<{
   visible: boolean;
@@ -80,12 +81,15 @@ const LoginModal: React.FC<{
         {!!telegramDataString && isConnected && currentChain?.id !== chains[0]?.id && (
           <SwitchNetwork />
         )}
-        {!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id && (
+        {!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id && !signature && (
           <SignMessage
             error={signMsgError}
             isLoading={signMsgLoading}
             signMessage={signMessage}
           />
+        )}
+        {!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id && !!signature && (
+          <Loading />
         )}
       </div>
     </Modal>

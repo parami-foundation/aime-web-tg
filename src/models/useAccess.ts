@@ -53,7 +53,7 @@ export default () => {
     const accessToken = localStorage.getItem("aime:accessToken");
     const accessTokenExpire = localStorage.getItem("aime:accessToken:expire");
     const now = new Date().getTime();
-    if (!!accessTokenExpire && parseInt(accessTokenExpire) < now) {
+    if (!accessTokenExpire || parseInt(accessTokenExpire) * 1000 < now) {
       setAccessToken(undefined);
       setAccessTokenExpire(0);
       localStorage.removeItem("aime:accessToken");
@@ -66,6 +66,12 @@ export default () => {
       setAccessTokenExpire(parseInt(accessTokenExpire));
     }
   }, []);
+
+  useEffect(() => {
+    if (!!address) {
+      localStorage.setItem("aime:address", address);
+    }
+  }, [address]);
 
   return {
     signature,
