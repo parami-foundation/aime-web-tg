@@ -13,7 +13,8 @@ import { AiOutlineStar } from "react-icons/ai";
 import { PiShareFatLight } from "react-icons/pi";
 
 const ChatDetail: React.FC = () => {
-  const { connectSocket, setCharacter, messages, socket } = useModel("useChat");
+  const { accessToken } = useModel("useAccess");
+  const { connectSocket, setCharacter, messages } = useModel("useChat");
   const [inputValue, setInputValue] = React.useState<string>();
 
   const msgList = useRef<HTMLDivElement>(null);
@@ -21,14 +22,16 @@ const ChatDetail: React.FC = () => {
   // Demo
   useEffect(() => {
     (async () => {
-      await connectSocket({
-        character: characters[0],
-        onReturn: () => {
-          setCharacter(undefined);
-        }
-      });
+      if (!!accessToken) {
+        await connectSocket({
+          character: characters[0],
+          onReturn: () => {
+            setCharacter(undefined);
+          }
+        }, undefined, accessToken);
+      }
     })();
-  }, []);
+  }, [accessToken]);
 
   useEffect(() => {
     if (msgList.current) {

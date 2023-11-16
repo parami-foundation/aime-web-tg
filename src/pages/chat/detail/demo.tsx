@@ -10,6 +10,7 @@ import { characters } from "@/service/typing.d";
 import { AccessLayout } from "@/layouts/access";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineStar } from "react-icons/ai";
+import { SendMessage } from "@/models/useChat";
 
 const ChatDemo: React.FC = () => {
   const { accessToken } = useModel("useAccess");
@@ -27,7 +28,7 @@ const ChatDemo: React.FC = () => {
           onReturn: () => {
             setCharacter(undefined);
           }
-        }, accessToken);
+        }, undefined, accessToken);
       }
     })();
   }, [accessToken]);
@@ -83,21 +84,21 @@ const ChatDemo: React.FC = () => {
             <div className={styles.chatInfo}>
               <InfoCard />
             </div>
-            {!!messages && messages.map((message, index) => {
+            {!!messages && messages?.map((message) => {
               return (
                 <>
-                  {message.sender === "Justin Sun" && (
+                  {message?.sender === "Justin Sun" && (
                     <AiPop
-                      type={message.type}
-                      data={message.content?.text}
-                      key={index}
+                      type={message?.type}
+                      data={(message?.content as SendMessage)?.text}
+                      key={message?.id}
                     />
                   )}
-                  {message.sender === "User" && (
+                  {message?.sender === "User" && (
                     <MePop
-                      type={message.type}
-                      data={message.content?.text}
-                      key={index}
+                      type={message?.type}
+                      data={(message?.content as SendMessage)?.text}
+                      key={message?.id}
                     />
                   )}
                 </>

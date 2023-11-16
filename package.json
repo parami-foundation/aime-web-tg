@@ -4,7 +4,7 @@
   "private": true,
   "author": "Hikaru Chang <i@rua.moe>",
   "scripts": {
-    "dev": "max dev",
+    "dev": "PORT=9090 max dev",
     "build": "max build",
     "format": "prettier --cache --write .",
     "postinstall": "max setup",

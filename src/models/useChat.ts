@@ -26,7 +26,7 @@ export interface AIResponse {
 }
 
 export interface SendMessage {
-  text?: string;
+  text?: string | Uint8Array;
   context?: {
     buypower?: string;
     login?: {
@@ -36,6 +36,7 @@ export interface SendMessage {
 }
 
 export interface MessageDisplay {
+  id?: string;
   type?: MessageType;
   sender?: string;
   content?: SendMessage;
@@ -51,15 +52,17 @@ export default () => {
   const [storedMessageSession, setStoredMessageSession] = useState<
     Map<string, Character>
   >(new Map());
+  const [currentSessionId, setCurrentSessionId] = useState<string>();
 
-  const handleAiMessage = (message: SendMessage, character: Character) => {
+  const handleAiMessage = (message: MessageDisplay, character: Character) => {
     setMessages((prev) => {
       return [
         ...prev,
         {
+          id: message?.id,
           type: MessageType.MESSAGE,
           sender: character?.name,
-          content: message,
+          content: message.content,
         },
       ];
     });
@@ -105,10 +108,6 @@ export default () => {
     socket?.send(JSON.stringify(message));
   };
 
-  let ws: WebSocket;
-  let chara: Character;
-  let session_Id: string;
-
   const connectSocket = async (
     props: ChatbotProps,
     sessionId?: string,
@@ -116,15 +115,16 @@ export default () => {
   ) => {
     const language = window.navigator.languages;
     const { character } = props;
-    chara = character;
+    setCharacter(character);
 
-    session_Id = sessionId ?? uuidv4();
+    const session_Id = sessionId ?? uuidv4();
+    setCurrentSessionId(session_Id);
 
     setStoredMessageSession((prev) => {
       return new Map(prev).set(session_Id, character);
     });
 
-    ws = new WebSocket(
+    const ws = new WebSocket(
       `${WEBSOCKET_CONFIG.scheme}://${WEBSOCKET_CONFIG.host}/ws/${session_Id}?language=${language}&character_id=${character?.character_id}&token=${authToken}&platform=web`
     );
     ws.binaryType = "arraybuffer";
@@ -133,7 +133,7 @@ export default () => {
 
   useEffect(() => {
     if (!socket) return;
-    ws.onopen = () => {
+    socket.onopen = () => {
       if (DEBUG) {
         notification.info({
           key: "debug",
@@ -144,20 +144,22 @@ export default () => {
       }
     };
 
-    ws.onclose = async () => {
-      const aiSession = storedMessageSession.get(session_Id);
+    socket.onclose = async () => {
+      if (!!currentSessionId) {
+        const aiSession = storedMessageSession.get(currentSessionId);
 
-      if (!!aiSession) {
-        await connectSocket(
-          {
-            character: aiSession,
-            onReturn: () => {
-              setCharacter(undefined);
+        if (!!aiSession) {
+          await connectSocket(
+            {
+              character: aiSession,
+              onReturn: () => {
+                setCharacter(undefined);
+              },
             },
-          },
-          session_Id,
-          accessToken
-        );
+            currentSessionId,
+            accessToken
+          );
+        }
       }
 
       if (DEBUG) {
@@ -171,7 +173,7 @@ export default () => {
       }
     };
 
-    ws.onerror = (err) => {
+    socket.onerror = (err) => {
       if (DEBUG) {
         notification.error({
           key: "debug",
@@ -182,7 +184,7 @@ export default () => {
       }
     };
 
-    ws.onmessage = (e) => {
+    socket.onmessage = (e) => {
       if (DEBUG) {
         notification.info({
           key: "debug",
@@ -207,28 +209,33 @@ export default () => {
             console.log("aiMessage", aiMessage);
           }
 
-          if (!!aiMessage?.data) {
+          if (!!aiMessage?.data && !!character) {
             switch (aiMessage?.type) {
               case "text":
                 handleAiMessage(
                   {
-                    text: aiMessage?.data,
+                    id: aiMessage?.sentence_id,
+                    type: MessageType.MESSAGE,
+                    sender: character?.name,
+                    content: {
+                      text: aiMessage?.data,
+                    },
                   },
-                  chara
+                  character
                 );
                 if (!!aiMessage?.give_token) {
                   setRewardModal(true);
                 }
                 break;
               case "score":
-                handleScore(parseInt(aiMessage?.data), chara);
+                handleScore(parseInt(aiMessage?.data), character);
                 break;
               case "think":
                 handleThink(
                   {
                     text: aiMessage?.data,
                   },
-                  chara
+                  character
                 );
                 break;
               case "end":
@@ -253,9 +260,12 @@ export default () => {
             return [
               ...prev,
               {
+                id: new Uint8Array(e.data).slice(0, 15).toString(),
                 type: MessageType.DATA,
                 sender: character?.name,
-                content: e?.data,
+                content: {
+                  text: new Uint8Array(e.data).slice(16),
+                },
               },
             ];
           });
@@ -263,7 +273,7 @@ export default () => {
           break;
       }
     };
-  }, [socket]);
+  }, [socket, character]);
 
   // Store messages session in local storage
   useEffect(() => {
