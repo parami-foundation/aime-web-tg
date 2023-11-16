@@ -56,7 +56,7 @@ const InputBox: React.FC<{
                         text: value,
                         context: {
                           // TODO: get from context
-                          buypower: 'hash',
+                          buypower: !!address ? 'hash' : undefined,
                           login: {
                             wallet_address: address,
                           },

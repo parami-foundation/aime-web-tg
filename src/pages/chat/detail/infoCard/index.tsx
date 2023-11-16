@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { Button, ConfigProvider, theme } from "antd";
 import { useModel } from "@umijs/max";
 import { RiTwitterXFill, RiWalletLine } from "react-icons/ri";
 import { THEME_CONFIG } from "@/constants/theme";
 import BuyModal from "../buyModal";
+import LoginModal from "@/components/loginModal";
 
 const ConnectWallet: React.FC = () => {
-  const { setWalletModalOpen } = useModel("useAccess");
+  const { signature, address } = useModel("useAccess");
+  const [walletModalOpen, setWalletModalOpen] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    if (!!signature && !!address) {
+      setWalletModalOpen(false);
+    }
+  }, [signature, address]);
 
   return (
     <div className={styles.infoCardContainer}>
@@ -30,6 +38,11 @@ const ConnectWallet: React.FC = () => {
           Connect Wallet
         </Button>
       </div>
+      <LoginModal
+        visible={walletModalOpen}
+        setVisible={setWalletModalOpen}
+        closeable
+      />
     </div>
   )
 };
@@ -104,17 +117,17 @@ const BuyPower: React.FC = () => {
 };
 
 const InfoCard: React.FC = () => {
-  const { accessToken, twitterBinded } = useModel("useAccess");
+  const { address, signature, twitterBinded } = useModel("useAccess");
 
-  if (!accessToken) {
+  if (!address || !signature) {
     return (
       <ConnectWallet />
     )
-  } else if (!!accessToken && !twitterBinded) {
+  } else if (!!address && !twitterBinded) {
     return (
       <ConnectTwitter />
     )
-  } else if (!!accessToken && twitterBinded) {
+  } else if (!!address && twitterBinded) {
     return (
       <BuyPower />
     )

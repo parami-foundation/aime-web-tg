@@ -14,7 +14,7 @@ const LoginModal: React.FC<{
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   closeable?: boolean;
 }> = ({ visible, setVisible, closeable }) => {
-  const { telegramData, setTelegramData, setTelegramDataString, setTelegramAuthType } = useModel('useTelegram');
+  const { telegramDataString, setTelegramData, setTelegramDataString, setTelegramAuthType } = useModel('useTelegram');
   const { setSignature, setAddress } = useModel('useAccess');
 
   const { data: signature, error: signMsgError, isLoading: signMsgLoading, signMessage } = useSignMessage();
@@ -57,7 +57,7 @@ const LoginModal: React.FC<{
       maskClosable={closeable ?? false}
     >
       <div className={styles.loginModalContainer}>
-        {!telegramData && !!tmaError && (
+        {!telegramDataString && !!tmaError && (
           <TelegramOauth
             dataOnauth={(response: TelegramOauthDataOnauthProps) => {
               setTelegramData(response);
@@ -74,13 +74,13 @@ const LoginModal: React.FC<{
             }}
           />
         )}
-        {!!telegramData && !isConnected && (
+        {!!telegramDataString && !isConnected && (
           <ConnectWallet />
         )}
-        {!!telegramData && isConnected && currentChain?.id !== chains[0]?.id && (
+        {!!telegramDataString && isConnected && currentChain?.id !== chains[0]?.id && (
           <SwitchNetwork />
         )}
-        {!!telegramData && isConnected && currentChain?.id === chains[0]?.id && (
+        {!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id && (
           <SignMessage
             error={signMsgError}
             isLoading={signMsgLoading}

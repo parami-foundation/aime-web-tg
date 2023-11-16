@@ -8,7 +8,7 @@ import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
 import { useAccount, useBalance, useContractRead, useContractWrite } from "wagmi";
 import { AIME_CONTRACT, DEMO_CONFIG } from "@/constants/global";
-import { formatEther } from "viem";
+import { formatEther, parseEther } from "viem";
 import { GetTokenPrice } from "@/service/third";
 import { useModel } from "@umijs/max";
 
@@ -203,6 +203,17 @@ const Detail: React.FC<{
 
   useEffect(() => {
     (async () => {
+      // const { request } = await prepareWriteContract({
+      //   address: `0x${AIME_CONTRACT.Goerli.Powers}`,
+      //   abi: require("@/abis/AIMePowersV3.json"),
+      //   functionName: 'buyPowers',
+      //   args: [
+      //     `0x${DEMO_CONFIG.Sun}`,
+      //     powerValue,
+      //   ],
+      //   value: parseEther(formatEther((unitPrice ?? 0n) * BigInt(powerValue))),
+      // });
+      // console.log(request?.gas)
       const gas = await publicClient?.estimateContractGas({
         address: `0x${AIME_CONTRACT.Goerli.Powers}`,
         abi: require("@/abis/AIMePowersV3.json"),
@@ -212,6 +223,7 @@ const Detail: React.FC<{
           powerValue,
         ],
         account: address as `0x${string}`,
+        value: parseEther(formatEther((unitPrice ?? 0n) * BigInt(powerValue))),
       });
       setGas(gas ?? 0n);
     })();
@@ -233,8 +245,8 @@ const Detail: React.FC<{
       token: "ethereum",
       currency: "usd",
     }).then(({ response, data }) => {
-      if (response.status === 200) {
-        setTokenPrice(data.ethereum.usd);
+      if (response?.status === 200) {
+        setTokenPrice(data?.ethereum?.usd);
       }
     });
   }, [powerValue]);
@@ -356,17 +368,18 @@ const Detail: React.FC<{
           size="large"
           className={styles.detailModalFooterButton}
           loading={isLoading}
-          disabled={parseInt(balance?.formatted ?? "0") === 0}
+          disabled={parseFloat(balance?.formatted ?? "0") === 0}
           onClick={async () => {
             await write({
               args: [
                 `0x${DEMO_CONFIG.Sun}`,
                 powerValue,
               ],
+              value: parseEther(formatEther((unitPrice ?? 0n) * BigInt(powerValue))),
             })
           }}
         >
-          {parseInt(balance?.formatted ?? "0") === 0 ? (
+          {parseFloat(balance?.formatted ?? "0") === 0 ? (
             <span>Insufficient Balance</span>
           ) : (
             <span>Confirm Purchase</span>
