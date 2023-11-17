@@ -14,7 +14,7 @@ export const NETWORK_CONFIG = {
 
 export const AIME_CONTRACT = {
   Goerli: {
-    Powers: "968665c68b3B347c9E9553a87F4a84620718ca07",
+    Powers: "A0A5366f28e36A219791F59cA8128FaD656Fbf92",
   },
   Arbitrum: {
     Powers: "D21881a9b32509fC0C042682E8a61f57d8B57C11",

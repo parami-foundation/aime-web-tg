@@ -14,21 +14,35 @@ export default () => {
   const [telegramWebApp, setTelegramWebApp] = useState<WebApp>();
 
   useEffect(() => {
-    if (!!telegramData) {
-      if (!telegramDataString) {
-        const params = new URLSearchParams(window.location.hash.slice(1));
-        const initDataString = params.get("tgWebAppData");
-        setTelegramDataString(initDataString || "");
-      }
+    // if (!!telegramData) {
+    //   if (!telegramDataString) {
+    //     const params = new URLSearchParams(window.location.hash.slice(1));
+    //     const initDataString = params.get("tgWebAppData");
+    //     setTelegramDataString(initDataString || "");
+    //   }
 
-      if (DEBUG) {
-        notification.info({
-          key: "initData",
-          message: "Telegram InitData",
-          description: telegramDataString ? telegramDataString : "No data",
-          duration: 0,
-        });
-      }
+    //   if (DEBUG) {
+    //     notification.info({
+    //       key: "initData",
+    //       message: "Telegram InitData",
+    //       description: telegramDataString ? telegramDataString : "No data",
+    //       duration: 0,
+    //     });
+    //   }
+    // }
+    if (!telegramDataString) {
+      const params = new URLSearchParams(window.location.hash.slice(1));
+      const initDataString = params.get("tgWebAppData");
+      setTelegramDataString(initDataString || "");
+    }
+
+    if (DEBUG) {
+      notification.info({
+        key: "initData",
+        message: "Telegram InitData",
+        description: telegramDataString ? telegramDataString : "No data",
+        duration: 0,
+      });
     }
   }, [telegramData, telegramDataString]);
 

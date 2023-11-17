@@ -12,6 +12,7 @@ const InputBox: React.FC<{
 }> = ({ value, onChange }) => {
   const { handleSendMessage } = useModel("useChat");
   const { address } = useModel("useAccess");
+  const { transactionHashs } = useModel("useContract");
   const [type, setType] = useState<string>("text");
   const [recording, setRecording] = useState<boolean>(false);
 
@@ -55,8 +56,7 @@ const InputBox: React.FC<{
                       await handleSendMessage({
                         text: value,
                         context: {
-                          // TODO: get from context
-                          buypower: !!address ? 'hash' : undefined,
+                          buypower: Object.values(transactionHashs)[0],
                           login: {
                             wallet_address: address,
                           },
@@ -74,8 +74,7 @@ const InputBox: React.FC<{
                     await handleSendMessage({
                       text: value,
                       context: {
-                        // TODO: get from context
-                        buypower: 'hash',
+                        buypower: Object.values(transactionHashs)[0],
                         login: {
                           wallet_address: address,
                         },

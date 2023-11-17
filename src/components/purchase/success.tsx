@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./style.less";
 import { Button, Modal } from "antd";
+import { useModel } from "@umijs/max";
 
 const PurchaseSuccess: React.FC<{
   visible: boolean;

@@ -8,7 +8,7 @@ import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
 import { useAccount, useBalance, useContractRead, useContractWrite } from "wagmi";
 import { AIME_CONTRACT, DEMO_CONFIG } from "@/constants/global";
-import { formatEther, parseEther } from "viem";
+import { formatEther } from "viem";
 import { GetTokenPrice } from "@/service/third";
 import { useModel } from "@umijs/max";
 
@@ -16,22 +16,26 @@ const Select: React.FC<{
   powerValue: number;
   setPowerValue: (powerValue: number) => void;
 }> = ({ powerValue, setPowerValue }) => {
-
   const { address } = useAccount();
   const { data: balance, isError: balanceError, isLoading: balanceLoading } = useBalance({
     address: address,
   });
+  const [manualInput, setManualInput] = React.useState<number>(0);
 
-  const { data: unitPrice }: {
-    data?: bigint;
-    isError: boolean;
-    isLoading: boolean;
-  } = useContractRead({
-    address: `0x${AIME_CONTRACT.Goerli.Powers}`,
-    abi: require("@/abis/AIMePowersV3.json"),
-    functionName: "getBuyPrice",
-    args: [`0x${DEMO_CONFIG.Sun}`, 1],
-  });
+  const getEthValue = (powerValue: number) => {
+    const { data: ethValue }: {
+      data?: bigint;
+      isError: boolean;
+      isLoading: boolean;
+    } = useContractRead({
+      address: `0x${AIME_CONTRACT.Goerli.Powers}`,
+      abi: require("@/abis/AIMePowers.json"),
+      functionName: "getBuyPrice",
+      args: [`0x${DEMO_CONFIG.Sun}`, powerValue],
+    });
+
+    return ethValue;
+  };
 
   return (
     <div className={styles.selectModalContainer}>
@@ -55,9 +59,9 @@ const Select: React.FC<{
         <div className={styles.selectModalHeaderSubtitle}>
           <b>justinsuntron‘s</b> Power
         </div>
-        <div className={styles.selectModalHeaderFlat}>
-          1 Power ≈ {formatEther(unitPrice ?? 0n)} ETH
-        </div>
+        {/* <div className={styles.selectModalHeaderFlat}>
+          1 Power ≈ {formatEther(getEthValue(1) ?? 0n)} ETH
+        </div> */}
       </div>
       <div className={styles.selectModalContent}>
         <div
@@ -67,7 +71,7 @@ const Select: React.FC<{
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
-            {formatEther(unitPrice ?? 0n)} ETH
+            {formatEther(getEthValue(1) ?? 0n)} ETH
           </div>
           <div className={styles.selectModalContentItemPower}>
             1 Power
@@ -80,7 +84,7 @@ const Select: React.FC<{
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
-            {formatEther((unitPrice ?? 0n) * 10n ?? 0n)} ETH
+            {formatEther(getEthValue(10) ?? 0n)} ETH
           </div>
           <div className={styles.selectModalContentItemPower}>
             10 Power
@@ -93,7 +97,7 @@ const Select: React.FC<{
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
-            {formatEther((unitPrice ?? 0n) * 30n ?? 0n)} ETH
+            {formatEther(getEthValue(30) ?? 0n)} ETH
           </div>
           <div className={styles.selectModalContentItemPower}>
             30 Power
@@ -101,34 +105,26 @@ const Select: React.FC<{
         </div>
       </div>
       <div className={styles.selectModalContentItemFull}>
-        <div className={styles.selectModalContentItemFullLeft}>
+        <div
+          className={styles.selectModalContentItemFullLeft}
+          onClick={() => {
+            setPowerValue(manualInput);
+          }}
+        >
           <div className={styles.selectModalContentItemPrice}>
-            All in
+            {formatEther(getEthValue(manualInput) ?? 0n)} ETH
           </div>
           <div className={styles.selectModalContentItemPower}>
-            ({balanceError && balanceLoading ? (
-              <span>0.00 ETH available</span>
-            ) : (
-              <span>{balance?.formatted} {balance?.symbol} available</span>
-            )})
+            {manualInput} Power
           </div>
         </div>
         <div className={styles.selectModalContentItemFullRight}>
-          <div className={styles.selectModalContentItemFullPrice}>
-            {!!balance?.value ? (
-              <span>
-                {(balance?.value / (unitPrice ?? 0n)).toString()} Power
-              </span>
-            ) : (
-              <span>Influence Balance</span>
-            )}
-          </div>
           <div className={styles.selectModalContentItemFullControl}>
             <div
               className={styles.selectModalContentItemFullControlMinus}
               onClick={() => {
-                if (powerValue > 0) {
-                  setPowerValue(powerValue - 1);
+                if (manualInput > 0) {
+                  setManualInput(manualInput - 1);
                 }
               }}
             >
@@ -142,18 +138,18 @@ const Select: React.FC<{
                 min={0}
                 max={100}
                 defaultValue={0}
-                value={powerValue}
+                value={manualInput}
                 type="number"
                 onChange={(e) => {
-                  setPowerValue(e!);
+                  setManualInput(e!);
                 }}
               />
             </div>
             <div
               className={styles.selectModalContentItemFullControlPlus}
               onClick={() => {
-                if (powerValue < 100) {
-                  setPowerValue(powerValue + 1);
+                if (manualInput < 100) {
+                  setManualInput(manualInput + 1);
                 }
               }}
             >
@@ -174,6 +170,7 @@ const Detail: React.FC<{
   setTransactionHash: React.Dispatch<React.SetStateAction<string>>;
 }> = ({ powerValue, setPurchaseSuccessVisible, setPurchaseFailedVisible, setError, setTransactionHash }) => {
   const { publicClient } = useModel("useWagmi");
+  const { setTransactionHashs } = useModel("useContract");
 
   const [bodyDropdown, setBodyDropdown] = React.useState<boolean>(false);
   const [tokenPrice, setTokenPrice] = React.useState<number>(0);
@@ -184,54 +181,52 @@ const Detail: React.FC<{
     address: address,
   });
 
-  const { data: unitPrice }: {
+  const { data: ethValue }: {
     data?: bigint;
     isError: boolean;
     isLoading: boolean;
   } = useContractRead({
     address: `0x${AIME_CONTRACT.Goerli.Powers}`,
-    abi: require("@/abis/AIMePowersV3.json"),
+    abi: require("@/abis/AIMePowers.json"),
     functionName: "getBuyPrice",
-    args: [`0x${DEMO_CONFIG.Sun}`, 1],
+    args: [`0x${DEMO_CONFIG.Sun}`, powerValue],
   });
 
   const { data, isLoading, isSuccess, error, write } = useContractWrite({
     address: `0x${AIME_CONTRACT.Goerli.Powers}`,
-    abi: require("@/abis/AIMePowersV3.json"),
+    abi: require("@/abis/AIMePowers.json"),
     functionName: 'buyPowers',
   });
 
   useEffect(() => {
     (async () => {
-      // const { request } = await prepareWriteContract({
-      //   address: `0x${AIME_CONTRACT.Goerli.Powers}`,
-      //   abi: require("@/abis/AIMePowersV3.json"),
-      //   functionName: 'buyPowers',
-      //   args: [
-      //     `0x${DEMO_CONFIG.Sun}`,
-      //     powerValue,
-      //   ],
-      //   value: parseEther(formatEther((unitPrice ?? 0n) * BigInt(powerValue))),
-      // });
-      // console.log(request?.gas)
       const gas = await publicClient?.estimateContractGas({
         address: `0x${AIME_CONTRACT.Goerli.Powers}`,
-        abi: require("@/abis/AIMePowersV3.json"),
+        abi: require("@/abis/AIMePowers.json"),
         functionName: 'buyPowers',
         args: [
           `0x${DEMO_CONFIG.Sun}`,
           powerValue,
         ],
         account: address as `0x${string}`,
-        value: parseEther(formatEther((unitPrice ?? 0n) * BigInt(powerValue))),
+        value: ethValue,
       });
       setGas(gas ?? 0n);
     })();
   }, [publicClient]);
 
   useEffect(() => {
+    console.log(data)
     if (isSuccess) {
+      const now = new Date().getTime();
       setPurchaseSuccessVisible(true);
+      setTransactionHashs((transactionHashs) => {
+        return transactionHashs.set(JSON.stringify(data), {
+          hash: JSON.stringify(data),
+          status: "success",
+          time: now,
+        });
+      });
       setTransactionHash(JSON.stringify(data));
     }
     if (!!error) {
@@ -270,7 +265,7 @@ const Detail: React.FC<{
           </div>
           <div className={styles.detailModalContentTitleRight}>
             <div className={styles.detailModalContentTitleRightValue}>
-              ${(tokenPrice * Number(formatEther((unitPrice ?? 0n) * BigInt(powerValue)))).toFixed(2) ?? 0}
+              ${(Number(formatEther((gas ?? 0n) + (ethValue ?? 0n))) * tokenPrice).toFixed(2)}
             </div>
             <AiFillCaretDown
               className={styles.detailModalContentTitleRightIcon}
@@ -313,10 +308,10 @@ const Detail: React.FC<{
           </div>
           <div className={styles.detailModalContentBodyItem}>
             <div className={styles.detailModalContentBodyItemTitle}>
-              <b>Est. Fees</b> ({formatEther(gas ?? 0n)} ETH)
+              <b>Est. Fees</b> ({Number(formatEther(gas ?? 0n)).toFixed(2)} ETH)
             </div>
             <div className={styles.detailModalContentBodyItemValue}>
-              USD <b>${tokenPrice * Number(formatEther(gas ?? 0n))}</b>
+              USD <b>${(Number(formatEther(gas ?? 0n)) * tokenPrice).toFixed(2)}</b>
             </div>
           </div>
         </div>
@@ -326,12 +321,12 @@ const Detail: React.FC<{
               Total <span>(including fees)</span>
             </div>
             <div className={styles.detailModalContentTotalLeftPrice}>
-              {formatEther((unitPrice ?? 0n) * BigInt(powerValue)).toString()} ETH
+              {formatEther(ethValue ?? 0n)} ETH
             </div>
           </div>
           <div className={styles.detailModalContentTotalRight}>
             <div className={styles.detailModalContentTotalRightFlat}>
-              USD <b>${(tokenPrice * Number(formatEther((unitPrice ?? 0n) * BigInt(powerValue)))).toFixed(2) ?? 0}</b>
+              USD <b>${(Number(formatEther((gas ?? 0n) + (ethValue ?? 0n))) * tokenPrice).toFixed(2)}</b>
             </div>
           </div>
         </div>
@@ -375,7 +370,7 @@ const Detail: React.FC<{
                 `0x${DEMO_CONFIG.Sun}`,
                 powerValue,
               ],
-              value: parseEther(formatEther((unitPrice ?? 0n) * BigInt(powerValue))),
+              value: ethValue ?? 0n + gas,
             })
           }}
         >
@@ -406,7 +401,6 @@ const BuyModal: React.FC<{
       setPurchaseSuccessVisible(false);
       setPurchaseFailedVisible(false);
       setError(new Error(""));
-      setTransactionHash("");
     }
   }, [visible]);
 

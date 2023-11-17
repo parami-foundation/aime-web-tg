@@ -42,6 +42,12 @@ export interface MessageDisplay {
   content?: SendMessage;
 }
 
+export interface FullMessageDisplay {
+  sender?: string;
+  text?: string;
+  data?: Uint8Array;
+}
+
 export default () => {
   const { accessToken } = useModel("useAccess");
   const [socket, setSocket] = useState<WebSocket>();
