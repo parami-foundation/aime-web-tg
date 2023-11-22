@@ -5,7 +5,7 @@ import InputBox from "./inputbox";
 import AiPop from "./pop/ai";
 import MePop from "./pop/me";
 import { history, useModel } from "@umijs/max";
-import InfoCard from "./infoCard";
+import InfoCard, { Share } from "./infoCard";
 import { characters } from "@/service/typing.d";
 import { AccessLayout } from "@/layouts/access";
 import { BiHomeAlt } from "react-icons/bi";
@@ -98,7 +98,8 @@ const ChatDemo: React.FC = () => {
             ref={msgList}
           >
             <div className={styles.chatInfo}>
-              <InfoCard />
+              {/* <InfoCard /> */}
+              <Share />
             </div>
             {!!messages && messages?.map((message) => {
               return (

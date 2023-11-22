@@ -1,17 +1,17 @@
-.loginModal {
+.shareModal {
   :global(.ant-modal-content) {
     background: var(--background);
   }
 }
 
-.loginModalContainer {
+.shareModalContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
 
-  .loginModalHeader {
+  .shareModalHeader {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,7 +25,7 @@
     line-height: normal;
     text-transform: uppercase;
 
-    .loginModalHeaderDescription {
+    .shareModalHeaderDescription {
       font-size: 14px;
       font-weight: 400;
       text-align: center;
@@ -33,7 +33,7 @@
     }
   }
 
-  .loginModalContent {
+  .shareModalContent {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -41,7 +41,7 @@
     width: 100%;
     margin-top: 30px;
 
-    .loginModalContentItem {
+    .shareModalContentItem {
       position: relative;
       display: flex;
       flex-direction: row;
@@ -61,19 +61,33 @@
         color: #000;
       }
 
-      .loginModalContentItemLeft {
+      .shareModalContentItemLeft {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
 
-        .loginModalContentItemIcon {
+        .shareModalContentItemIcon {
           width: 40px;
           height: 40px;
           margin-right: 20px;
         }
 
-        .loginModalContentItemText {
+        .shareModalContentItemMoreIcon {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          margin-right: 20px;
+          border-radius: 100%;
+          padding: 5px;
+          background-color: #eeeeee;
+          color: #000;
+        }
+
+        .shareModalContentItemText {
           display: flex;
           flex-direction: row;
           align-items: center;
@@ -84,7 +98,7 @@
           font-weight: 500;
           line-height: normal;
 
-          .loginModalContentItemTag {
+          .shareModalContentItemTag {
             color: #000;
             font-size: 10px;
             font-style: normal;
@@ -95,14 +109,14 @@
         }
       }
 
-      .loginModalContentItemRight {
+      .shareModalContentItemRight {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: flex-end;
       }
 
-      .loginModalContentItemRightIcon {
+      .shareModalContentItemRightIcon {
         font-size: 18px;
         color: #000;
       }
@@ -110,7 +124,7 @@
   }
 }
 
-.telegramLoginBtn {
+.telegramshareBtn {
   position: absolute;
   width: calc(100% - 40px);
   height: calc(100% - 20px);

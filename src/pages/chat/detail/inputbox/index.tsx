@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./style.less";
 import { BiMicrophone } from "react-icons/bi";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { CgKeyboard } from "react-icons/cg";
 import { Input } from "antd";
 import { useModel } from "@umijs/max";
+import BuyModal from "../buyModal";
 
 const InputBox: React.FC<{
   value?: string;
@@ -13,92 +14,114 @@ const InputBox: React.FC<{
   const { handleSendMessage } = useModel("useChat");
   const { address } = useModel("useAccess");
   const { transactionHashs } = useModel("useContract");
-  const [type, setType] = useState<string>("text");
-  const [recording, setRecording] = useState<boolean>(false);
+  const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
+  const [type, setType] = React.useState<string>("text");
+  const [recording, setRecording] = React.useState<boolean>(false);
 
   return (
-    <div className={styles.inputBoxContainer}>
-      <div className={styles.inputBoxWrapper}>
-        <div className={styles.inputBox}>
-          <div
-            className={styles.inputBoxSwitch}
-            onClick={() => {
-              if (type === "text") {
-                setType("microphone");
-              } else {
-                setType("text");
-              }
-            }}
-          >
-            {type === "text" ? (
-              <BiMicrophone
-                className={styles.inputBoxSwitchIcon}
-              />
-            ) : (
-              <CgKeyboard
-                className={styles.inputBoxSwitchIcon}
-              />
-            )}
+    <>
+      <div className={styles.inputBoxContainer}>
+        <div className={styles.inputBoxWrapper}>
+          <div className={styles.inputBoxWrapperRow}>
+            <div className={styles.inputBoxWrapperTip}>
+              You own 1 Power of Justinsuntron
+            </div>
           </div>
-          {type === "text" ? (
-            <>
-              <div className={styles.inputBoxInput}>
-                <Input
-                  bordered={false}
-                  placeholder="Enter something..."
-                  className={styles.inputBoxInputInput}
-                  value={value}
-                  onChange={(e) => {
-                    onChange(e.target.value);
-                  }}
-                  onKeyDown={async (e) => {
-                    if (e.key === "Enter" && !!value) {
-                      await handleSendMessage({
-                        text: value,
-                        context: {
-                          buypower: Object.values(transactionHashs)[0],
-                          login: {
-                            wallet_address: address,
-                          },
-                        }
-                      });
-                      onChange("");
-                    }
-                  }}
-                />
-              </div>
+          <div className={styles.inputBoxWrapperRow}>
+            <div className={styles.inputBox}>
               <div
-                className={styles.inputBoxSend}
-                onClick={async () => {
-                  if (!!value) {
-                    await handleSendMessage({
-                      text: value,
-                      context: {
-                        buypower: Object.values(transactionHashs)[0],
-                        login: {
-                          wallet_address: address,
-                        },
-                      }
-                    });
-                    onChange("");
+                className={styles.inputBoxSwitch}
+                onClick={() => {
+                  if (type === "text") {
+                    setType("microphone");
+                  } else {
+                    setType("text");
                   }
                 }}
               >
-                <HiArrowNarrowRight
-                  className={styles.inputBoxSendIcon}
-                />
+                {type === "text" ? (
+                  <BiMicrophone
+                    className={styles.inputBoxSwitchIcon}
+                  />
+                ) : (
+                  <CgKeyboard
+                    className={styles.inputBoxSwitchIcon}
+                  />
+                )}
               </div>
-            </>
-          ) : (
-            <div
-              className={styles.inputBoxRecord}
-            >
-              Hold to record audio
+              {type === "text" ? (
+                <>
+                  <div className={styles.inputBoxInput}>
+                    <Input
+                      bordered={false}
+                      placeholder="Enter something..."
+                      className={styles.inputBoxInputInput}
+                      value={value}
+                      onChange={(e) => {
+                        onChange(e.target.value);
+                      }}
+                      onKeyDown={async (e) => {
+                        if (e.key === "Enter" && !!value) {
+                          await handleSendMessage({
+                            text: value,
+                            context: {
+                              buypower: Object.values(transactionHashs)[0],
+                              login: {
+                                wallet_address: address,
+                              },
+                            }
+                          });
+                          onChange("");
+                        }
+                      }}
+                    />
+                  </div>
+                  <div
+                    className={styles.inputBoxSend}
+                    onClick={async () => {
+                      if (!!value) {
+                        await handleSendMessage({
+                          text: value,
+                          context: {
+                            buypower: Object.values(transactionHashs)[0],
+                            login: {
+                              wallet_address: address,
+                            },
+                          }
+                        });
+                        onChange("");
+                      }
+                    }}
+                  >
+                    <HiArrowNarrowRight
+                      className={styles.inputBoxSendIcon}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div
+                  className={styles.inputBoxRecord}
+                >
+                  Hold to record audio
+                </div>
+              )}
             </div>
-          )}
+            <div
+              className={styles.buyButton}
+              onClick={() => {
+                setBuyModalVisible(true);
+              }}
+            >
+              Buy
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+      <BuyModal
+        visible={buyModalVisible}
+        setVisible={setBuyModalVisible}
+      />
+    </>
   )
 };
 

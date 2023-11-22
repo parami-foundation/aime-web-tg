@@ -16,10 +16,6 @@ const Select: React.FC<{
   powerValue: number;
   setPowerValue: (powerValue: number) => void;
 }> = ({ powerValue, setPowerValue }) => {
-  const { address } = useAccount();
-  const { data: balance, isError: balanceError, isLoading: balanceLoading } = useBalance({
-    address: address,
-  });
   const [manualInput, setManualInput] = React.useState<number>(0);
 
   const getEthValue = (powerValue: number) => {

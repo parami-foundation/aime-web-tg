@@ -6,8 +6,9 @@ import { RiTwitterXFill, RiWalletLine } from "react-icons/ri";
 import { THEME_CONFIG } from "@/constants/theme";
 import BuyModal from "../buyModal";
 import LoginModal from "@/components/loginModal";
+import ShareModal from "../shareModal";
 
-const ConnectWallet: React.FC = () => {
+export const ConnectWallet: React.FC = () => {
   const { signature, address } = useModel("useAccess");
   const [walletModalOpen, setWalletModalOpen] = React.useState<boolean>(false);
 
@@ -47,7 +48,7 @@ const ConnectWallet: React.FC = () => {
   )
 };
 
-const ConnectTwitter: React.FC = () => {
+export const ConnectTwitter: React.FC = () => {
   return (
     <div className={styles.infoCardContainer}>
       <p>
@@ -72,7 +73,7 @@ const ConnectTwitter: React.FC = () => {
   )
 };
 
-const BuyPower: React.FC = () => {
+export const BuyPower: React.FC = () => {
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
 
   return (
@@ -116,6 +117,40 @@ const BuyPower: React.FC = () => {
   )
 };
 
+export const Share: React.FC = () => {
+  const [shareModalVisible, setShareModalVisible] = React.useState<boolean>(false);
+
+  return (
+    <>
+      <div className={styles.infoCardContainer}>
+        <p>
+          👍 Good job! You have already acquired my AI share. Without a doubt, you are already the vanguard of this technological revolution. Now, don't hide it and boldly <b>share my AIME link</b> with the world, telling them it's synonymous with cool technology.
+          <br />
+          <br />
+          <b>When they follow your footsteps and purchase my AI Power through your link</b>, you are not only a guide, but also a trendsetter. <span className={styles.italicOrange}>An additional <span className={styles.red}>5%</span> profit will be a reward for your wisdom.</span> Now, go out, exude confidence, share this future opportunity, let's work together to create miracles!
+        </p>
+        <div className={styles.chatHeaderInfoButtons}>
+          <Button
+            block
+            type="primary"
+            size="large"
+            className={styles.chatHeaderInfoButton}
+            onClick={() => {
+              setShareModalVisible(true);
+            }}
+          >
+            Share
+          </Button>
+        </div>
+      </div>
+      <ShareModal
+        visible={shareModalVisible}
+        setVisible={setShareModalVisible}
+      />
+    </>
+  )
+};
+
 const InfoCard: React.FC = () => {
   const { address, signature, twitterBinded } = useModel("useAccess");
 
@@ -132,7 +167,7 @@ const InfoCard: React.FC = () => {
       <BuyPower />
     )
   } else {
-    <></>
+    <Share />
   }
 };
 
