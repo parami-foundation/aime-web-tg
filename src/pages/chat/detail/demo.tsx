@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { MdOutlineAnalytics } from "react-icons/md";
 import InputBox from "./inputbox";
@@ -18,7 +18,9 @@ const ChatDemo: React.FC = () => {
   const [inputValue, setInputValue] = React.useState<string>();
   const [messageList, setMessageList] = React.useState<Map<string, FullMessageDisplay[]>>(new Map());
 
-  const msgList = useRef<HTMLDivElement>(null);
+  const chatWrapper = React.useRef<HTMLDivElement>(null);
+  const msgList = React.useRef<HTMLDivElement>(null);
+  const inputBoxContainer = React.useRef<HTMLDivElement>(null);
 
   // Demo
   useEffect(() => {
@@ -55,10 +57,19 @@ const ChatDemo: React.FC = () => {
     }
   }, [messages]);
 
+  useEffect(() => {
+    if (!!inputBoxContainer.current && !!chatWrapper.current) {
+      chatWrapper?.current?.setAttribute("style", `height: calc(100vh - ${inputBoxContainer.current?.clientHeight}px)`);
+    }
+  }, [inputBoxContainer.current, chatWrapper.current]);
+
   return (
     <AccessLayout>
       <div className={styles.chatContainer}>
-        <div className={styles.chatWrapper}>
+        <div
+          className={styles.chatWrapper}
+          ref={chatWrapper}
+        >
           <div className={styles.chatHeader}>
             <div className={styles.chatHeaderButtons}>
               <div className={styles.chatHeaderLeft}>
@@ -126,6 +137,7 @@ const ChatDemo: React.FC = () => {
         <InputBox
           value={inputValue}
           onChange={setInputValue}
+          inputBoxContainer={inputBoxContainer}
         />
       </div>
     </AccessLayout>

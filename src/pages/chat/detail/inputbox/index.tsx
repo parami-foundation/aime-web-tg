@@ -10,7 +10,8 @@ import BuyModal from "../buyModal";
 const InputBox: React.FC<{
   value?: string;
   onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
+  inputBoxContainer?: React.RefObject<HTMLDivElement>;
+}> = ({ value, onChange, inputBoxContainer }) => {
   const { handleSendMessage } = useModel("useChat");
   const { address } = useModel("useAccess");
   const { transactionHashs } = useModel("useContract");
@@ -20,7 +21,10 @@ const InputBox: React.FC<{
 
   return (
     <>
-      <div className={styles.inputBoxContainer}>
+      <div
+        className={styles.inputBoxContainer}
+        ref={inputBoxContainer}
+      >
         <div className={styles.inputBoxWrapper}>
           <div className={styles.inputBoxWrapperRow}>
             <div className={styles.inputBoxWrapperTip}>
