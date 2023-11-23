@@ -1,7 +1,7 @@
 import { AIME_CONTRACT } from "@/constants/global";
 import { useModel } from "@umijs/max";
 import { EthereumClient } from "@web3modal/ethereum";
-import React from "react";
+import React, { useMemo } from "react";
 import { useEffect, useState } from "react";
 import { GetContractResult, getContract } from "wagmi/actions";
 
@@ -11,9 +11,9 @@ export default () => {
     useState<GetContractResult<any, EthereumClient>>();
   const [transactionHashs, setTransactionHashs] = React.useState<
     Map<
-      string,
+      `0x${string}`,
       {
-        hash?: string;
+        hash?: `0x${string}`;
         status?: "pending" | "success" | "error";
         message?: string;
         time?: number;
@@ -31,18 +31,33 @@ export default () => {
     setAIMePowers(AIMePowers);
   }, []);
 
-  useEffect(() => {
-    if (!!transactionHashs.size) {
+  const storeTransactionHash = useMemo(() => {
+    return (hash: `0x${string}`, status: "pending" | "success" | "error") => {
+      setTransactionHashs((transactionHashs) => {
+        return transactionHashs.set(hash, {
+          hash,
+          status,
+          time: new Date().getTime(),
+        });
+      });
       localStorage.setItem(
         "aime:transactionHashs",
         JSON.stringify(Array.from(transactionHashs.entries()))
       );
-    }
+    };
   }, [transactionHashs]);
+
+  useEffect(() => {
+    const transactionHashs = localStorage.getItem("aime:transactionHashs");
+    if (!!transactionHashs) {
+      setTransactionHashs(new Map(JSON.parse(transactionHashs)));
+    }
+  }, []);
 
   return {
     AIMePowers,
     transactionHashs,
     setTransactionHashs,
+    storeTransactionHash,
   };
 };

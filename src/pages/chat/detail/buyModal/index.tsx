@@ -163,10 +163,11 @@ const Detail: React.FC<{
   setPurchaseSuccessVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setPurchaseFailedVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setError: React.Dispatch<React.SetStateAction<Error>>;
-  setTransactionHash: React.Dispatch<React.SetStateAction<string>>;
-}> = ({ powerValue, setPurchaseSuccessVisible, setPurchaseFailedVisible, setError, setTransactionHash }) => {
+  setTransactionHash: React.Dispatch<React.SetStateAction<`0x${string}` | undefined>>;
+  setBuyModalVisible: (visible: boolean) => void;
+}> = ({ powerValue, setPurchaseSuccessVisible, setPurchaseFailedVisible, setError, setTransactionHash, setBuyModalVisible }) => {
   const { publicClient } = useModel("useWagmi");
-  const { setTransactionHashs } = useModel("useContract");
+  const { storeTransactionHash } = useModel("useContract");
 
   const [bodyDropdown, setBodyDropdown] = React.useState<boolean>(false);
   const [tokenPrice, setTokenPrice] = React.useState<number>(0);
@@ -212,18 +213,11 @@ const Detail: React.FC<{
   }, [publicClient]);
 
   useEffect(() => {
-    console.log(data)
-    if (isSuccess) {
-      const now = new Date().getTime();
+    if (isSuccess && !!data?.hash) {
+      setBuyModalVisible(false);
       setPurchaseSuccessVisible(true);
-      setTransactionHashs((transactionHashs) => {
-        return transactionHashs.set(JSON.stringify(data), {
-          hash: JSON.stringify(data),
-          status: "success",
-          time: now,
-        });
-      });
-      setTransactionHash(JSON.stringify(data));
+      storeTransactionHash(data?.hash, "success");
+      setTransactionHash(data?.hash);
     }
     if (!!error) {
       setPurchaseFailedVisible(true);
@@ -389,7 +383,7 @@ const BuyModal: React.FC<{
   const [purchaseSuccessVisible, setPurchaseSuccessVisible] = React.useState<boolean>(false);
   const [purchaseFailedVisible, setPurchaseFailedVisible] = React.useState<boolean>(false);
   const [error, setError] = React.useState<Error>(new Error(""));
-  const [transactionHash, setTransactionHash] = React.useState<string>("");
+  const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
 
   useEffect(() => {
     if (!visible) {
@@ -422,6 +416,7 @@ const BuyModal: React.FC<{
             setPurchaseFailedVisible={setPurchaseFailedVisible}
             setError={setError}
             setTransactionHash={setTransactionHash}
+            setBuyModalVisible={setVisible}
           />
         )}
       </Modal>

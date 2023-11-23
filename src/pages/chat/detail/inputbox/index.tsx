@@ -26,13 +26,20 @@ const InputBox: React.FC<{
         ref={inputBoxContainer}
       >
         <div className={styles.inputBoxWrapper}>
-          <div className={styles.inputBoxWrapperRow}>
-            <div className={styles.inputBoxWrapperTip}>
-              You own 1 Power of Justinsuntron
+          {!!address && (
+            <div className={styles.inputBoxWrapperRow}>
+              <div className={styles.inputBoxWrapperTip}>
+                You own 1 Power of Justinsuntron
+              </div>
             </div>
-          </div>
+          )}
           <div className={styles.inputBoxWrapperRow}>
-            <div className={styles.inputBox}>
+            <div
+              className={styles.inputBox}
+              style={{
+                width: !!address ? "calc(100% - 55px)" : "100%",
+              }}
+            >
               <div
                 className={styles.inputBoxSwitch}
                 onClick={() => {
@@ -69,7 +76,7 @@ const InputBox: React.FC<{
                           await handleSendMessage({
                             text: value,
                             context: {
-                              buypower: Object.values(transactionHashs)[0],
+                              buypower: Array.from(transactionHashs.keys())[0],
                               login: {
                                 wallet_address: address,
                               },
@@ -87,7 +94,7 @@ const InputBox: React.FC<{
                         await handleSendMessage({
                           text: value,
                           context: {
-                            buypower: Object.values(transactionHashs)[0],
+                            buypower: Array.from(transactionHashs.keys())[0],
                             login: {
                               wallet_address: address,
                             },
@@ -110,14 +117,16 @@ const InputBox: React.FC<{
                 </div>
               )}
             </div>
-            <div
-              className={styles.buyButton}
-              onClick={() => {
-                setBuyModalVisible(true);
-              }}
-            >
-              Buy
-            </div>
+            {!!address && (
+              <div
+                className={styles.buyButton}
+                onClick={() => {
+                  setBuyModalVisible(true);
+                }}
+              >
+                Buy
+              </div>
+            )}
           </div>
         </div>
       </div>

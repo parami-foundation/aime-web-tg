@@ -109,8 +109,7 @@ const ChatDemo: React.FC = () => {
             ref={msgList}
           >
             <div className={styles.chatInfo}>
-              {/* <InfoCard /> */}
-              <Share />
+              <InfoCard />
             </div>
             {!!messages && messages?.map((message) => {
               return (
