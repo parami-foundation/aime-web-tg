@@ -1,35 +1,76 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styles from "./style.less";
 import { BsSoundwave } from "react-icons/bs";
 
 const MePop: React.FC<{
-  type?: string;
   data?: any;
-}> = ({ type, data }) => {
+}> = ({ data }) => {
+  const [audioDuration, setAudioDuration] = React.useState<number>();
+
+  const audioPlayer = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    (async () => {
+      audioPlayer?.current?.addEventListener("loadedmetadata", () => {
+        var duration = audioPlayer?.current?.duration;
+        setAudioDuration(duration);
+        audioPlayer?.current?.play();
+      });
+    })();
+  }, []);
+
   return (
-    <>
-      {type === "message" && (
-        <div className={styles.mePopContainer}>
-          <div className={styles.mePopWrapper}>
-            {data}
-          </div>
-        </div>
-      )}
-      {type === "data" && (
-        <div className={styles.mePopContainer}>
-          <div className={styles.mePopWrapper}>
-            <div className={styles.audioMsg}>
-              <div className={styles.audioMsgTime}>
-                3''
-              </div>
-              <BsSoundwave
-                className={styles.audioMsgIcon}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <div
+      className={styles.mePopContainer}
+      onClick={() => {
+        if (!!audioPlayer?.current && audioPlayer?.current?.paused) {
+          audioPlayer?.current?.play();
+        } else {
+          audioPlayer?.current?.pause();
+        }
+      }}
+    >
+      <div className={styles.mePopWrapper}>
+        {typeof data === "string" && data}
+        {typeof data === "object" && data?.map((item: any, index: number) => {
+          switch (item?.type) {
+            case "message":
+              return (
+                <div
+                  className={styles.mePopText}
+                  key={index}
+                >
+                  {item?.data}
+                </div>
+              )
+            case "data":
+              return (
+                <div
+                  className={styles.mePopAudio}
+                  key={index}
+                >
+                  <div className={styles.mePopAudioTime}>
+                    {audioDuration && `${audioDuration.toFixed(2)}`}''
+                  </div>
+                  <BsSoundwave
+                    className={styles.mePopAudioIcon}
+                  />
+                  <audio
+                    className={styles.mePopAudioPlayer}
+                    src={URL.createObjectURL(new Blob([item?.data], { type: "audio/mp3" }))}
+                    ref={audioPlayer}
+                  >
+                    <source
+                      src={URL.createObjectURL(new Blob([item?.data], { type: "audio/mp3" }))}
+                      type="audio/mp3"
+                    />
+                  </audio>
+                </div>
+              )
+          }
+        })}
+      </div>
+    </div>
   )
 };
 

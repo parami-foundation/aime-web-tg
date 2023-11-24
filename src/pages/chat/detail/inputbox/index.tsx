@@ -8,13 +8,12 @@ import { useModel } from "@umijs/max";
 import BuyModal from "../buyModal";
 
 const InputBox: React.FC<{
-  value?: string;
-  onChange: (value: string) => void;
   inputBoxContainer?: React.RefObject<HTMLDivElement>;
-}> = ({ value, onChange, inputBoxContainer }) => {
+}> = ({ inputBoxContainer }) => {
   const { handleSendMessage } = useModel("useChat");
   const { address } = useModel("useAccess");
   const { transactionHashs } = useModel("useContract");
+  const [inputValue, setInputValue] = React.useState<string>();
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
   const [type, setType] = React.useState<string>("text");
   const [recording, setRecording] = React.useState<boolean>(false);
@@ -67,14 +66,14 @@ const InputBox: React.FC<{
                       bordered={false}
                       placeholder="Enter something..."
                       className={styles.inputBoxInputInput}
-                      value={value}
+                      value={inputValue}
                       onChange={(e) => {
-                        onChange(e.target.value);
+                        setInputValue(e.target.value);
                       }}
                       onKeyDown={async (e) => {
-                        if (e.key === "Enter" && !!value) {
+                        if (e.key === "Enter" && !!inputValue) {
                           await handleSendMessage({
-                            text: value,
+                            text: inputValue,
                             context: {
                               buypower: Array.from(transactionHashs.keys())[0],
                               login: {
@@ -82,7 +81,7 @@ const InputBox: React.FC<{
                               },
                             }
                           });
-                          onChange("");
+                          setInputValue("");
                         }
                       }}
                     />
@@ -90,9 +89,9 @@ const InputBox: React.FC<{
                   <div
                     className={styles.inputBoxSend}
                     onClick={async () => {
-                      if (!!value) {
+                      if (!!inputValue) {
                         await handleSendMessage({
-                          text: value,
+                          text: inputValue,
                           context: {
                             buypower: Array.from(transactionHashs.keys())[0],
                             login: {
@@ -100,7 +99,7 @@ const InputBox: React.FC<{
                             },
                           }
                         });
-                        onChange("");
+                        setInputValue("");
                       }
                     }}
                   >

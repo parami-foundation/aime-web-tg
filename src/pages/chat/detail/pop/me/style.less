@@ -17,17 +17,39 @@
     line-height: 1.5;
     white-space: pre-wrap;
 
-    .audioMsg {
+    .mePopText {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      white-space: pre-wrap;
+
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+
+      .mePopTextIcon {
+        width: 20px;
+        height: 20px;
+        margin-left: 10px;
+      }
+    }
+
+    .mePopAudio {
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
       white-space: pre-wrap;
 
-      .audioMsgIcon {
+      .mePopAudioIcon {
         width: 20px;
         height: 20px;
         margin-left: 10px;
+      }
+
+      .mePopAudioPlayer {
+        display: none;
       }
     }
   }

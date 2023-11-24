@@ -1,8 +1,10 @@
 import { DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
+import { buf2hex } from "@/libs/hex";
 import { Character } from "@/service/typing";
 import { useModel } from "@umijs/max";
 import { notification } from "antd";
-import { useEffect, useState } from "react";
+import React from "react";
+import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export enum MessageType {
@@ -10,6 +12,9 @@ export enum MessageType {
   SCORE = "score",
   THINK = "think",
   DATA = "data",
+  AUDIO = "audio",
+  VIDEO = "video",
+  IMAGE = "image",
 }
 
 export interface ChatbotProps {
@@ -39,26 +44,23 @@ export interface MessageDisplay {
   id?: string;
   type?: MessageType;
   sender?: string;
-  content?: SendMessage;
-}
-
-export interface FullMessageDisplay {
-  sender?: string;
-  text?: string;
-  data?: Uint8Array;
+  data?: string | Uint8Array;
 }
 
 export default () => {
   const { accessToken } = useModel("useAccess");
-  const [socket, setSocket] = useState<WebSocket>();
-  const [messageEnd, setMessageEnd] = useState<boolean>(false);
-  const [messages, setMessages] = useState<MessageDisplay[]>([]);
-  const [character, setCharacter] = useState<Character>();
-  const [rewardModal, setRewardModal] = useState<boolean>(false);
-  const [storedMessageSession, setStoredMessageSession] = useState<
+  const [socket, setSocket] = React.useState<WebSocket>();
+  const [character, setCharacter] = React.useState<Character>();
+  const [rewardModal, setRewardModal] = React.useState<boolean>(false);
+  const [storedMessageSession, setStoredMessageSession] = React.useState<
     Map<string, Character>
   >(new Map());
-  const [currentSessionId, setCurrentSessionId] = useState<string>();
+  const [currentSessionId, setCurrentSessionId] = React.useState<string>();
+  const [messages, setMessages] = React.useState<MessageDisplay[]>([]);
+  const [messageList, setMessageList] = React.useState<
+    Map<string, MessageDisplay[]>
+  >(new Map());
+  const [messageEnd, setMessageEnd] = React.useState<boolean>(false);
 
   const handleAiMessage = (message: MessageDisplay, character: Character) => {
     setMessages((prev) => {
@@ -68,10 +70,19 @@ export default () => {
           id: message?.id,
           type: MessageType.MESSAGE,
           sender: character?.name,
-          content: message.content,
+          data: message?.data,
         },
       ];
     });
+
+    if (!!message?.id) {
+      setMessageList((prev) => {
+        const list = prev.get(`${message?.id}/${character?.name}`) || [];
+        list.push(message);
+        prev.set(`${message?.id}/${character?.name}`, list);
+        return prev;
+      });
+    }
   };
 
   const handleThink = (message: SendMessage, character: Character) => {
@@ -81,7 +92,7 @@ export default () => {
         {
           type: MessageType.THINK,
           sender: character?.name,
-          content: message,
+          content: message?.text,
         },
       ];
     });
@@ -94,23 +105,38 @@ export default () => {
         {
           type: MessageType.SCORE,
           sender: character?.name,
-          content: {
-            text: score.toString(),
-          },
+          content: score,
         },
       ];
     });
   };
 
   const handleSendMessage = async (message: SendMessage) => {
-    setMessages([
-      ...messages,
-      {
+    setMessages((prev) => {
+      return [
+        ...prev,
+        {
+          type: MessageType.MESSAGE,
+          sender: "user",
+          content: message?.text,
+        },
+      ];
+    });
+
+    const id = uuidv4().replace(/-/g, "");
+
+    setMessageList((prev) => {
+      const list = prev.get(`${id}/User`) || [];
+      list.push({
+        id: id,
+        sender: "user",
         type: MessageType.MESSAGE,
-        sender: "User",
-        content: message,
-      },
-    ]);
+        data: message?.text,
+      });
+      prev.set(`${id}/User`, list);
+      return prev;
+    });
+
     socket?.send(JSON.stringify(message));
   };
 
@@ -223,9 +249,7 @@ export default () => {
                     id: aiMessage?.sentence_id,
                     type: MessageType.MESSAGE,
                     sender: character?.name,
-                    content: {
-                      text: aiMessage?.data,
-                    },
+                    data: aiMessage?.data,
                   },
                   character
                 );
@@ -262,19 +286,36 @@ export default () => {
             console.log("ws message", e.data);
           }
 
+          const id = buf2hex(new Uint8Array(e.data).slice(0, 16)).toString();
+          const text = new Uint8Array(e.data).slice(16);
+
           setMessages((prev) => {
             return [
               ...prev,
               {
-                id: new Uint8Array(e.data).slice(0, 15).toString(),
+                id: id,
                 type: MessageType.DATA,
                 sender: character?.name,
                 content: {
-                  text: new Uint8Array(e.data).slice(16),
+                  text: text,
                 },
               },
             ];
           });
+
+          if (!!id) {
+            setMessageList((prev) => {
+              const list = prev.get(`${id}/${character?.name}`) || [];
+              list.push({
+                id: id,
+                sender: character?.name,
+                type: MessageType.DATA,
+                data: text,
+              });
+              prev.set(`${id}/${character?.name}`, list);
+              return prev;
+            });
+          }
 
           break;
       }
@@ -305,10 +346,12 @@ export default () => {
     character,
     rewardModal,
     storedMessageSession,
+    messageList,
     handleSendMessage,
     setCharacter,
     setRewardModal,
     setMessages,
+    setMessageList,
     setStoredMessageSession,
   };
 };

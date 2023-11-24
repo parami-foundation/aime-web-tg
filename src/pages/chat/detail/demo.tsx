@@ -5,18 +5,15 @@ import InputBox from "./inputbox";
 import AiPop from "./pop/ai";
 import MePop from "./pop/me";
 import { history, useModel } from "@umijs/max";
-import InfoCard, { Share } from "./infoCard";
+import InfoCard from "./infoCard";
 import { characters } from "@/service/typing.d";
 import { AccessLayout } from "@/layouts/access";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineStar } from "react-icons/ai";
-import { SendMessage, FullMessageDisplay } from "@/models/useChat";
 
 const ChatDemo: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { connectSocket, setCharacter, messages } = useModel("useChat");
-  const [inputValue, setInputValue] = React.useState<string>();
-  const [messageList, setMessageList] = React.useState<Map<string, FullMessageDisplay[]>>(new Map());
+  const { connectSocket, setCharacter, messages, messageList } = useModel("useChat");
 
   const chatWrapper = React.useRef<HTMLDivElement>(null);
   const msgList = React.useRef<HTMLDivElement>(null);
@@ -41,21 +38,6 @@ const ChatDemo: React.FC = () => {
       msgList.current.scrollTop = msgList.current.scrollHeight;
     }
   }, [messages, msgList.current]);
-
-  useEffect(() => {
-    if (!!messages) {
-      messages?.forEach((message) => {
-        if (!!message?.id) {
-          setMessageList((prev) => {
-            const list = prev.get(message?.id ?? "") || [];
-            list.push(message);
-            prev.set(message?.id ?? "", list);
-            return new Map(prev);
-          });
-        }
-      });
-    }
-  }, [messages]);
 
   useEffect(() => {
     if (!!inputBoxContainer.current && !!chatWrapper.current) {
@@ -111,31 +93,29 @@ const ChatDemo: React.FC = () => {
             <div className={styles.chatInfo}>
               <InfoCard />
             </div>
-            {!!messages && messages?.map((message) => {
+            {!!messageList.size && Array.from(messageList?.keys())?.map((key) => {
               return (
-                <>
-                  {message?.sender === "Justin Sun" && (
+                <React.Fragment
+                  key={key}
+                >
+                  {key.split("/")[1] === "Justin Sun" && (
                     <AiPop
-                      type={message?.type}
-                      data={(message?.content as SendMessage)?.text}
-                      key={message?.id}
+                      data={messageList?.get(key)}
+                      data-id={key}
                     />
                   )}
-                  {message?.sender === "User" && (
+                  {key.split("/")[1] === "User" && (
                     <MePop
-                      type={message?.type}
-                      data={(message?.content as SendMessage)?.text}
-                      key={message?.id}
+                      data={messageList?.get(key)}
+                      data-id={key}
                     />
                   )}
-                </>
-              )
+                </React.Fragment>
+              );
             })}
           </div>
         </div>
         <InputBox
-          value={inputValue}
-          onChange={setInputValue}
           inputBoxContainer={inputBoxContainer}
         />
       </div>

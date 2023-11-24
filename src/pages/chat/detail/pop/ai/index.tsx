@@ -3,9 +3,8 @@ import styles from "./style.less";
 import { BsSoundwave } from "react-icons/bs";
 
 const AiPop: React.FC<{
-  type?: string;
   data?: any;
-}> = ({ type, data }) => {
+}> = ({ data }) => {
   const [audioDuration, setAudioDuration] = React.useState<number>();
 
   const audioPlayer = useRef<HTMLAudioElement>(null);
@@ -15,49 +14,63 @@ const AiPop: React.FC<{
       audioPlayer?.current?.addEventListener("loadedmetadata", () => {
         var duration = audioPlayer?.current?.duration;
         setAudioDuration(duration);
+        audioPlayer?.current?.play();
       });
     })();
   }, []);
 
   return (
-    <>
-      {type === "message" && (
-        <div className={styles.aiPopContainer}>
-          <div className={styles.aiPopWrapper}>
-            {data}
-          </div>
-        </div>
-      )}
-      {type === "data" && (
-        <div
-          className={styles.aiPopContainer}
-          onClick={() => {
-            audioPlayer?.current?.play();
-          }}
-        >
-          <div className={styles.aiPopWrapper}>
-            <div className={styles.audioMsg}>
-              <div className={styles.audioMsgTime}>
-                {audioDuration && `${audioDuration.toFixed(2)}`}''
-              </div>
-              <BsSoundwave
-                className={styles.audioMsgIcon}
-              />
-              <audio
-                className={styles.audioMsgPlayer}
-                src={URL.createObjectURL(new Blob([data], { type: "audio/mp3" }))}
-                ref={audioPlayer}
-              >
-                <source
-                  src={URL.createObjectURL(new Blob([data], { type: "audio/mp3" }))}
-                  type="audio/mp3"
-                />
-              </audio>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <div
+      className={styles.aiPopContainer}
+      onClick={() => {
+        if (!!audioPlayer?.current && audioPlayer?.current?.paused) {
+          audioPlayer?.current?.play();
+        } else {
+          audioPlayer?.current?.pause();
+        }
+      }}
+    >
+      <div className={styles.aiPopWrapper}>
+        {typeof data === "string" && data}
+        {typeof data === "object" && data?.map((item: any, index: number) => {
+          switch (item?.type) {
+            case "message":
+              return (
+                <div
+                  className={styles.aiPopText}
+                  key={index}
+                >
+                  {item?.data}
+                </div>
+              )
+            case "data":
+              return (
+                <div
+                  className={styles.aiPopAudio}
+                  key={index}
+                >
+                  <div className={styles.aiPopAudioTime}>
+                    {audioDuration && `${audioDuration.toFixed(2)}`}''
+                  </div>
+                  <BsSoundwave
+                    className={styles.aiPopAudioIcon}
+                  />
+                  <audio
+                    className={styles.aiPopAudioPlayer}
+                    src={URL.createObjectURL(new Blob([item?.data], { type: "audio/mp3" }))}
+                    ref={audioPlayer}
+                  >
+                    <source
+                      src={URL.createObjectURL(new Blob([item?.data], { type: "audio/mp3" }))}
+                      type="audio/mp3"
+                    />
+                  </audio>
+                </div>
+              )
+          }
+        })}
+      </div>
+    </div>
   )
 };
 
