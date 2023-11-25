@@ -1,6 +1,7 @@
 import { DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
 import { buf2hex } from "@/libs/hex";
 import { Character } from "@/service/typing";
+import { LBArrayBuffer } from "@/utils/audioUtils";
 import { useModel } from "@umijs/max";
 import { notification } from "antd";
 import React from "react";
@@ -45,10 +46,15 @@ export interface MessageDisplay {
   type?: MessageType;
   sender?: string;
   data?: string | Uint8Array;
+  timestamp?: number;
 }
 
 export default () => {
   const { accessToken } = useModel("useAccess");
+  const { shouldPlayAudio, audioQueue, pushAudioQueue, setIsPlaying } =
+    useModel("useAudio");
+  const { isMute } = useModel("useSetting");
+
   const [socket, setSocket] = React.useState<WebSocket>();
   const [character, setCharacter] = React.useState<Character>();
   const [rewardModal, setRewardModal] = React.useState<boolean>(false);
@@ -250,6 +256,7 @@ export default () => {
                     type: MessageType.MESSAGE,
                     sender: character?.name,
                     data: aiMessage?.data,
+                    timestamp: Date.now(),
                   },
                   character
                 );
@@ -315,6 +322,16 @@ export default () => {
               prev.set(`${id}/${character?.name}`, list);
               return prev;
             });
+          }
+
+          // binary data
+          if (!shouldPlayAudio || isMute) {
+            console.log("should not play audio");
+            return;
+          }
+          pushAudioQueue(e.data as LBArrayBuffer);
+          if (audioQueue.length === 1) {
+            setIsPlaying(true); // this will trigger playAudios in CallView.
           }
 
           break;

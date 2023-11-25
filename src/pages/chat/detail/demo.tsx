@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { RefObject, useEffect, useRef } from "react";
 import styles from "./style.less";
 import { MdOutlineAnalytics } from "react-icons/md";
 import InputBox from "./inputbox";
@@ -10,14 +10,76 @@ import { characters } from "@/service/typing.d";
 import { AccessLayout } from "@/layouts/access";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineStar } from "react-icons/ai";
+import { playAudios } from "@/utils/audioUtils";
+
+export interface LBAudioElement extends HTMLAudioElement {
+  setSinkId(id: string): Promise<void>;
+};
 
 const ChatDemo: React.FC = () => {
   const { accessToken } = useModel("useAccess");
   const { connectSocket, setCharacter, messages, messageList } = useModel("useChat");
+  const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer } = useModel("useAudio");
+  const { selectedSpeaker, selectedMicrophone, getAudioList } = useModel("useSetting");
 
   const chatWrapper = React.useRef<HTMLDivElement>(null);
   const msgList = React.useRef<HTMLDivElement>(null);
   const inputBoxContainer = React.useRef<HTMLDivElement>(null);
+
+  // Audio player
+  const audioPlayerRef = useRef<LBAudioElement>(null);
+  const audioQueueRef = useRef(audioQueue);
+
+  useEffect(() => {
+    audioQueueRef.current = audioQueue;
+  }, [audioQueue]);
+
+  useEffect(() => {
+    setAudioPlayerRef(audioPlayerRef);
+  }, []);
+
+  useEffect(() => {
+    // if (mediaRecorder) {
+    //   closeMediaRecorder();
+    // }
+    if (rtcConnectionEstablished) {
+      closePeer();
+    }
+    getAudioList().then(
+    ).then(() => {
+      connectPeer().then(
+        () => {
+          // connectMicrophone();
+          // initializeVAD();
+        }
+      );
+    });
+  }, [selectedMicrophone]);
+
+  useEffect(() => {
+    // The chrome on android seems to have problems selecting devices.
+    if (typeof audioPlayerRef.current?.setSinkId === 'function') {
+      audioPlayerRef.current?.setSinkId(selectedSpeaker.values().next().value);
+    }
+  }, [selectedSpeaker]);
+
+  // Audio Playback
+  useEffect(() => {
+    console.log(audioQueue.length)
+    if (isPlaying && !!audioContext) {
+      console.log("playback")
+      playAudios(
+        audioContext,
+        audioPlayerRef,
+        audioQueueRef,
+        isPlaying,
+        setIsPlaying,
+        incomingStreamDestination!,
+        popAudioQueueFront
+      );
+    }
+  }
+    , [isPlaying, audioPlayerRef]);
 
   // Demo
   useEffect(() => {
@@ -48,6 +110,15 @@ const ChatDemo: React.FC = () => {
   return (
     <AccessLayout>
       <div className={styles.chatContainer}>
+        <audio
+          ref={audioPlayerRef}
+          className={styles.audioPlayer}
+        >
+          <source
+            src=''
+            type='audio/mp3'
+          />
+        </audio>
         <div
           className={styles.chatWrapper}
           ref={chatWrapper}

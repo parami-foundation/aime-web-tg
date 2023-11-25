@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, createRef } from "react";
 import styles from "./style.less";
 import { BsSoundwave } from "react-icons/bs";
 
@@ -7,7 +7,7 @@ const MePop: React.FC<{
 }> = ({ data }) => {
   const [audioDuration, setAudioDuration] = React.useState<number>();
 
-  const audioPlayer = useRef<HTMLAudioElement>(null);
+  const audioPlayer = createRef<HTMLAudioElement>();
 
   useEffect(() => {
     (async () => {

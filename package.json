@@ -31,8 +31,9 @@
     "react-telegram-login": "^1.1.2",
     "umi-request": "^1.4.0",
     "uuid": "^9.0.1",
-    "viem": "^1.19.7",
-    "wagmi": "^1.4.7"
+    "viem": "^1.19.8",
+    "wagmi": "^1.4.7",
+    "zustand": "^4.4.6"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.1",

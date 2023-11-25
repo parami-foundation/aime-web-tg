@@ -1,23 +1,23 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { MdOutlineAnalytics } from "react-icons/md";
 import InputBox from "./inputbox";
 import AiPop from "./pop/ai";
 import MePop from "./pop/me";
-import { useModel, history } from "@umijs/max";
+import { history, useModel } from "@umijs/max";
 import InfoCard from "./infoCard";
 import { characters } from "@/service/typing.d";
 import { AccessLayout } from "@/layouts/access";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineStar } from "react-icons/ai";
-import { PiShareFatLight } from "react-icons/pi";
 
-const ChatDetail: React.FC = () => {
+const Chat: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { connectSocket, setCharacter, messages } = useModel("useChat");
-  const [inputValue, setInputValue] = React.useState<string>();
+  const { connectSocket, setCharacter, messages, messageList } = useModel("useChat");
 
-  const msgList = useRef<HTMLDivElement>(null);
+  const chatWrapper = React.createRef<HTMLDivElement>();
+  const msgList = React.createRef<HTMLDivElement>();
+  const inputBoxContainer = React.createRef<HTMLDivElement>();
 
   // Demo
   useEffect(() => {
@@ -35,14 +35,23 @@ const ChatDetail: React.FC = () => {
 
   useEffect(() => {
     if (msgList.current) {
-      window.scrollTo(0, document.body.scrollHeight);
+      msgList.current.scrollTop = msgList.current.scrollHeight;
     }
-  }, [messages, msgList.current, window.scrollY]);
+  }, [messages, msgList.current]);
+
+  useEffect(() => {
+    if (!!inputBoxContainer.current && !!chatWrapper.current) {
+      chatWrapper?.current?.setAttribute("style", `height: calc(100vh - ${inputBoxContainer.current?.clientHeight}px)`);
+    }
+  }, [inputBoxContainer.current, chatWrapper.current]);
 
   return (
-    <AccessLayout >
+    <AccessLayout>
       <div className={styles.chatContainer}>
-        <div className={styles.chatWrapper}>
+        <div
+          className={styles.chatWrapper}
+          ref={chatWrapper}
+        >
           <div className={styles.chatHeader}>
             <div className={styles.chatHeaderButtons}>
               <div className={styles.chatHeaderLeft}>
@@ -65,11 +74,6 @@ const ChatDetail: React.FC = () => {
                 <div className={styles.chatHeaderButton}>
                   <AiOutlineStar />
                 </div>
-                <div className={styles.chatHeaderButton} onClick={() => {
-                  window.open("https://t.me/share/url?url=https://t.me/aime_beta_bot/aimeapp", "_blank");
-                }}>
-                  <PiShareFatLight />
-                </div>
               </div>
             </div>
             <div className={styles.chatHeaderAvatar}>
@@ -89,35 +93,34 @@ const ChatDetail: React.FC = () => {
             <div className={styles.chatInfo}>
               <InfoCard />
             </div>
-            {!!messages && messages.map((message, index) => {
+            {!!messageList.size && Array.from(messageList?.keys())?.map((key) => {
               return (
-                <>
-                  {message.sender === "Justin Sun" && (
+                <React.Fragment
+                  key={key}
+                >
+                  {key.split("/")[1] === "Justin Sun" && (
                     <AiPop
-                      type={message?.type}
-                      data={message?.content?.text}
-                      key={index}
+                      data={messageList?.get(key)}
+                      data-id={key}
                     />
                   )}
-                  {message.sender === "User" && (
+                  {key.split("/")[1] === "User" && (
                     <MePop
-                      type={message?.type}
-                      data={message?.content?.text}
-                      key={index}
+                      data={messageList?.get(key)}
+                      data-id={key}
                     />
                   )}
-                </>
-              )
+                </React.Fragment>
+              );
             })}
           </div>
         </div>
         <InputBox
-          value={inputValue}
-          onChange={setInputValue}
+          inputBoxContainer={inputBoxContainer}
         />
       </div>
     </AccessLayout>
   )
 };
 
-export default ChatDetail;
+export default Chat;
