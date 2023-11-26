@@ -27,10 +27,6 @@ export default defineConfig({
           path: "/chat/:id",
           component: "chat/detail",
         },
-        {
-          path: "/chat/demo",
-          component: "chat/detail/demo",
-        },
       ],
     },
     {
@@ -45,7 +41,7 @@ export default defineConfig({
           component: "me",
         },
       ],
-    }
+    },
   ],
   manifest: {
     basePath: "/",

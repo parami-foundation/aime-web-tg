@@ -1,5 +1,5 @@
 import { BIND_WALLET_MESSAGE } from "@/constants/global";
-import { OauthTelegram } from "@/service/api";
+import { OauthTelegram } from "@/services/api";
 import { useModel } from "@umijs/max";
 import { message } from "antd";
 import { useEffect, useState } from "react";

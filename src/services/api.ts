@@ -1,5 +1,5 @@
 import { extend } from "umi-request";
-import { Resp, Req } from "@/service/typing.d";
+import { Resp, Req } from "@/services/typing";
 import { API_CONFIG } from "@/constants/global";
 
 const errorHandler = (error: any) => {

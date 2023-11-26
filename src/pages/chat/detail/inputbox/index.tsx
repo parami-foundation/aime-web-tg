@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { BiMicrophone } from "react-icons/bi";
 import { HiArrowNarrowRight } from "react-icons/hi";
@@ -8,15 +8,30 @@ import { useModel } from "@umijs/max";
 import BuyModal from "../buyModal";
 
 const InputBox: React.FC<{
-  inputBoxContainer?: React.RefObject<HTMLDivElement>;
-}> = ({ inputBoxContainer }) => {
-  const { handleSendMessage } = useModel("useWebsocket");
+  isTextMode: boolean;
+  setIsTextMode: React.Dispatch<React.SetStateAction<boolean>>;
+  handsFreeMode: () => void;
+  textMode: () => void;
+  inputBoxContainer: React.RefObject<HTMLDivElement>;
+}> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode }) => {
+  const { SendMessageType, sendOverSocket } = useModel("useWebsocket");
   const { address } = useModel("useAccess");
   const { transactionHashs } = useModel("useContract");
+  const { isRecording } = useModel("useRecorder");
+  const { speechInterim } = useModel("useChat");
+
   const [inputValue, setInputValue] = React.useState<string>();
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
-  const [type, setType] = React.useState<string>("text");
-  const [recording, setRecording] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    if (!isTextMode) {
+      // switch to hands free mode
+      handsFreeMode();
+    } else {
+      // switch to text mode
+      textMode();
+    }
+  }, [isTextMode]);
 
   return (
     <>
@@ -42,14 +57,11 @@ const InputBox: React.FC<{
               <div
                 className={styles.inputBoxSwitch}
                 onClick={() => {
-                  if (type === "text") {
-                    setType("microphone");
-                  } else {
-                    setType("text");
-                  }
+                  console.log("switch");
+                  setIsTextMode(!isTextMode);
                 }}
               >
-                {type === "text" ? (
+                {isTextMode ? (
                   <BiMicrophone
                     className={styles.inputBoxSwitchIcon}
                   />
@@ -59,7 +71,7 @@ const InputBox: React.FC<{
                   />
                 )}
               </div>
-              {type === "text" ? (
+              {isTextMode ? (
                 <>
                   <div className={styles.inputBoxInput}>
                     <Input
@@ -72,7 +84,7 @@ const InputBox: React.FC<{
                       }}
                       onKeyDown={async (e) => {
                         if (e.key === "Enter" && !!inputValue) {
-                          await handleSendMessage({
+                          await sendOverSocket(SendMessageType.OBJECT, {
                             text: inputValue,
                             context: {
                               buypower: Array.from(transactionHashs.keys())[0],
@@ -90,7 +102,7 @@ const InputBox: React.FC<{
                     className={styles.inputBoxSend}
                     onClick={async () => {
                       if (!!inputValue) {
-                        await handleSendMessage({
+                        await sendOverSocket(SendMessageType.OBJECT, {
                           text: inputValue,
                           context: {
                             buypower: Array.from(transactionHashs.keys())[0],
@@ -112,7 +124,11 @@ const InputBox: React.FC<{
                 <div
                   className={styles.inputBoxRecord}
                 >
-                  Hold to record audio
+                  {isRecording && speechInterim ? (
+                    <>Listening...</>
+                  ) : (
+                    <>Please speak...</>
+                  )}
                 </div>
               )}
             </div>

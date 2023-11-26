@@ -137,13 +137,16 @@ export default () => {
   };
 
   return {
+    vadEvents,
     isRecording,
+    mediaRecorder,
     startRecording,
     stopRecording,
     closeMediaRecorder,
     connectMicrophone,
     disconnectMicrophone,
     enableVAD,
+    closeVAD,
     disableVAD,
     vadEventsCallback,
   };

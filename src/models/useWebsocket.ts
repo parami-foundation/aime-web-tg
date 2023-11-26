@@ -2,8 +2,15 @@ import { v4 as uuidv4 } from "uuid";
 import React, { useEffect } from "react";
 import { useModel } from "@umijs/max";
 import { DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
-import { Character } from "@/service/typing";
+import { Character } from "@/services/typing";
 import { buf2hex } from "@/libs/hex";
+
+export enum SendMessageType {
+  TEXT = "text",
+  OBJECT = "object",
+  BLOB = "blob",
+  ARRAY_BUFFER = "arraybuffer",
+}
 
 export interface ChatbotProps {
   character: Character;
@@ -16,6 +23,16 @@ export interface AIResponse {
   sentence_id?: string;
   give_token?: boolean;
   end?: boolean;
+}
+
+export interface SendMessage {
+  text?: string | Uint8Array;
+  context?: {
+    buypower?: string;
+    login?: {
+      wallet_address?: string;
+    };
+  };
 }
 
 export default () => {
@@ -46,7 +63,6 @@ export default () => {
     enableGoogle,
     enableQuivr,
     enableMultiOn,
-    character,
     setCharacter,
   } = useModel("useSetting");
   const { accessToken } = useModel("useAccess");
@@ -58,9 +74,47 @@ export default () => {
     Map<string, Character>
   >(new Map());
 
-  const sendOverSocket = (data: any) => {
+  const sendOverSocket = (
+    type: SendMessageType,
+    data: string | SendMessage | ArrayBuffer | Blob
+  ) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(data);
+      switch (type) {
+        case SendMessageType.TEXT:
+          socket?.send(data as string);
+          break;
+
+        case SendMessageType.OBJECT:
+          const id = uuidv4().replace(/-/g, "");
+          setMessages((prev) => {
+            return [
+              ...prev,
+              {
+                id: id,
+                type: MessageType.MESSAGE,
+                sender: "user",
+                data: (data as SendMessage)?.text,
+                timestamp: Date.now(),
+              },
+            ];
+          });
+
+          setMessageList((prev) => {
+            const list = prev.get(`${id}/user`) || [];
+            list.push({
+              id: id,
+              sender: "user",
+              type: MessageType.MESSAGE,
+              data: (data as SendMessage)?.text,
+              timestamp: Date.now(),
+            });
+            prev.set(`${id}/user`, list);
+            return prev;
+          });
+
+          socket?.send(JSON.stringify(data));
+          break;
+      }
       console.log("message sent to server");
     } else {
       console.log("tries to send message to server but socket not open.");
@@ -75,7 +129,7 @@ export default () => {
 
         if (DEBUG) console.log("aiMessage", aiMessage);
 
-        if (!!aiMessage?.data && !!character) {
+        if (!!aiMessage?.data) {
           switch (aiMessage?.type) {
             case "text":
               if (
@@ -129,7 +183,7 @@ export default () => {
                     {
                       id: aiMessage?.sentence_id,
                       type: MessageType.MESSAGE,
-                      sender: character?.name,
+                      sender: "character",
                       data: aiMessage?.data,
                       timestamp: Date.now(),
                     },
@@ -137,19 +191,15 @@ export default () => {
                 });
                 setMessageList((prev) => {
                   const list =
-                    prev.get(`${aiMessage?.sentence_id}/${character?.name}`) ||
-                    [];
+                    prev.get(`${aiMessage?.sentence_id}/character`) || [];
                   list.push({
                     id: aiMessage?.sentence_id,
                     type: MessageType.MESSAGE,
-                    sender: character?.name,
+                    sender: "character",
                     data: aiMessage?.data,
                     timestamp: Date.now(),
                   });
-                  prev.set(
-                    `${aiMessage?.sentence_id}/${character?.name}`,
-                    list
-                  );
+                  prev.set(`${aiMessage?.sentence_id}/character`, list);
                   return prev;
                 });
                 appendSpeechInterim(aiMessage.data);
@@ -169,7 +219,7 @@ export default () => {
                   ...prev,
                   {
                     type: MessageType.SCORE,
-                    sender: character?.name,
+                    sender: "character",
                     data: aiMessage?.data,
                     timestamp: Date.now(),
                   },
@@ -183,7 +233,7 @@ export default () => {
                   ...prev,
                   {
                     type: MessageType.THINK,
-                    sender: character?.name,
+                    sender: "character",
                     data: aiMessage?.data,
                     timestamp: Date.now(),
                   },
@@ -220,7 +270,7 @@ export default () => {
               {
                 id: id,
                 type: MessageType.DATA,
-                sender: character?.name,
+                sender: "character",
                 data: data,
                 timestamp: Date.now(),
               },
@@ -228,18 +278,15 @@ export default () => {
           });
 
           setMessageList((prev) => {
-            const list =
-              prev.get(`${id}/${character?.name}`) ||
-              prev.get(`${id}/user`) ||
-              [];
+            const list = prev.get(`${id}/character`) || [];
             list.push({
               id: id,
               type: MessageType.DATA,
-              sender: character?.name || "user",
+              sender: "character",
               data: data,
               timestamp: Date.now(),
             });
-            prev.set(`${id}/${character?.name || "user"}`, list);
+            prev.set(`${id}/character`, list);
             return prev;
           });
 
@@ -273,7 +320,7 @@ export default () => {
 
       const ws_path =
         ws_url +
-        `/ws/${sessionId}?llm_model=${
+        `/ws/${session_Id}?llm_model=${
           selectedModel.values().next().value
         }&platform=web&use_search=${enableGoogle}&use_quivr=${enableQuivr}&use_multion=${enableMultiOn}&character_id=${
           character.character_id
@@ -332,6 +379,7 @@ export default () => {
   }, [socket]);
 
   return {
+    SendMessageType,
     socket,
     socketIsOpen,
     currentSessionId,

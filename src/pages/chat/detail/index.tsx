@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import styles from "./style.less";
 import { MdOutlineAnalytics } from "react-icons/md";
 import InputBox from "./inputbox";
@@ -6,32 +6,171 @@ import AiPop from "./pop/ai";
 import MePop from "./pop/me";
 import { history, useModel } from "@umijs/max";
 import InfoCard from "./infoCard";
-import { characters } from "@/service/typing.d";
+import { charactersData } from "@/mocks/character";
 import { AccessLayout } from "@/layouts/access";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineStar } from "react-icons/ai";
+import { playAudios } from "@/utils/audioUtils";
+
+export interface LBAudioElement extends HTMLAudioElement {
+  setSinkId(id: string): Promise<void>;
+};
 
 const Chat: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { connectSocket, setCharacter, messages, messageList } = useModel("useWebsocket");
+  const { messages, messageList, clearChatContent } = useModel("useChat");
+  const { SendMessageType, socketIsOpen, closeSocket, connectSocket, sendOverSocket } = useModel("useWebsocket");
+  const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer, stopAudioPlayback } = useModel("useWebRTC");
+  const { selectedSpeaker, selectedMicrophone, isMute, setIsMute, setCharacter, getAudioList } = useModel("useSetting");
+  const { mediaRecorder, vadEvents, enableVAD, closeVAD, startRecording, stopRecording, vadEventsCallback, closeMediaRecorder, connectMicrophone, disableVAD } = useModel("useRecorder");
 
-  const chatWrapper = React.createRef<HTMLDivElement>();
-  const msgList = React.createRef<HTMLDivElement>();
-  const inputBoxContainer = React.createRef<HTMLDivElement>();
+  const chatWrapper = React.useRef<HTMLDivElement>(null);
+  const msgList = React.useRef<HTMLDivElement>(null);
+  const inputBoxContainer = React.useRef<HTMLDivElement>(null);
+  const [disableMic, setDisableMic] = React.useState<boolean>(false);
+  const [isTextMode, setIsTextMode] = React.useState<boolean>(true);
+
+  // Audio player
+  const audioPlayerRef = useRef<LBAudioElement>(null);
+  const audioQueueRef = useRef(audioQueue);
+
+  // subscribe to audioQueue changes
+  useEffect(() => {
+    audioQueueRef.current = audioQueue;
+  }, [audioQueue]);
+
+  useEffect(() => {
+    setAudioPlayerRef(audioPlayerRef);
+  }, []);
 
   // Demo
   useEffect(() => {
-    (async () => {
-      if (!!accessToken) {
-        await connectSocket({
-          character: characters[0],
-          onReturn: () => {
-            setCharacter(undefined);
-          }
-        }, undefined, accessToken);
+    if (!accessToken || !charactersData.length) return;
+    connectSocket({
+      character: charactersData[0],
+      onReturn: () => {
+        setCharacter({});
       }
-    })();
-  }, [accessToken]);
+    })
+  }, [accessToken, charactersData]);
+
+  useEffect(() => {
+    if (!!mediaRecorder) {
+      closeMediaRecorder();
+    }
+    if (!!rtcConnectionEstablished) {
+      closePeer();
+    }
+    getAudioList().then(
+    ).then(() => {
+      connectPeer().then(
+        () => {
+          connectMicrophone();
+          initializeVAD();
+        }
+      );
+    });
+  }, [selectedMicrophone, isTextMode]);
+
+  function initializeVAD() {
+    if (vadEvents) {
+      closeVAD();
+    }
+    vadEventsCallback(
+      () => {
+        stopAudioPlayback();
+        startRecording();
+      },
+      () => {
+        // Stops recording and send interim audio clip to server.
+        sendOverSocket(SendMessageType.TEXT, '[&Speech]');
+        stopRecording();
+      },
+      () => {
+        sendOverSocket(SendMessageType.TEXT, '[SpeechFinished]');
+      })
+    if (!isTextMode && !disableMic) {
+      enableVAD();
+    }
+  };
+
+  useEffect(() => {
+    if (!mediaRecorder || !socketIsOpen || !rtcConnectionEstablished) {
+      return;
+    }
+    closeSocket();
+    clearChatContent();
+    connectSocket({
+      character: charactersData[0],
+      onReturn: () => {
+        setCharacter({});
+      }
+    });
+    initializeVAD();
+  }, []);
+
+  useEffect(() => {
+    // The chrome on android seems to have problems selecting devices.
+    if (typeof audioPlayerRef.current?.setSinkId === 'function') {
+      audioPlayerRef.current?.setSinkId(selectedSpeaker.values().next().value);
+    }
+  }, [selectedSpeaker]);
+
+  // Audio Playback
+  useEffect(() => {
+    console.log(audioQueue.length)
+    if (isPlaying && !!audioContext) {
+      console.log("playback");
+      playAudios(
+        audioContext,
+        audioPlayerRef,
+        audioQueueRef,
+        isPlaying,
+        setIsPlaying,
+        incomingStreamDestination!,
+        popAudioQueueFront
+      );
+    }
+  }
+    , [isPlaying, audioPlayerRef]);
+
+  function handsFreeMode() {
+    setIsTextMode(false);
+    if (!disableMic) {
+      enableVAD();
+    }
+  };
+
+  function textMode() {
+    setIsTextMode(true);
+    disableVAD();
+  };
+
+  function toggleMute() {
+    if (!isMute) {
+      stopAudioPlayback();
+    }
+    setIsMute(!isMute);
+  };
+
+  function handleMic() {
+    if (disableMic) {
+      enableVAD();
+    } else {
+      disableVAD();
+    }
+    setDisableMic(!disableMic);
+  };
+
+  const cleanUpStates = () => {
+    disableVAD();
+    closeVAD();
+    closeMediaRecorder();
+    closePeer();
+    closeSocket();
+    clearChatContent();
+    setCharacter({});
+  };
 
   useEffect(() => {
     if (msgList.current) {
@@ -48,6 +187,15 @@ const Chat: React.FC = () => {
   return (
     <AccessLayout>
       <div className={styles.chatContainer}>
+        <audio
+          ref={audioPlayerRef}
+          className={styles.audioPlayer}
+        >
+          <source
+            src=''
+            type='audio/mp3'
+          />
+        </audio>
         <div
           className={styles.chatWrapper}
           ref={chatWrapper}
@@ -98,13 +246,13 @@ const Chat: React.FC = () => {
                 <React.Fragment
                   key={key}
                 >
-                  {key.split("/")[1] === "Justin Sun" && (
+                  {key.split("/")[1] === "character" && (
                     <AiPop
                       data={messageList?.get(key)}
                       data-id={key}
                     />
                   )}
-                  {key.split("/")[1] === "User" && (
+                  {key.split("/")[1] === "user" && (
                     <MePop
                       data={messageList?.get(key)}
                       data-id={key}
@@ -116,7 +264,11 @@ const Chat: React.FC = () => {
           </div>
         </div>
         <InputBox
+          isTextMode={isTextMode}
+          setIsTextMode={setIsTextMode}
           inputBoxContainer={inputBoxContainer}
+          handsFreeMode={handsFreeMode}
+          textMode={textMode}
         />
       </div>
     </AccessLayout>

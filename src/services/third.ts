@@ -1,5 +1,5 @@
 import { request } from "./api";
-import { Resp, Req } from "@/service/typing.d";
+import { Resp, Req } from "@/services/typing";
 
 export async function GetTokenPrice(
   data: Req.GetTokenPrice,

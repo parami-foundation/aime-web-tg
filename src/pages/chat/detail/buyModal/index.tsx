@@ -9,7 +9,7 @@ import PurchaseFailed from "@/components/purchase/failed";
 import { useAccount, useBalance, useContractRead, useContractWrite } from "wagmi";
 import { AIME_CONTRACT, DEMO_CONFIG } from "@/constants/global";
 import { formatEther } from "viem";
-import { GetTokenPrice } from "@/service/third";
+import { GetTokenPrice } from "@/services/third";
 import { useModel } from "@umijs/max";
 
 const Select: React.FC<{

@@ -1,4 +1,4 @@
-import { Character } from "@/service/typing";
+import { Character } from "@/services/typing";
 import React from "react";
 
 export const languageList: string[] = [
