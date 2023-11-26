@@ -1,3 +1,5 @@
+import { useModel } from "@umijs/max";
+
 export interface LBArrayBuffer extends ArrayBuffer {
   detached: boolean;
 }

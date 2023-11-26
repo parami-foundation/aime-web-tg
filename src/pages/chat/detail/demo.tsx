@@ -30,6 +30,28 @@ const ChatDemo: React.FC = () => {
   const audioPlayerRef = useRef<LBAudioElement>(null);
   const audioQueueRef = useRef(audioQueue);
 
+  // function initializeVAD() {
+  //   if (vadEvents) {
+  //     closeVAD();
+  //   }
+  //   vadEventsCallback(
+  //     () => {
+  //       stopAudioPlayback();
+  //       startRecording();
+  //     },
+  //     () => {
+  //       // Stops recording and send interim audio clip to server.
+  //       sendOverSocket('[&Speech]');
+  //       stopRecording();
+  //     },
+  //     () => {
+  //       sendOverSocket('[SpeechFinished]');
+  //     })
+  //   if (!isTextMode && !disableMic) {
+  //     enableVAD();
+  //   }
+  // };
+
   useEffect(() => {
     audioQueueRef.current = audioQueue;
   }, [audioQueue]);

@@ -1,7 +1,7 @@
 import { LBAudioElement } from "@/pages/chat/detail/demo";
 import { LBArrayBuffer } from "@/utils/audioUtils";
 import { useModel } from "@umijs/max";
-import React, { useEffect } from "react";
+import React from "react";
 
 export interface LBRTCPeerConnection extends RTCPeerConnection {
   sdpSemantics: string;
@@ -25,6 +25,8 @@ export default () => {
   const [micStream, setMicStream] = React.useState<MediaStream | null>(null);
   const [rtcConnectionEstablished, setRtcConnectionEstablished] =
     React.useState<boolean>(false);
+  const [currentAudio, setCurrentAudio] =
+    React.useState<LBArrayBuffer | null>();
 
   const pushAudioQueue = (audio: LBArrayBuffer) => {
     setAudioQueue((prev) => {
@@ -151,9 +153,11 @@ export default () => {
     incomingStreamDestination,
     audioPlayerRef,
     rtcConnectionEstablished,
+    currentAudio,
     setShouldPlayAudio,
     setAudioPlayerRef,
     setIsPlaying,
     setRtcConnectionEstablished,
+    setCurrentAudio,
   };
 };
