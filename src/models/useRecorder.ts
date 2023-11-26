@@ -4,7 +4,7 @@ import { useModel } from "@umijs/max";
 
 export default () => {
   const { selectedMicrophone } = useModel("useSetting");
-  const { audioContext } = useModel("useAudio");
+  const { audioContext } = useModel("useWebRTC");
 
   const [isRecording, setIsRecording] = React.useState<boolean>(false);
   const [mediaRecorder, setMediaRecorder] =

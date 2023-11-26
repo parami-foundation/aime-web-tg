@@ -1,4 +1,4 @@
-export const languageCode = {
+export const languageCode: { [key: string]: string } = {
   English: "en-US",
   Chinese: "zh-CN",
   French: "fr-FR",

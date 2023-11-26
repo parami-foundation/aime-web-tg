@@ -18,8 +18,10 @@ export interface LBAudioElement extends HTMLAudioElement {
 
 const ChatDemo: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { connectSocket, setCharacter, messages, messageList } = useModel("useChat");
-  const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer } = useModel("useAudio");
+  const { setCharacter } = useModel("useSetting");
+  const { messages, messageList } = useModel("useChat");
+  const { connectSocket } = useModel("useWebsocket");
+  const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer } = useModel("useWebRTC");
   const { selectedSpeaker, selectedMicrophone, getAudioList } = useModel("useSetting");
 
   const chatWrapper = React.useRef<HTMLDivElement>(null);
@@ -110,9 +112,9 @@ const ChatDemo: React.FC = () => {
         await connectSocket({
           character: characters[0],
           onReturn: () => {
-            setCharacter(undefined);
+            setCharacter({});
           }
-        }, undefined, accessToken);
+        });
       }
     })();
   }, [accessToken]);

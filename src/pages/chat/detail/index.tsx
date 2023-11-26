@@ -13,7 +13,7 @@ import { AiOutlineStar } from "react-icons/ai";
 
 const Chat: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { connectSocket, setCharacter, messages, messageList } = useModel("useChat");
+  const { connectSocket, setCharacter, messages, messageList } = useModel("useWebsocket");
 
   const chatWrapper = React.createRef<HTMLDivElement>();
   const msgList = React.createRef<HTMLDivElement>();

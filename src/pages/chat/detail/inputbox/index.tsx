@@ -10,7 +10,7 @@ import BuyModal from "../buyModal";
 const InputBox: React.FC<{
   inputBoxContainer?: React.RefObject<HTMLDivElement>;
 }> = ({ inputBoxContainer }) => {
-  const { handleSendMessage } = useModel("useChat");
+  const { handleSendMessage } = useModel("useWebsocket");
   const { address } = useModel("useAccess");
   const { transactionHashs } = useModel("useContract");
   const [inputValue, setInputValue] = React.useState<string>();
