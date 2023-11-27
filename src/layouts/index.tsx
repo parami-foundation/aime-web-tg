@@ -24,8 +24,7 @@ const Layout: React.FC = () => {
 
   return (
     <SDKProvider
-      initOptions={{
-        debug: true,
+      options={{
         cssVars: true,
         acceptCustomStyles: true,
       }}

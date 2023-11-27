@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 export default () => {
   const { telegramDataString, telegramAuthType } = useModel("useTelegram");
-  const [address, setAddress] = useState<string>();
+  const [address, setAddress] = useState<`0x${string}` | undefined>();
   const [signature, setSignature] = useState<string>();
   const [accessToken, setAccessToken] = useState<string>();
   const [accessTokenExpire, setAccessTokenExpire] = useState<number>(0);

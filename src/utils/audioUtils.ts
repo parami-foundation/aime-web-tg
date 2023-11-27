@@ -1,4 +1,6 @@
+import { DEBUG } from "@/constants/global";
 import { useModel } from "@umijs/max";
+import { notification } from "antd";
 
 export interface LBArrayBuffer extends ArrayBuffer {
   detached: boolean;
@@ -19,13 +21,23 @@ export const playAudio = (
         .then(() => {
           !!audioPlayer.current && audioPlayer.current.muted === false; // Unmute after playback starts
         })
-        .catch((error) => {
+        .catch((error: Error) => {
           if (error.name === "NotSupportedError") {
-            alert(
+            if (DEBUG)
+              notification.error({
+                message: "Not Supported Error",
+                description: `Playback failed because: ${error}. Please check https://elevenlabs.io/subscription if you have encough characters left.`,
+              });
+            console.log(
               `Playback failed because: ${error}. Please check https://elevenlabs.io/subscription if you have encough characters left.`
             );
           } else {
-            alert(`Playback failed because: ${error}`);
+            if (DEBUG)
+              notification.error({
+                message: "Playback failed",
+                description: `Playback failed because: ${error}`,
+              });
+            console.log(`Playback failed because: ${error}`);
           }
         });
   });

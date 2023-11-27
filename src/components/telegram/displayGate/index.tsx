@@ -1,13 +1,13 @@
 import { type PropsWithChildren } from 'react';
-import { useSDK } from '@tma.js/sdk-react';
+import { useSDKContext } from '@tma.js/sdk-react';
 import { Button, Result } from 'antd';
 
 export const DisplayGate = ({ children }: PropsWithChildren) => {
-  const { didInit } = useSDK();
+  const { initResult, error } = useSDKContext();
 
   // There were no calls of SDK's init function. It means, we did not
   // even try to do it.
-  if (!didInit) {
+  if (!initResult && !error) {
     return (
       <Result
         status="error"

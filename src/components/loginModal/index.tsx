@@ -3,7 +3,7 @@ import styles from "./style.less";
 import { Modal, message } from "antd";
 import { useAccount, useNetwork, useSignMessage, useSwitchNetwork } from 'wagmi';
 import { useModel } from "@umijs/max";
-import { useSDK } from "@tma.js/sdk-react";
+import { useSDKContext } from "@tma.js/sdk-react";
 import TelegramOauth, { TelegramOauthDataOnauthProps } from "./telegramOauth";
 import ConnectWallet from "./connectWallet";
 import SwitchNetwork from "./switchNetwork";
@@ -21,7 +21,7 @@ const LoginModal: React.FC<{
   const { data: signature, error: signMsgError, isLoading: signMsgLoading, signMessage } = useSignMessage();
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
-  const { error: tmaError } = useSDK();
+  const { error: tmaError } = useSDKContext();
 
   const { address, isConnected } = useAccount({
     onConnect: () => {

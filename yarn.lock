@@ -2160,101 +2160,17 @@
     "@tanstack/query-core" "4.36.1"
     use-sync-external-store "^1.2.0"
 
-"@tma.js/bridge@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.npmmirror.com/@tma.js/bridge/-/bridge-1.4.1.tgz#0b59280a1531752b3c5da94033833b9159341189"
-  integrity sha512-+awjUpk5Q9qVyfDdHUBY/bZk9LyifJjJCyYIxcs9SyiB9ldIWHFANIs9/22v0nHHGZb7QKCpYf/cSajsU98gIw==
-  dependencies:
-    "@tma.js/colors" "0.0.5"
-    "@tma.js/event-emitter" "0.1.0"
-    "@tma.js/logger" "0.0.5"
-    "@tma.js/parsing" "1.0.1"
-    "@tma.js/util-types" "0.0.3"
-    "@tma.js/utils" "0.5.6"
-
-"@tma.js/colors@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.npmmirror.com/@tma.js/colors/-/colors-0.0.5.tgz#f1895b063ce2bd6e9b254df0db1b14100816c4bd"
-  integrity sha512-2O4Z/2TzSuhlJhuIvGZTN/qt+XFADU+gGFtKp5dCEkarR0XvV4cDOs5VQC/gJc0Cy0qElkUIBgPhTOnKSUgRPA==
-
-"@tma.js/event-emitter@0.1.0":
-  version "0.1.0"
-  resolved "https://registry.npmmirror.com/@tma.js/event-emitter/-/event-emitter-0.1.0.tgz#32dbe0975b14641d8298de4282d67cbcbd783f75"
-  integrity sha512-06ximJ22jovIhxezHimPQP/McBzGEDoxBHdvko9671GmWR8KctYz0MPNCU+dfRX/gchWRBhAnP5ZOdHo8YZywQ==
-  dependencies:
-    "@tma.js/util-types" "0.0.3"
-
-"@tma.js/init-data@0.2.22":
-  version "0.2.22"
-  resolved "https://registry.npmmirror.com/@tma.js/init-data/-/init-data-0.2.22.tgz#6bf9da97c85a386e65fb557e1f355702a8ce1efa"
-  integrity sha512-stQC15EZ82mDDNK20hp6KimsrNDonbMH+xLmOncuu8jJ2E1/GwgmXLfXxPu58+ocpU4io1KxADFoX0tGBS64vg==
-  dependencies:
-    "@tma.js/parsing" "1.0.1"
-
-"@tma.js/launch-params@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmmirror.com/@tma.js/launch-params/-/launch-params-1.0.1.tgz#9b720e1356f97776224ddbcdf626cd6ebc8322c3"
-  integrity sha512-Ar/AdNTCBE9+D3XEnNnG/nfY39ZcFK2/X1zNY2H0HwZZOcntZ6R1MuNub5J7pdiUxTBHbJxBF79DYVSTXi9wCQ==
-  dependencies:
-    "@tma.js/init-data" "0.2.22"
-    "@tma.js/parsing" "1.0.1"
-    "@tma.js/theme-params" "1.0.0"
-
-"@tma.js/logger@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.npmmirror.com/@tma.js/logger/-/logger-0.0.5.tgz#520fc2ce740b608f862f113f087bc43d9e84244a"
-  integrity sha512-9Nb1ODh27oJZ5XaajhLibu41elarRVuweEV8TTDmuOzLFL0C0fOlUu9FsETqor88+UOBKlKjvnbMnjMj/An9jw==
-
-"@tma.js/parsing@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmmirror.com/@tma.js/parsing/-/parsing-1.0.1.tgz#80d2eb450194736da10b585e6a026ed066780f54"
-  integrity sha512-6yBYpn1VVwZObmL6+Gi8PSZ2EOqjiOgWnb80DWiKV+Wur0wjF0rqmTOuy8CCfV18ZKgBwNsSRD6xkx89wHZo4A==
-  dependencies:
-    "@tma.js/colors" "0.0.5"
-    "@tma.js/util-types" "0.0.3"
-
-"@tma.js/sdk-react@^0.5.4":
-  version "0.5.4"
-  resolved "https://registry.npmmirror.com/@tma.js/sdk-react/-/sdk-react-0.5.4.tgz#3770cb505da2f0b0dc358c7a3ebcbe723e9f0dc2"
-  integrity sha512-pM34xiTsJf2MLVoKbkCD5T78HuIUZ5oNs8ospJ2Sz9y3wACk/to1482vZbjb2mSEERPdx6cs5AVG4VDdiOax/g==
-  dependencies:
-    "@tma.js/bridge" "1.4.1"
-    "@tma.js/launch-params" "1.0.1"
-    "@tma.js/sdk" "0.13.3"
-    "@tma.js/theme-params" "1.0.0"
-
-"@tma.js/sdk@0.13.3":
-  version "0.13.3"
-  resolved "https://registry.npmmirror.com/@tma.js/sdk/-/sdk-0.13.3.tgz#9bc65813e041783e5a4f53c2d5351667373aca53"
-  integrity sha512-Koqg9FPoCaEvn6bBBgBt9afSaHtIFFKiwFP05+MIQqHi5XkoLJWqJB9k6pWVHxwwZg7jZv1vQNiiND5HGOJ8bA==
-  dependencies:
-    "@tma.js/bridge" "1.4.1"
-    "@tma.js/colors" "0.0.5"
-    "@tma.js/event-emitter" "0.1.0"
-    "@tma.js/init-data" "0.2.22"
-    "@tma.js/launch-params" "1.0.1"
-    "@tma.js/parsing" "1.0.1"
-    "@tma.js/theme-params" "1.0.0"
-    "@tma.js/util-types" "0.0.3"
-    "@tma.js/utils" "0.5.6"
-
-"@tma.js/theme-params@1.0.0":
+"@tma.js/sdk-react@^1.0.0":
   version "1.0.0"
-  resolved "https://registry.npmmirror.com/@tma.js/theme-params/-/theme-params-1.0.0.tgz#3a819d8609a426fd02501a5b1b9bd19d302925b9"
-  integrity sha512-MxA8QNMG7J1cn1x501rD3f9MtiJAc1NNg3rYTGtp/Yoc7cv0N60fsHpE+mgNoyrFzddqbUQ7x+NVnUbzLaio+A==
+  resolved "https://registry.npmmirror.com/@tma.js/sdk-react/-/sdk-react-1.0.0.tgz#5bf5abc796559dbe019abb0333e24f4462e36a78"
+  integrity sha512-MolaMrPQfABCP7Ne7yVDsSR9WZeZXArdw3Cs6+p6e517uF23+L0ONfBRwTJSTKcj/EZaYclQo4HMT+i7pT82Tw==
   dependencies:
-    "@tma.js/colors" "0.0.5"
-    "@tma.js/parsing" "1.0.1"
+    "@tma.js/sdk" "1.0.0"
 
-"@tma.js/util-types@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.npmmirror.com/@tma.js/util-types/-/util-types-0.0.3.tgz#1f8ca7867c56ca4dbf46014564767b998a61ade0"
-  integrity sha512-9hYutR7Ee4F3dgZlztTL31w8ljs3loRQ0pnzox0EG/Ey2CmbXTbLc9UIJuXzyKBiJKNJEoB3NNoAIy7mBaLRIQ==
-
-"@tma.js/utils@0.5.6":
-  version "0.5.6"
-  resolved "https://registry.npmmirror.com/@tma.js/utils/-/utils-0.5.6.tgz#e2d8787aee95523508e550c97780f8f724a42c9e"
-  integrity sha512-aNn3w6uzHNmqET9g4CRRtazOmMrdwboWrIXKdkNMMlC5hrNwV+Z09dPeZzQmaqUS7hvbwI9lMF9cUW4bJCaeGw==
+"@tma.js/sdk@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/@tma.js/sdk/-/sdk-1.0.0.tgz#c924be997f10c620f1623b9d63b979b0d1c8f8ec"
+  integrity sha512-R4FImxJ1BcO2OBWth4I8D4AlBv4XBUasrlvuJlNakmRVam3ROF9It12BYSrgkQCk4MSEedSx4y2v24y8HtfCrQ==
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
@@ -3796,10 +3712,10 @@ antd@^4.20.6:
     rc-util "^5.37.0"
     scroll-into-view-if-needed "^2.2.25"
 
-antd@^5.11.4:
-  version "5.11.4"
-  resolved "https://registry.npmmirror.com/antd/-/antd-5.11.4.tgz#7c4c7254a0424573c095d20d997d2e34763e67f2"
-  integrity sha512-FuaV/viyZiMlCL1JzdQpSlzPcWcBlGYDAbtj3FM4BgwAso+ge3d4tXkZZG4yZkktUoLvWrcaJObs3Nk32Oiwuw==
+antd@^5.11.5:
+  version "5.11.5"
+  resolved "https://registry.npmmirror.com/antd/-/antd-5.11.5.tgz#e1528aa9a10c035ce2921d487b96da2d07b4feaa"
+  integrity sha512-qB1YmvO4Zm4r48M0Ptxn7orpaXeMPSeTrrw6dAgtTYN+ysnWD/D/zlxFc5g73GywIzZ10XGqvNC+74A+HD0yeQ==
   dependencies:
     "@ant-design/colors" "^7.0.0"
     "@ant-design/cssinjs" "^1.17.5"
@@ -4439,9 +4355,9 @@ camelize@^1.0.0:
   integrity sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==
 
 caniuse-lite@^1.0.30001538, caniuse-lite@^1.0.30001541:
-  version "1.0.30001564"
-  resolved "https://registry.npmmirror.com/caniuse-lite/-/caniuse-lite-1.0.30001564.tgz#eaa8bbc58c0cbccdcb7b41186df39dd2ba591889"
-  integrity sha512-DqAOf+rhof+6GVx1y+xzbFPeOumfQnhYzVnZD6LAXijR77yPtm9mfOcqOnT3mpnJiZVT+kwLAFnRlZcIz+c6bg==
+  version "1.0.30001565"
+  resolved "https://registry.npmmirror.com/caniuse-lite/-/caniuse-lite-1.0.30001565.tgz#a528b253c8a2d95d2b415e11d8b9942acc100c4f"
+  integrity sha512-xrE//a3O7TP0vaJ8ikzkD2c2NgcVUvsEe2IvFTntV4Yd1Z9FVzh+gW+enX96L0psrbaFMcVcH2l90xNuGDWc8w==
 
 chalk@5.3.0:
   version "5.3.0"
@@ -4528,9 +4444,9 @@ cli-truncate@^3.1.0:
     string-width "^5.0.0"
 
 click-to-react-component@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.npmmirror.com/click-to-react-component/-/click-to-react-component-1.0.8.tgz#bcad2f4551dde67c54cec77e02791c7ecda50e5a"
-  integrity sha512-YBNYOp00udy+NBEnUmM/3Df0Yco1iHNQ8k0ltlJVcDYK9AuYt14xPoJicBh/BokLqbzkci1p+pbdY5r4JXZC4g==
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/click-to-react-component/-/click-to-react-component-1.1.0.tgz#6268659153881d9e6052deee54b1716c63706ff6"
+  integrity sha512-/DjZemufS1BkxyRgZL3r7HXVVOFRWVQi5Xd4EBnjxZMwrHEh0OlUVA2N9CjXkZ0x8zMf8dL1cKnnx+xUWUg4VA==
   dependencies:
     "@floating-ui/react-dom-interactions" "^0.3.1"
     htm "^3.1.0"

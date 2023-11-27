@@ -1,20 +1,18 @@
-import { InitData, WebApp, useClosingBehaviour, useInitData, useSDK, useViewport, useWebApp } from "@tma.js/sdk-react";
+import { useInitData, useSDKContext, useViewport, useMiniApp } from "@tma.js/sdk-react";
+import { InitData, MiniApp } from "@tma.js/sdk";
 import { useModel } from "@umijs/max";
 import { PropsWithChildren, useEffect } from "react";
 
 export const TMAInitData = ({ children }: PropsWithChildren) => {
   const { setTelegramData, setTelegramAuthType, setTelegramMiniAppHeight, setTelegramWebApp } = useModel('useTelegram');
 
-  const { components, error } = useSDK();
+  const { loading, error } = useSDKContext();
 
-  let webApp: WebApp | null = null;
-  let initData: InitData | null = null;
-  if (!error && !!components) {
-    webApp = useWebApp();
+  let webApp: MiniApp | null = null;
+  let initData: InitData | undefined = undefined;
+  if (!error && !loading) {
+    webApp = useMiniApp();
     setTelegramWebApp(webApp);
-
-    const closingConfirmation = useClosingBehaviour()
-    closingConfirmation.enableConfirmation();
 
     const viewport = useViewport()
     viewport.expand();

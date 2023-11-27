@@ -1,10 +1,13 @@
 import hark from "hark";
 import React from "react";
 import { useModel } from "@umijs/max";
+import { notification } from "antd";
+import { DEBUG } from "@/constants/global";
 
 export default () => {
   const { selectedMicrophone } = useModel("useSetting");
   const { audioContext } = useModel("useWebRTC");
+  const { sendOverSocket, SendMessageType } = useModel("useWebsocket");
 
   const [isRecording, setIsRecording] = React.useState<boolean>(false);
   const [mediaRecorder, setMediaRecorder] =
@@ -106,19 +109,33 @@ export default () => {
           .connect(micStreamDestinationNode);
         // Temporary workaround for mimic stop event behavior, as for now on iOS 16 stop event doesn't fire.
         mediaRecorder.ondataavailable = (event) => {
-          let blob = new Blob([event.data], { type: "audio/webm" });
-          // sendOverSocket(blob);
+          let blob = new Blob([event.data], { type: "audio/mp3" });
+          sendOverSocket(SendMessageType.BLOB, blob);
         };
         setMediaRecorder(mediaRecorder);
       })
       .catch(function (err) {
         console.log("An error occurred: " + err);
         if (err.name === "NotAllowedError") {
-          alert(
+          if (DEBUG)
+            notification.error({
+              key: "notAllowedError",
+              message: "Not Allowed Error",
+              description:
+                "Permission Denied: Please grant permission to access the microphone and refresh the website to try again!",
+            });
+          console.log(
             "Permission Denied: Please grant permission to access the microphone and refresh the website to try again!"
           );
         } else if (err.name === "NotFoundError") {
-          alert(
+          if (DEBUG)
+            notification.error({
+              key: "notFoundError",
+              message: "Not Found Error",
+              description:
+                "No Device Found: Please check your microphone device and refresh the website to try again.",
+            });
+          console.log(
             "No Device Found: Please check your microphone device and refresh the website to try again."
           );
         }
