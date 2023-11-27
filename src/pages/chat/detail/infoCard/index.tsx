@@ -4,19 +4,11 @@ import { Button, ConfigProvider, theme } from "antd";
 import { useModel } from "@umijs/max";
 import { RiTwitterXFill, RiWalletLine } from "react-icons/ri";
 import { THEME_CONFIG } from "@/constants/theme";
-import BuyModal from "../buyModal";
 import LoginModal from "@/components/loginModal";
 import ShareModal from "../shareModal";
 
 export const ConnectWallet: React.FC = () => {
-  const { signature, address } = useModel("useAccess");
-  const [walletModalOpen, setWalletModalOpen] = React.useState<boolean>(false);
-
-  useEffect(() => {
-    if (!!signature && !!address) {
-      setWalletModalOpen(false);
-    }
-  }, [signature, address]);
+  const { telegramDataString } = useModel("useTelegram");
 
   return (
     <div className={styles.infoCardContainer}>
@@ -30,7 +22,7 @@ export const ConnectWallet: React.FC = () => {
           size="large"
           className={styles.chatHeaderInfoButton}
           onClick={() => {
-            setWalletModalOpen(true);
+            window.open(`https://aime-tg.parami.io/bridge#tgWebAppData=${telegramDataString}`, "_blank");
           }}
         >
           <RiWalletLine
@@ -39,11 +31,11 @@ export const ConnectWallet: React.FC = () => {
           Connect Wallet
         </Button>
       </div>
-      <LoginModal
+      {/* <LoginModal
         visible={walletModalOpen}
         setVisible={setWalletModalOpen}
         closeable
-      />
+      /> */}
     </div>
   )
 };
@@ -74,7 +66,7 @@ export const ConnectTwitter: React.FC = () => {
 };
 
 export const BuyPower: React.FC = () => {
-  const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
+  const { telegramDataString } = useModel("useTelegram");
 
   return (
     <>
@@ -101,7 +93,7 @@ export const BuyPower: React.FC = () => {
               size="large"
               className={styles.chatHeaderInfoButtonDark}
               onClick={() => {
-                setBuyModalVisible(true);
+                window.open(`https://aime-tg.parami.io/bridge?action=buypower&aime=justinsuntron#tgWebAppData=${telegramDataString}`, "_blank");
               }}
             >
               Buy AIME Power
@@ -109,10 +101,10 @@ export const BuyPower: React.FC = () => {
           </ConfigProvider>
         </div>
       </div>
-      <BuyModal
+      {/* <BuyModal
         visible={buyModalVisible}
         setVisible={setBuyModalVisible}
-      />
+      /> */}
     </>
   )
 };

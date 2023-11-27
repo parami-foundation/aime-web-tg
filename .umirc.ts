@@ -42,6 +42,10 @@ export default defineConfig({
         },
       ],
     },
+    {
+      path: "/bridge",
+      component: "bridge",
+    },
   ],
   manifest: {
     basePath: "/",

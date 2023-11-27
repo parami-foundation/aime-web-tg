@@ -1,0 +1,145 @@
+.bridgeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 100px;
+
+  .contentContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 20px;
+
+    .bridgeHeader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      color: #000;
+      text-align: center;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 800;
+      line-height: normal;
+      text-transform: uppercase;
+
+      .bridgeHeaderDescription {
+        font-size: 14px;
+        font-weight: 400;
+        text-align: center;
+        margin-top: var(--spacing-min);
+      }
+    }
+
+    .bridgeContent {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 30px;
+
+      .bridgeContentItem {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: auto;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+
+        &:not(:last-child) {
+          margin-bottom: 15px;
+        }
+
+        :global(.ant-btn-loading-icon) {
+          color: #000;
+        }
+
+        .bridgeContentItemLeft {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+
+          .bridgeContentItemIcon {
+            width: 40px;
+            height: 40px;
+            margin-right: 20px;
+          }
+
+          .bridgeContentItemText {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            color: #000;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+
+            .bridgeContentItemTag {
+              color: #000;
+              font-size: 10px;
+              font-style: normal;
+              font-weight: 900;
+              line-height: normal;
+              margin-left: 5px;
+            }
+          }
+        }
+
+        .bridgeContentItemRight {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-end;
+        }
+
+        .bridgeContentItemRightIcon {
+          font-size: 18px;
+          color: #000;
+        }
+      }
+    }
+  }
+
+  .logoContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 10px;
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 34px;
+      overflow: hidden;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .title {
+      width: 80px;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}

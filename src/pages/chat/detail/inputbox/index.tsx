@@ -5,7 +5,6 @@ import { HiArrowNarrowRight } from "react-icons/hi";
 import { CgKeyboard } from "react-icons/cg";
 import { Input } from "antd";
 import { useModel } from "@umijs/max";
-import BuyModal from "../buyModal";
 
 const InputBox: React.FC<{
   isTextMode: boolean;
@@ -16,12 +15,12 @@ const InputBox: React.FC<{
 }> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode }) => {
   const { SendMessageType, sendOverSocket } = useModel("useWebsocket");
   const { address } = useModel("useAccess");
+  const { telegramDataString } = useModel("useTelegram");
   const { transactionHashs } = useModel("useContract");
   const { isRecording } = useModel("useRecorder");
   const { speechInterim } = useModel("useChat");
 
   const [inputValue, setInputValue] = React.useState<string>();
-  const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
 
   useEffect(() => {
     if (!isTextMode) {
@@ -136,7 +135,7 @@ const InputBox: React.FC<{
               <div
                 className={styles.buyButton}
                 onClick={() => {
-                  setBuyModalVisible(true);
+                  window.open(`https://aime-tg.parami.io/bridge?action=buypower&aime=justinsuntron#tgWebAppData=${telegramDataString}`, "_blank");
                 }}
               >
                 Buy
@@ -145,10 +144,6 @@ const InputBox: React.FC<{
           </div>
         </div>
       </div>
-      <BuyModal
-        visible={buyModalVisible}
-        setVisible={setBuyModalVisible}
-      />
     </>
   )
 };

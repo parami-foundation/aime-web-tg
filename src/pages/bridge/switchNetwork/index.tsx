@@ -11,13 +11,13 @@ const SwitchNetwork: React.FC = () => {
 
   return (
     <>
-      <div className={styles.loginModalHeader}>
+      <div className={styles.bridgeHeader}>
         Change Network
-        <div className={styles.loginModalHeaderDescription}>
+        <div className={styles.bridgeHeaderDescription}>
           Please change your network to {chains[0]?.name}
         </div>
       </div>
-      <div className={styles.loginModalContent}>
+      <div className={styles.bridgeContent}>
         <ConfigProvider
           theme={{
             algorithm: theme.defaultAlgorithm,
@@ -33,22 +33,22 @@ const SwitchNetwork: React.FC = () => {
             block
             type="primary"
             size="large"
-            className={styles.loginModalContentItem}
+            className={styles.bridgeContentItem}
             onClick={() => {
               switchNetworkAsync?.(chains[0]?.id);
             }}
           >
-            <div className={styles.loginModalContentItemLeft}>
+            <div className={styles.bridgeContentItemLeft}>
               <RefreshIcon
-                className={styles.loginModalContentItemIcon}
+                className={styles.bridgeContentItemIcon}
               />
-              <div className={styles.loginModalContentItemText}>
+              <div className={styles.bridgeContentItemText}>
                 Switch Network
               </div>
             </div>
-            <div className={styles.loginModalContentItemRight}>
+            <div className={styles.bridgeContentItemRight}>
               <FaAngleRight
-                className={styles.loginModalContentItemRightIcon}
+                className={styles.bridgeContentItemRightIcon}
               />
             </div>
           </Button>

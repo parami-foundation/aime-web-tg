@@ -24,10 +24,10 @@ const ConnectWallet: React.FC = () => {
 
   return (
     <>
-      <div className={styles.loginModalHeader}>
+      <div className={styles.bridgeHeader}>
         Log in with wallet
       </div>
-      <div className={styles.loginModalContent}>
+      <div className={styles.bridgeContent}>
         {connectors.map((connector) => {
           if (!connector.ready) {
             return null;
@@ -48,47 +48,47 @@ const ConnectWallet: React.FC = () => {
                 block
                 type="primary"
                 size="large"
-                className={styles.loginModalContentItem}
+                className={styles.bridgeContentItem}
                 onClick={() => {
                   connect({ connector });
                 }}
               >
-                <div className={styles.loginModalContentItemLeft}>
+                <div className={styles.bridgeContentItemLeft}>
                   {connector.id === 'metaMask' && (
                     <MetamaskIcon
-                      className={styles.loginModalContentItemIcon}
+                      className={styles.bridgeContentItemIcon}
                     />
                   )}
                   {connector.id === 'coinbaseWallet' && (
                     <CoinbaseIcon
-                      className={styles.loginModalContentItemIcon}
+                      className={styles.bridgeContentItemIcon}
                     />
                   )}
                   {connector.id === 'walletConnect' && (
                     <WalletConnectIcon
-                      className={styles.loginModalContentItemIcon}
+                      className={styles.bridgeContentItemIcon}
                     />
                   )}
                   {connector.id === 'eip6963' && (
                     <InjectedIcon
-                      className={styles.loginModalContentItemIcon}
+                      className={styles.bridgeContentItemIcon}
                     />
                   )}
-                  <div className={styles.loginModalContentItemText}>
+                  <div className={styles.bridgeContentItemText}>
                     {connector.name}
                     {connector.id === 'walletConnect' && (
                       <Tag
                         color={THEME_CONFIG.colorSecondary}
-                        className={styles.loginModalContentItemTag}
+                        className={styles.bridgeContentItemTag}
                       >
                         HOT
                       </Tag>
                     )}
                   </div>
                 </div>
-                <div className={styles.loginModalContentItemRight}>
+                <div className={styles.bridgeContentItemRight}>
                   <FaAngleRight
-                    className={styles.loginModalContentItemRightIcon}
+                    className={styles.bridgeContentItemRightIcon}
                   />
                 </div>
               </Button>

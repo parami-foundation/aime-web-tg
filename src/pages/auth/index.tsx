@@ -8,12 +8,11 @@ import { useModel, history } from '@umijs/max';
 import { AccessLayout } from '@/layouts/access';
 
 const Auth: React.FC = () => {
-  const { accessToken, setWalletModalOpen } = useModel('useAccess');
+  const { accessToken, setTelegramOauthModalVisible } = useModel('useAccess');
 
   useEffect(() => {
     if (!!accessToken) {
-      // TODO: DEMO
-      history.push('/chat/demo');
+      history.push('/home');
     }
   }, [accessToken]);
 
@@ -40,10 +39,10 @@ const Auth: React.FC = () => {
               size="large"
               className={styles.button}
               onClick={() => {
-                setWalletModalOpen(true);
+                setTelegramOauthModalVisible(true);
               }}
             >
-              Connect Wallet
+              Login with Telegram
             </Button>
           </div>
         </div>

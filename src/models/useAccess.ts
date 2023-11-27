@@ -1,4 +1,3 @@
-import { BIND_WALLET_MESSAGE } from "@/constants/global";
 import { OauthTelegram } from "@/services/api";
 import { useModel } from "@umijs/max";
 import { message } from "antd";
@@ -6,28 +5,27 @@ import { useEffect, useState } from "react";
 
 export default () => {
   const { telegramDataString, telegramAuthType } = useModel("useTelegram");
-  const [address, setAddress] = useState<`0x${string}` | undefined>();
-  const [signature, setSignature] = useState<string>();
   const [accessToken, setAccessToken] = useState<string>();
   const [accessTokenExpire, setAccessTokenExpire] = useState<number>(0);
+
+  const [address, setAddress] = useState<`0x${string}` | undefined>();
+  const [signature, setSignature] = useState<string>();
   const [twitterBinded, setTwitterBinded] = useState<boolean>(true);
-  const [walletModalOpen, setWalletModalOpen] = useState<boolean>(false);
+  const [telegramOauthModalVisible, setTelegramOauthModalVisible] =
+    useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
       if (!!telegramDataString && !accessToken) {
         const { response, data } = await OauthTelegram({
           init_data: telegramDataString,
-          message: BIND_WALLET_MESSAGE,
-          signature: signature,
-          address: address,
           type: telegramAuthType,
         });
 
         if (response?.status === 200 && data?.status === "success") {
           message.success({
-            key: "bindTelegram",
-            content: "Bind telegram success",
+            key: "loginSuccess",
+            content: "Login success",
           });
           !!data?.access_token &&
             localStorage.setItem("aime:accessToken", data?.access_token);
@@ -41,8 +39,8 @@ export default () => {
           !!data?.expire && setAccessTokenExpire(data?.expire);
         } else {
           message.error({
-            key: "bindTelegram",
-            content: "Bind telegram failed",
+            key: "loginFailed",
+            content: "Login failed",
           });
         }
       }
@@ -79,12 +77,12 @@ export default () => {
     accessTokenExpire,
     address,
     twitterBinded,
-    walletModalOpen,
+    telegramOauthModalVisible,
     setAccessToken,
     setSignature,
     setAccessTokenExpire,
     setAddress,
     setTwitterBinded,
-    setWalletModalOpen,
+    setTelegramOauthModalVisible,
   };
 };

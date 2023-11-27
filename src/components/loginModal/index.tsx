@@ -5,8 +5,6 @@ import { useAccount, useNetwork, useSignMessage, useSwitchNetwork } from 'wagmi'
 import { useModel } from "@umijs/max";
 import { useSDKContext } from "@tma.js/sdk-react";
 import TelegramOauth, { TelegramOauthDataOnauthProps } from "./telegramOauth";
-import ConnectWallet from "./connectWallet";
-import SwitchNetwork from "./switchNetwork";
 import SignMessage from "./signMessage";
 import Loading from "./loading";
 
@@ -75,12 +73,12 @@ const LoginModal: React.FC<{
             }}
           />
         )}
-        {!!telegramDataString && !isConnected && (
+        {/* {!!telegramDataString && !isConnected && (
           <ConnectWallet />
-        )}
-        {!!telegramDataString && isConnected && currentChain?.id !== chains[0]?.id && (
+        )} */}
+        {/* {!!telegramDataString && isConnected && currentChain?.id !== chains[0]?.id && (
           <SwitchNetwork />
-        )}
+        )} */}
         {!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id && !signature && (
           <SignMessage
             error={signMsgError}
