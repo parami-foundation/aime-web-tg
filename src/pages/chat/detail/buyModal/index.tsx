@@ -17,6 +17,8 @@ const Select: React.FC<{
   powerValue: number;
   setPowerValue: (powerValue: number) => void;
 }> = ({ powerValue, setPowerValue }) => {
+  const { character } = useModel("useSetting");
+
   const [manualInput, setManualInput] = React.useState<number>(0);
 
   const getEthValue = (powerValue: number) => {
@@ -45,7 +47,7 @@ const Select: React.FC<{
           />
           <div className={styles.selectModalHeaderIconAvatar}>
             <img
-              src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
+              src={character?.avatar_url}
               alt="avatar"
             />
           </div>
@@ -54,7 +56,7 @@ const Select: React.FC<{
           Buy
         </div>
         <div className={styles.selectModalHeaderSubtitle}>
-          <b>justinsuntron‘s</b> Power
+          <b>{character?.name}‘s</b> Power
         </div>
         <div className={styles.selectModalHeaderFlat}>
           1 Power ≈ {formatEther(getEthValue(1) ?? 0n)} ETH
@@ -379,7 +381,8 @@ const Detail: React.FC<{
 const BuyModal: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
-}> = ({ visible, setVisible }) => {
+  closeable?: boolean;
+}> = ({ visible, setVisible, closeable }) => {
   const [powerValue, setPowerValue] = React.useState<number>(0);
   const [purchaseSuccessVisible, setPurchaseSuccessVisible] = React.useState<boolean>(false);
   const [purchaseFailedVisible, setPurchaseFailedVisible] = React.useState<boolean>(false);
@@ -404,6 +407,8 @@ const BuyModal: React.FC<{
         className={styles.buyModal}
         open={visible}
         onCancel={() => setVisible(false)}
+        closable={closeable ?? true}
+        maskClosable={closeable ?? true}
       >
         {powerValue === 0 ? (
           <Select

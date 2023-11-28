@@ -9,6 +9,7 @@ export interface Character {
   source?: string;
   twitter_handle?: string;
   voice_id?: string;
+  share_message?: string;
   contract_address?: string;
 }
 
@@ -20,6 +21,7 @@ export interface CharacterInfo {
   avatar_key?: string;
   background?: string;
   token_icon?: string;
+  share_message?: string;
   questions?: string[];
 }
 

@@ -6,11 +6,14 @@ import { FaAngleRight } from "react-icons/fa";
 import { IoIosMore } from "react-icons/io";
 import { ReactComponent as TelegramIcon } from "@/assets/brand/telegram.svg";
 import { ReactComponent as TwitterIcon } from "@/assets/brand/twitter.svg";
+import Share from "@/components/share";
 
 const ShareModal: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
 }> = ({ visible, setVisible }) => {
+  const [shareModalVisible, setShareModalVisible] = React.useState(false);
+
   return (
     <>
       <Modal
@@ -106,6 +109,7 @@ const ShareModal: React.FC<{
                 type="primary"
                 size="large"
                 className={styles.shareModalContentItem}
+                onClick={() => setShareModalVisible(true)}
               >
                 <div className={styles.shareModalContentItemLeft}>
                   <IoIosMore
@@ -125,6 +129,11 @@ const ShareModal: React.FC<{
           </div>
         </div>
       </Modal>
+      <Share
+        visible={shareModalVisible}
+        setVisible={setShareModalVisible}
+        userId={'kai'}
+      />
     </>
   )
 };

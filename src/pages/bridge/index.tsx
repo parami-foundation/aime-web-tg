@@ -5,7 +5,7 @@ import { ReactComponent as Logo } from '@/assets/logo.svg';
 import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
 import SwitchNetwork from "./switchNetwork";
 import ConnectWallet from "./connectWallet";
-import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 import { Button, Result, message } from "antd";
 import queryString from 'query-string';
 import BuyModal from "../chat/detail/buyModal";
@@ -18,6 +18,7 @@ const Bridge: React.FC = () => {
 
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
+  const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount({
     onConnect: () => {
       message.success({
@@ -55,6 +56,11 @@ const Bridge: React.FC = () => {
               <LogoTitle />
             </div>
           </div>
+          {!!address && isConnected && (
+            <div className={styles.accountContainer}>
+              <w3m-account-button />
+            </div>
+          )}
           <div className={styles.contentContainer}>
             {!!telegramDataString && !isConnected && (
               <ConnectWallet />
@@ -97,6 +103,7 @@ const Bridge: React.FC = () => {
       <BuyModal
         visible={buyModalVisible}
         setVisible={setBuyModalVisible}
+        closeable={false}
       />
     </div>
   )

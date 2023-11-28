@@ -1,4 +1,4 @@
-import { LBAudioElement } from "@/pages/chat/detail/demo";
+import { LBAudioElement } from "@/pages/chat/detail";
 import { LBArrayBuffer } from "@/utils/audioUtils";
 import { useModel } from "@umijs/max";
 import React from "react";

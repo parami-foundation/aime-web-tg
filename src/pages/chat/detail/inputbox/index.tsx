@@ -13,7 +13,8 @@ const InputBox: React.FC<{
   handsFreeMode: () => void;
   textMode: () => void;
   inputBoxContainer: React.RefObject<HTMLDivElement>;
-}> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode }) => {
+  setDisableMic: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode, setDisableMic }) => {
   const { SendMessageType, sendOverSocket } = useModel("useWebsocket");
   const { address, accessToken } = useModel("useAccess");
   const { telegramDataString } = useModel("useTelegram");
@@ -27,6 +28,7 @@ const InputBox: React.FC<{
   useEffect(() => {
     if (!isTextMode) {
       // switch to hands free mode
+      setDisableMic(false);
       handsFreeMode();
     } else {
       // switch to text mode

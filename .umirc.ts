@@ -30,10 +30,6 @@ export default defineConfig({
       ],
     },
     {
-      path: "/share",
-      component: "share",
-    },
-    {
       path: "/me",
       routes: [
         {

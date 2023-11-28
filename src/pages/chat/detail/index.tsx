@@ -10,7 +10,9 @@ import { charactersData } from "@/mocks/character";
 import { AccessLayout } from "@/layouts/access";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineStar } from "react-icons/ai";
+import { IoShareSocialOutline } from "react-icons/io5";
 import { playAudios } from "@/utils/audioUtils";
+import ShareModal from "./shareModal";
 
 export interface LBAudioElement extends HTMLAudioElement {
   setSinkId(id: string): Promise<void>;
@@ -21,14 +23,15 @@ const Chat: React.FC = () => {
   const { messages, messageList, clearChatContent } = useModel("useChat");
   const { SendMessageType, socketIsOpen, closeSocket, connectSocket, sendOverSocket } = useModel("useWebsocket");
   const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer, stopAudioPlayback } = useModel("useWebRTC");
-  const { selectedSpeaker, selectedMicrophone, isMute, setIsMute, setCharacter, getAudioList } = useModel("useSetting");
-  const { mediaRecorder, vadEvents, enableVAD, closeVAD, startRecording, stopRecording, vadEventsCallback, closeMediaRecorder, connectMicrophone, disableVAD } = useModel("useRecorder");
+  const { selectedSpeaker, selectedMicrophone, character, isMute, setIsMute, setCharacter, getAudioList } = useModel("useSetting");
+  const { mediaRecorder, vadEvents, enableVAD, closeVAD, startRecording, stopRecording, vadEventsCallback, closeMediaRecorder, connectMicrophone, disableVAD, disconnectMicrophone } = useModel("useRecorder");
 
   const chatWrapper = React.useRef<HTMLDivElement>(null);
   const msgList = React.useRef<HTMLDivElement>(null);
   const inputBoxContainer = React.useRef<HTMLDivElement>(null);
-  const [disableMic, setDisableMic] = React.useState<boolean>(false);
+  const [disableMic, setDisableMic] = React.useState<boolean>(true);
   const [isTextMode, setIsTextMode] = React.useState<boolean>(true);
+  const [shareModalVisible, setShareModalVisible] = React.useState<boolean>(false);
 
   // Audio player
   const audioPlayerRef = useRef<LBAudioElement>(null);
@@ -46,6 +49,7 @@ const Chat: React.FC = () => {
   // Demo
   useEffect(() => {
     if (!accessToken || !charactersData.length) return;
+    setCharacter(charactersData[0]);
     connectSocket({
       character: charactersData[0],
       onReturn: () => {
@@ -61,16 +65,18 @@ const Chat: React.FC = () => {
     if (!!rtcConnectionEstablished) {
       closePeer();
     }
-    getAudioList().then(
-    ).then(() => {
-      connectPeer().then(
-        () => {
-          connectMicrophone();
-          initializeVAD();
-        }
-      );
-    });
-  }, [selectedMicrophone, isTextMode]);
+    if (!disableMic) {
+      getAudioList().then(
+      ).then(() => {
+        connectPeer().then(
+          () => {
+            connectMicrophone();
+            initializeVAD();
+          }
+        );
+      });
+    }
+  }, [selectedMicrophone, isTextMode, disableMic]);
 
   function initializeVAD() {
     if (vadEvents) {
@@ -118,7 +124,6 @@ const Chat: React.FC = () => {
 
   // Audio Playback
   useEffect(() => {
-    console.log(audioQueue.length)
     if (isPlaying && !!audioContext) {
       console.log("playback");
       playAudios(
@@ -222,16 +227,24 @@ const Chat: React.FC = () => {
                 <div className={styles.chatHeaderButton}>
                   <AiOutlineStar />
                 </div>
+                <div
+                  className={styles.chatHeaderButton}
+                  onClick={() => {
+                    setShareModalVisible(true);
+                  }}
+                >
+                  <IoShareSocialOutline />
+                </div>
               </div>
             </div>
             <div className={styles.chatHeaderAvatar}>
               <img
-                src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
+                src={character?.avatar_url}
                 alt="avatar"
               />
             </div>
             <div className={styles.chatHeaderName}>
-              justinsuntron
+              {character?.name}
             </div>
           </div>
           <div
@@ -269,8 +282,13 @@ const Chat: React.FC = () => {
           inputBoxContainer={inputBoxContainer}
           handsFreeMode={handsFreeMode}
           textMode={textMode}
+          setDisableMic={setDisableMic}
         />
       </div>
+      <ShareModal
+        visible={shareModalVisible}
+        setVisible={setShareModalVisible}
+      />
     </AccessLayout>
   )
 };

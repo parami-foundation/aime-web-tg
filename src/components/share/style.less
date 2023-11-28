@@ -1,10 +1,36 @@
+.shareModal {
+  position: relative;
+  :global(.ant-modal-content) {
+    background: var(--background);
+    padding: unset;
+    overflow: hidden;
+  }
+}
+
+.shareModalCloseIcon {
+  color: #fff;
+}
+
+.generateButton {
+  position: absolute;
+  bottom: 0;
+  z-index: 2;
+}
+
 .shareContentContainer {
-  width: 375px;
+  width: 100%;
   height: 668px;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
+
+  .shareContentWrapper {
+    height: 100%;
+    position: relative;
+    z-index: 2;
+  }
 
   .logoContainer {
     padding: 20px;
@@ -87,6 +113,7 @@
   .footer {
     height: 114px;
     position: relative;
+    overflow: hidden;
 
     .footerContent {
       position: relative;
@@ -139,12 +166,24 @@
     .footerBgContainer {
       position: absolute;
       top: 0;
+      width: 100%;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 
   .bgContainer {
     top: 0;
     position: absolute;
-    z-index: -1;
+    z-index: 1;
+    width: 100%;
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
