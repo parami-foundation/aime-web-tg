@@ -1,14 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./style.less";
 import { Button, ConfigProvider, theme } from "antd";
 import { useModel } from "@umijs/max";
 import { RiTwitterXFill, RiWalletLine } from "react-icons/ri";
 import { THEME_CONFIG } from "@/constants/theme";
-import LoginModal from "@/components/loginModal";
 import ShareModal from "../shareModal";
+import BuyModal from "../buyModal";
 
 export const ConnectWallet: React.FC = () => {
   const { telegramDataString } = useModel("useTelegram");
+  const { setWalletModalVisible, accessToken } = useModel("useAccess");
 
   return (
     <div className={styles.infoCardContainer}>
@@ -22,7 +23,7 @@ export const ConnectWallet: React.FC = () => {
           size="large"
           className={styles.chatHeaderInfoButton}
           onClick={() => {
-            window.open(`https://aime-tg.parami.io/bridge#tgWebAppData=${telegramDataString}`, "_blank");
+            !!telegramDataString ? window.open(`https://aime-tg.parami.io/bridge?token=${accessToken}#tgWebAppData=${encodeURIComponent(telegramDataString)}`, "_blank") : setWalletModalVisible(true);
           }}
         >
           <RiWalletLine
@@ -31,11 +32,6 @@ export const ConnectWallet: React.FC = () => {
           Connect Wallet
         </Button>
       </div>
-      {/* <LoginModal
-        visible={walletModalOpen}
-        setVisible={setWalletModalOpen}
-        closeable
-      /> */}
     </div>
   )
 };
@@ -66,7 +62,10 @@ export const ConnectTwitter: React.FC = () => {
 };
 
 export const BuyPower: React.FC = () => {
+  const { accessToken } = useModel("useAccess");
   const { telegramDataString } = useModel("useTelegram");
+
+  const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
 
   return (
     <>
@@ -93,7 +92,7 @@ export const BuyPower: React.FC = () => {
               size="large"
               className={styles.chatHeaderInfoButtonDark}
               onClick={() => {
-                window.open(`https://aime-tg.parami.io/bridge?action=buypower&aime=justinsuntron#tgWebAppData=${telegramDataString}`, "_blank");
+                !!telegramDataString ? window.open(`https://aime-tg.parami.io/bridge?token=${accessToken}&action=buypower&aime=justinsuntron#tgWebAppData=${encodeURIComponent(telegramDataString)}`, "_blank") : setIsBuyModalVisible(true);
               }}
             >
               Buy AIME Power
@@ -101,10 +100,10 @@ export const BuyPower: React.FC = () => {
           </ConfigProvider>
         </div>
       </div>
-      {/* <BuyModal
-        visible={buyModalVisible}
-        setVisible={setBuyModalVisible}
-      /> */}
+      <BuyModal
+        visible={isBuyModalVisible}
+        setVisible={setIsBuyModalVisible}
+      />
     </>
   )
 };
@@ -146,7 +145,7 @@ export const Share: React.FC = () => {
 const InfoCard: React.FC = () => {
   const { address, signature, twitterBinded } = useModel("useAccess");
 
-  if (!address || !signature) {
+  if (!address) {
     return (
       <ConnectWallet />
     )

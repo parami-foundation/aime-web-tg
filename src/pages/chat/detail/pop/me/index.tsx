@@ -14,10 +14,9 @@ const MePop: React.FC<{
       audioPlayer?.current?.addEventListener("loadedmetadata", () => {
         var duration = audioPlayer?.current?.duration;
         setAudioDuration(duration);
-        audioPlayer?.current?.play();
       });
     })();
-  }, []);
+  }, [audioPlayer]);
 
   return (
     <div

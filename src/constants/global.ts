@@ -1,4 +1,4 @@
-import { goerli } from "wagmi/chains";
+import { arbitrum, goerli } from "wagmi/chains";
 
 export const DEBUG = false;
 
@@ -9,7 +9,7 @@ export const PROJECT_CONFIG = {
 };
 
 export const NETWORK_CONFIG = {
-  chains: [goerli],
+  chains: [arbitrum],
 };
 
 export const AIME_CONTRACT = {
@@ -29,10 +29,6 @@ export const WEBSOCKET_CONFIG = {
 export const API_CONFIG = {
   scheme: "https",
   host: "beta-parami.quaere.app",
-};
-
-export const DEMO_CONFIG = {
-  Sun: "CecB7683E1Fa399Ff2457dE8B33D9110939547d6",
 };
 
 export const ALCHEMY_CONFIG = {

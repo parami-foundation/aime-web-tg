@@ -5,6 +5,7 @@ import { HiArrowNarrowRight } from "react-icons/hi";
 import { CgKeyboard } from "react-icons/cg";
 import { Input } from "antd";
 import { useModel } from "@umijs/max";
+import BuyModal from "../buyModal";
 
 const InputBox: React.FC<{
   isTextMode: boolean;
@@ -14,13 +15,14 @@ const InputBox: React.FC<{
   inputBoxContainer: React.RefObject<HTMLDivElement>;
 }> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode }) => {
   const { SendMessageType, sendOverSocket } = useModel("useWebsocket");
-  const { address } = useModel("useAccess");
+  const { address, accessToken } = useModel("useAccess");
   const { telegramDataString } = useModel("useTelegram");
   const { transactionHashs } = useModel("useContract");
   const { isRecording } = useModel("useRecorder");
   const { speechInterim } = useModel("useChat");
 
   const [inputValue, setInputValue] = React.useState<string>();
+  const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
 
   useEffect(() => {
     if (!isTextMode) {
@@ -135,7 +137,7 @@ const InputBox: React.FC<{
               <div
                 className={styles.buyButton}
                 onClick={() => {
-                  window.open(`https://aime-tg.parami.io/bridge?action=buypower&aime=justinsuntron#tgWebAppData=${telegramDataString}`, "_blank");
+                  !!telegramDataString ? window.open(`https://aime-tg.parami.io/bridge?token=${accessToken}&action=buypower&aime=justinsuntron#tgWebAppData=${encodeURIComponent(telegramDataString)}`, "_blank") : setIsBuyModalVisible(true);
                 }}
               >
                 Buy
@@ -144,6 +146,10 @@ const InputBox: React.FC<{
           </div>
         </div>
       </div>
+      <BuyModal
+        visible={isBuyModalVisible}
+        setVisible={setIsBuyModalVisible}
+      />
     </>
   )
 };

@@ -13,6 +13,7 @@ export default () => {
   const [twitterBinded, setTwitterBinded] = useState<boolean>(true);
   const [telegramOauthModalVisible, setTelegramOauthModalVisible] =
     useState<boolean>(false);
+  const [walletModalVisible, setWalletModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -78,11 +79,13 @@ export default () => {
     address,
     twitterBinded,
     telegramOauthModalVisible,
+    walletModalVisible,
     setAccessToken,
     setSignature,
     setAccessTokenExpire,
     setAddress,
     setTwitterBinded,
     setTelegramOauthModalVisible,
+    setWalletModalVisible,
   };
 };

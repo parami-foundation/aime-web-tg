@@ -7,10 +7,11 @@ import { THEME_CONFIG } from "@/constants/theme";
 import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
 import { useAccount, useBalance, useContractRead, useContractWrite } from "wagmi";
-import { AIME_CONTRACT, DEMO_CONFIG } from "@/constants/global";
+import { AIME_CONTRACT, DEBUG } from "@/constants/global";
 import { formatEther } from "viem";
 import { GetTokenPrice } from "@/services/third";
 import { useModel } from "@umijs/max";
+import { ADDRESS_CONFIG } from "@/mocks/character";
 
 const Select: React.FC<{
   powerValue: number;
@@ -24,10 +25,10 @@ const Select: React.FC<{
       isError: boolean;
       isLoading: boolean;
     } = useContractRead({
-      address: `0x${AIME_CONTRACT.Goerli.Powers}`,
+      address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
       abi: require("@/abis/AIMePowers.json"),
       functionName: "getBuyPrice",
-      args: [`0x${DEMO_CONFIG.Sun}`, powerValue],
+      args: [DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`, powerValue],
     });
 
     return ethValue;
@@ -55,9 +56,9 @@ const Select: React.FC<{
         <div className={styles.selectModalHeaderSubtitle}>
           <b>justinsuntron‘s</b> Power
         </div>
-        {/* <div className={styles.selectModalHeaderFlat}>
+        <div className={styles.selectModalHeaderFlat}>
           1 Power ≈ {formatEther(getEthValue(1) ?? 0n)} ETH
-        </div> */}
+        </div>
       </div>
       <div className={styles.selectModalContent}>
         <div
@@ -186,7 +187,7 @@ const Detail: React.FC<{
     address: `0x${AIME_CONTRACT.Goerli.Powers}`,
     abi: require("@/abis/AIMePowers.json"),
     functionName: "getBuyPrice",
-    args: [`0x${DEMO_CONFIG.Sun}`, powerValue],
+    args: [DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`, powerValue],
   });
 
   const { data, isLoading, isSuccess, error, write } = useContractWrite({
@@ -202,7 +203,7 @@ const Detail: React.FC<{
         abi: require("@/abis/AIMePowers.json"),
         functionName: 'buyPowers',
         args: [
-          `0x${DEMO_CONFIG.Sun}`,
+          DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`,
           powerValue,
         ],
         account: address as `0x${string}`,
@@ -285,7 +286,7 @@ const Detail: React.FC<{
               To
             </div>
             <div className={styles.detailModalContentBodyItemValue}>
-              0x{DEMO_CONFIG.Sun?.slice(0, 5)}...{DEMO_CONFIG.Sun?.slice(-4)}
+              0x{(DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`)?.slice(0, 5)}...{(DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`)?.slice(-4)}
             </div>
           </div>
           <div className={styles.detailModalContentBodyItem}>
@@ -357,7 +358,7 @@ const Detail: React.FC<{
           onClick={async () => {
             await write({
               args: [
-                `0x${DEMO_CONFIG.Sun}`,
+                DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`,
                 powerValue,
               ],
               value: ethValue ?? 0n + gas,

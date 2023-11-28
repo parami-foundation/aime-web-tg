@@ -14,3 +14,10 @@ export const charactersData: CharacterInfo[] = [
     questions: ["Sir wen moon?", "Where are you?", "Give me some TRX!"],
   },
 ];
+
+export const ADDRESS_CONFIG = {
+  Sun: {
+    Goerli: "CecB7683E1Fa399Ff2457dE8B33D9110939547d6",
+    Arbitrum: "52aBD651F0D56C2F7772DcEcEB7495b86BFaeEbD",
+  },
+};

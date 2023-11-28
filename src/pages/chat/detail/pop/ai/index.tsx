@@ -15,13 +15,21 @@ const AiPop: React.FC<{
       audioPlayer?.current?.addEventListener("loadedmetadata", () => {
         var duration = audioPlayer?.current?.duration;
         setAudioDuration(duration);
-        audioPlayer?.current?.play();
       });
     })();
-  }, []);
+  }, [audioPlayer]);
 
   return (
-    <div className={styles.aiPopContainer}>
+    <div
+      className={styles.aiPopContainer}
+      onClick={() => {
+        if (!!audioPlayer?.current && audioPlayer?.current?.paused) {
+          audioPlayer?.current?.play();
+        } else {
+          audioPlayer?.current?.pause();
+        }
+      }}
+    >
       <div className={styles.aiPopWrapper}>
         {typeof data === "string" && data}
         {typeof data === "object" && data?.map((item: any, index: number) => {
@@ -38,17 +46,17 @@ const AiPop: React.FC<{
             case "data":
               return (
                 <div
-                  className={styles.mePopAudio}
+                  className={styles.aiPopAudio}
                   key={index}
                 >
-                  <div className={styles.mePopAudioTime}>
+                  <div className={styles.aiPopAudioTime}>
                     {audioDuration && `${audioDuration.toFixed(2)}`}''
                   </div>
                   <BsSoundwave
-                    className={styles.mePopAudioIcon}
+                    className={styles.aiPopAudioIcon}
                   />
                   <audio
-                    className={styles.mePopAudioPlayer}
+                    className={styles.aiPopAudioPlayer}
                     src={URL.createObjectURL(new Blob([item?.data], { type: "audio/mp3" }))}
                     ref={audioPlayer}
                   >

@@ -1,33 +1,20 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "../style.less";
-import { Button, ConfigProvider, Tag, notification, theme } from "antd";
-import { ReactComponent as StampIcon } from '@/assets/icon/stamp.svg';
-import { BIND_WALLET_MESSAGE } from "@/constants/global";
-import { SignMessageArgs } from "wagmi/actions";
+import { useSwitchNetwork } from "wagmi";
+import { ReactComponent as RefreshIcon } from '@/assets/icon/refresh.svg';
 import { FaAngleRight } from "react-icons/fa";
+import { Button, ConfigProvider, theme } from "antd";
 import { THEME_CONFIG } from "@/constants/theme";
 
-const SignMessage: React.FC<{
-  error: Error | null;
-  isLoading: boolean;
-  signMessage: (args?: SignMessageArgs | undefined) => void;
-}> = ({ error, isLoading, signMessage }) => {
-  useEffect(() => {
-    if (!!error) {
-      notification.error({
-        key: 'signMessageError',
-        message: 'Sign message failed',
-        description: error.message,
-      });
-    }
-  }, [error]);
+const SwitchNetwork: React.FC = () => {
+  const { chains, switchNetworkAsync } = useSwitchNetwork();
 
   return (
     <>
       <div className={styles.loginModalHeader}>
-        Need to verify your wallet
+        Change Network
         <div className={styles.loginModalHeaderDescription}>
-          Please sign the message <Tag>{BIND_WALLET_MESSAGE}</Tag> with your wallet
+          Please change your network to {chains[0]?.name}
         </div>
       </div>
       <div className={styles.loginModalContent}>
@@ -46,20 +33,17 @@ const SignMessage: React.FC<{
             block
             type="primary"
             size="large"
-            loading={isLoading}
             className={styles.loginModalContentItem}
             onClick={() => {
-              signMessage({
-                message: BIND_WALLET_MESSAGE
-              })
+              switchNetworkAsync?.(chains[0]?.id);
             }}
           >
             <div className={styles.loginModalContentItemLeft}>
-              <StampIcon
+              <RefreshIcon
                 className={styles.loginModalContentItemIcon}
               />
               <div className={styles.loginModalContentItemText}>
-                Sign Message
+                Switch Network
               </div>
             </div>
             <div className={styles.loginModalContentItemRight}>
@@ -74,4 +58,4 @@ const SignMessage: React.FC<{
   )
 };
 
-export default SignMessage;
+export default SwitchNetwork;
