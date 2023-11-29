@@ -11,7 +11,6 @@ import { AIME_CONTRACT, DEBUG } from "@/constants/global";
 import { formatEther } from "viem";
 import { GetTokenPrice } from "@/services/third";
 import { useModel } from "@umijs/max";
-import { ADDRESS_CONFIG } from "@/mocks/character";
 
 const Select: React.FC<{
   powerValue: number;
@@ -30,7 +29,7 @@ const Select: React.FC<{
       address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
       abi: require("@/abis/AIMePowers.json"),
       functionName: "getBuyPrice",
-      args: [DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`, powerValue],
+      args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, powerValue],
     });
 
     return ethValue;
@@ -47,7 +46,7 @@ const Select: React.FC<{
           />
           <div className={styles.selectModalHeaderIconAvatar}>
             <img
-              src={character?.avatar_url}
+              src={character?.avatar_url || "https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"}
               alt="avatar"
             />
           </div>
@@ -56,7 +55,7 @@ const Select: React.FC<{
           Buy
         </div>
         <div className={styles.selectModalHeaderSubtitle}>
-          <b>{character?.name}‘s</b> Power
+          <b>{character?.name || 'Justin Sun'}‘s</b> Power
         </div>
         <div className={styles.selectModalHeaderFlat}>
           1 Power ≈ {formatEther(getEthValue(1) ?? 0n)} ETH
@@ -171,6 +170,7 @@ const Detail: React.FC<{
 }> = ({ powerValue, setPurchaseSuccessVisible, setPurchaseFailedVisible, setError, setTransactionHash, setBuyModalVisible }) => {
   const { publicClient } = useModel("useWagmi");
   const { storeTransactionHash } = useModel("useContract");
+  const { character } = useModel("useSetting");
 
   const [bodyDropdown, setBodyDropdown] = React.useState<boolean>(false);
   const [tokenPrice, setTokenPrice] = React.useState<number>(0);
@@ -189,7 +189,7 @@ const Detail: React.FC<{
     address: `0x${AIME_CONTRACT.Goerli.Powers}`,
     abi: require("@/abis/AIMePowers.json"),
     functionName: "getBuyPrice",
-    args: [DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`, powerValue],
+    args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, powerValue],
   });
 
   const { data, isLoading, isSuccess, error, write } = useContractWrite({
@@ -205,7 +205,7 @@ const Detail: React.FC<{
         abi: require("@/abis/AIMePowers.json"),
         functionName: 'buyPowers',
         args: [
-          DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`,
+          DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`,
           powerValue,
         ],
         account: address as `0x${string}`,
@@ -288,7 +288,7 @@ const Detail: React.FC<{
               To
             </div>
             <div className={styles.detailModalContentBodyItemValue}>
-              0x{(DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`)?.slice(0, 5)}...{(DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`)?.slice(-4)}
+              0x{(DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`)?.slice(0, 5)}...{(DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`)?.slice(-4)}
             </div>
           </div>
           <div className={styles.detailModalContentBodyItem}>
@@ -360,7 +360,7 @@ const Detail: React.FC<{
           onClick={async () => {
             await write({
               args: [
-                DEBUG ? `0x${ADDRESS_CONFIG.Sun.Goerli}` : `0x${ADDRESS_CONFIG.Sun.Arbitrum}`,
+                DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`,
                 powerValue,
               ],
               value: ethValue ?? 0n + gas,

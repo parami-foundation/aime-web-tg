@@ -64,6 +64,7 @@ export const ConnectTwitter: React.FC = () => {
 export const BuyPower: React.FC = () => {
   const { accessToken } = useModel("useAccess");
   const { telegramDataString } = useModel("useTelegram");
+  const { character } = useModel("useSetting");
 
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
 
@@ -92,7 +93,7 @@ export const BuyPower: React.FC = () => {
               size="large"
               className={styles.chatHeaderInfoButtonDark}
               onClick={() => {
-                !!telegramDataString ? window.open(`https://aime-tg.parami.io/bridge?token=${accessToken}&action=buypower&aime=justinsuntron#tgWebAppData=${encodeURIComponent(telegramDataString)}`, "_blank") : setIsBuyModalVisible(true);
+                !!telegramDataString ? window.open(`https://aime-tg.parami.io/bridge?token=${accessToken}&action=buypower&character=${character}#tgWebAppData=${encodeURIComponent(telegramDataString)}`, "_blank") : setIsBuyModalVisible(true);
               }}
             >
               Buy AIME Power

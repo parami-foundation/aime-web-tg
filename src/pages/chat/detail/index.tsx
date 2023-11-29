@@ -21,7 +21,7 @@ export interface LBAudioElement extends HTMLAudioElement {
 const Chat: React.FC = () => {
   const { accessToken } = useModel("useAccess");
   const { messages, messageList, clearChatContent } = useModel("useChat");
-  const { SendMessageType, socketIsOpen, closeSocket, connectSocket, sendOverSocket } = useModel("useWebsocket");
+  const { SendMessageType, socketIsOpen, storedMessageSession, closeSocket, connectSocket, sendOverSocket } = useModel("useWebsocket");
   const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer, stopAudioPlayback } = useModel("useWebRTC");
   const { selectedSpeaker, selectedMicrophone, character, isMute, setIsMute, setCharacter, getAudioList } = useModel("useSetting");
   const { mediaRecorder, vadEvents, enableVAD, closeVAD, startRecording, stopRecording, vadEventsCallback, closeMediaRecorder, connectMicrophone, disableVAD, disconnectMicrophone } = useModel("useRecorder");
@@ -48,14 +48,16 @@ const Chat: React.FC = () => {
 
   // Demo
   useEffect(() => {
-    if (!accessToken || !charactersData.length) return;
-    setCharacter(charactersData[0]);
+    if (!accessToken || !charactersData.size) return;
+    setCharacter(Array.from(charactersData.values())[0]);
+    closeSocket();
+    clearChatContent();
     connectSocket({
-      character: charactersData[0],
+      character: Array.from(charactersData.values())[0],
       onReturn: () => {
         setCharacter({});
       }
-    })
+    }, storedMessageSession.get(Array.from(charactersData.values())[0].id!) ?? undefined);
   }, [accessToken, charactersData]);
 
   useEffect(() => {
@@ -104,14 +106,6 @@ const Chat: React.FC = () => {
     if (!mediaRecorder || !socketIsOpen || !rtcConnectionEstablished) {
       return;
     }
-    closeSocket();
-    clearChatContent();
-    connectSocket({
-      character: charactersData[0],
-      onReturn: () => {
-        setCharacter({});
-      }
-    });
     initializeVAD();
   }, []);
 

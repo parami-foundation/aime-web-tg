@@ -4,6 +4,7 @@ import { useModel } from "@umijs/max";
 import { DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
 import { Character } from "@/services/typing";
 import { buf2hex } from "@/libs/hex";
+import { charactersData } from "@/mocks/character";
 
 export enum SendMessageType {
   TEXT = "text",
@@ -71,8 +72,16 @@ export default () => {
   const [socketIsOpen, setSocketIsOpen] = React.useState<boolean>(false);
   const [currentSessionId, setCurrentSessionId] = React.useState<string>();
   const [storedMessageSession, setStoredMessageSession] = React.useState<
-    Map<string, Character>
+    Map<string, string>
   >(new Map());
+
+  useEffect(() => {
+    const storedSession = localStorage.getItem("aime:messageSession");
+    if (!!storedSession && JSON.parse(storedSession).length > 0) {
+      const session = new Map(JSON.parse(storedSession));
+      setStoredMessageSession(session as Map<string, string>);
+    }
+  }, []);
 
   const sendOverSocket = (
     type: SendMessageType,
@@ -315,7 +324,13 @@ export default () => {
       setCurrentSessionId(session_Id);
 
       setStoredMessageSession((prev) => {
-        return new Map(prev).set(session_Id, character);
+        const session = prev;
+        session.set(character.id ?? "", session_Id);
+        localStorage.setItem(
+          "aime:messageSession",
+          JSON.stringify([...session])
+        );
+        return session;
       });
 
       const ws_path =
@@ -323,10 +338,11 @@ export default () => {
         `/ws/${session_Id}?llm_model=${
           selectedModel.values().next().value
         }&platform=web&use_search=${enableGoogle}&use_quivr=${enableQuivr}&use_multion=${enableMultiOn}&character_id=${
-          character.character_id
+          character.id ?? ""
         }&language=${language}&token=${accessToken}`;
 
       let socket = new WebSocket(ws_path);
+
       socket.binaryType = "arraybuffer";
       setSocket(socket);
     }
@@ -357,7 +373,7 @@ export default () => {
         if (!!aiSession) {
           await connectSocket(
             {
-              character: aiSession,
+              character: charactersData.get(aiSession) ?? {},
               onReturn: () => {
                 setCharacter({});
               },
@@ -383,6 +399,7 @@ export default () => {
     socket,
     socketIsOpen,
     currentSessionId,
+    storedMessageSession,
     setCurrentSessionId,
     connectSocket,
     closeSocket,

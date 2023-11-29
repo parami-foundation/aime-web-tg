@@ -1,27 +1,29 @@
 export interface Character {
-  avatar?: string;
-  author_name?: string;
-  avatar_id?: string;
-  avatar_url?: string;
-  character_id?: string;
-  image_url?: string;
-  name?: string;
-  source?: string;
-  twitter_handle?: string;
-  voice_id?: string;
-  share_message?: string;
-  contract_address?: string;
-}
-
-export interface CharacterInfo {
+  id?: string;
   name?: string;
   handle?: string;
-  character_id?: string;
   avatar_url?: string;
-  avatar_key?: string;
+  author_name?: string;
   background?: string;
-  token_icon?: string;
+  source?: string;
+  twitter?: {
+    id?: string;
+    name?: string;
+    screen_name?: string;
+    profile_image_url_https?: string;
+  };
+  token?: {
+    id?: string;
+    name?: string;
+    symbol?: string;
+    icon?: string;
+  };
+  voice_id?: string;
   share_message?: string;
+  wallet?: {
+    goerli?: string;
+    arbitrum?: string;
+  };
   questions?: string[];
 }
 
