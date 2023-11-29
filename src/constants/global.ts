@@ -17,7 +17,7 @@ export const AIME_CONTRACT = {
     Powers: "A0A5366f28e36A219791F59cA8128FaD656Fbf92",
   },
   Arbitrum: {
-    Powers: "D21881a9b32509fC0C042682E8a61f57d8B57C11",
+    Powers: "be21B5812094bB808c4D88CCf62c8C7EC7b37Ab2",
   },
 };
 
