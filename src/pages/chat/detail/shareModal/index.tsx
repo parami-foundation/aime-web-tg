@@ -8,6 +8,9 @@ import { ReactComponent as TelegramIcon } from "@/assets/brand/telegram.svg";
 import { ReactComponent as TwitterIcon } from "@/assets/brand/twitter.svg";
 import Share from "@/components/share";
 
+const AIME_APP_URL = `https://t.me/aime_beta_bot/aimeapp`;
+const TG_SHARE_URL = `https://t.me/share/url`;
+
 const ShareModal: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
@@ -45,6 +48,7 @@ const ShareModal: React.FC<{
                 type="primary"
                 size="large"
                 className={styles.shareModalContentItem}
+                onClick={() => window.open(`${TG_SHARE_URL}?url=${AIME_APP_URL}`, '_blank')}
               >
                 <div className={styles.shareModalContentItemLeft}>
                   <TelegramIcon
