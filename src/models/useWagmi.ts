@@ -44,7 +44,11 @@ export default () => {
         infuraProvider({ apiKey: INFURA_CONFIG.apiKey }),
         alchemyProvider({ apiKey: ALCHEMY_CONFIG.Georli }),
         publicProvider(),
-      ]
+      ],
+      {
+        rank: true,
+        batch: { multicall: true },
+      }
     );
 
     const config = createConfig({

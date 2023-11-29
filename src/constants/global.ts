@@ -1,6 +1,6 @@
 import { arbitrum, goerli } from "wagmi/chains";
 
-export const DEBUG = false;
+export const DEBUG = true;
 
 export const PROJECT_CONFIG = {
   name: "AIME",

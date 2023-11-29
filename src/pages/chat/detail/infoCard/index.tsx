@@ -6,9 +6,10 @@ import { RiTwitterXFill, RiWalletLine } from "react-icons/ri";
 import { THEME_CONFIG } from "@/constants/theme";
 import ShareModal from "../shareModal";
 import BuyModal from "../buyModal";
+import { PROJECT_CONFIG } from "@/constants/global";
 
 export const ConnectWallet: React.FC = () => {
-  const { telegramDataString } = useModel("useTelegram");
+  const { telegramDataString, miniAppUtils } = useModel("useTelegram");
   const { setWalletModalVisible, accessToken } = useModel("useAccess");
 
   return (
@@ -23,7 +24,7 @@ export const ConnectWallet: React.FC = () => {
           size="large"
           className={styles.chatHeaderInfoButton}
           onClick={() => {
-            !!telegramDataString ? window.open(`https://aime-tg.parami.io/bridge?token=${accessToken}#tgWebAppData=${encodeURIComponent(telegramDataString)}`, "_blank") : setWalletModalVisible(true);
+            !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setWalletModalVisible(true);
           }}
         >
           <RiWalletLine
@@ -63,7 +64,7 @@ export const ConnectTwitter: React.FC = () => {
 
 export const BuyPower: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { telegramDataString } = useModel("useTelegram");
+  const { telegramDataString, miniAppUtils } = useModel("useTelegram");
   const { character } = useModel("useSetting");
 
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
@@ -93,7 +94,7 @@ export const BuyPower: React.FC = () => {
               size="large"
               className={styles.chatHeaderInfoButtonDark}
               onClick={() => {
-                !!telegramDataString ? window.open(`https://aime-tg.parami.io/bridge?token=${accessToken}&action=buypower&character=${character}#tgWebAppData=${encodeURIComponent(telegramDataString)}`, "_blank") : setIsBuyModalVisible(true);
+                !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&character=${character}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
               }}
             >
               Buy AIME Power
@@ -144,7 +145,7 @@ export const Share: React.FC = () => {
 };
 
 const InfoCard: React.FC = () => {
-  const { address, signature, twitterBinded } = useModel("useAccess");
+  const { address, twitterBinded } = useModel("useAccess");
 
   if (!address) {
     return (

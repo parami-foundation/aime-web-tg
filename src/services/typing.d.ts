@@ -38,6 +38,12 @@ export interface ChatHistory {
   user_id?: string;
 }
 
+export interface StartParam {
+  character_id?: string;
+  address?: string;
+  signature?: string;
+}
+
 export declare namespace Req {
   interface OauthTelegram {
     init_data?: string;

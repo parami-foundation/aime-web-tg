@@ -5,22 +5,24 @@ import { ReactComponent as Logo } from '@/assets/logo.svg';
 import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
 import SwitchNetwork from "./switchNetwork";
 import ConnectWallet from "./connectWallet";
-import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { Button, Result, message } from "antd";
 import queryString from 'query-string';
 import BuyModal from "../chat/detail/buyModal";
 import { charactersData } from "@/mocks/character";
+import SignMessage from "./signMessage";
+import Loading from "./loading";
+import { StartParam } from "@/services/typing";
 
 const Bridge: React.FC = () => {
   const { telegramDataString } = useModel('useTelegram');
-  const { setAddress } = useModel('useAccess');
+  const { setAddress, signature } = useModel('useAccess');
   const { setCharacter } = useModel('useSetting');
 
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
 
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
-  const { disconnect } = useDisconnect();
   const { address, isConnected } = useAccount({
     onConnect: () => {
       message.success({
@@ -45,9 +47,18 @@ const Bridge: React.FC = () => {
       setCharacter(charactersData.get(search?.characterId as string) ?? {});
     }
     if (!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id) {
-      setBuyModalVisible(true);
+      // setBuyModalVisible(true);
+      if (!!address && !!signature) {
+        const params: StartParam = {
+          character_id: search?.characterId as string,
+          address: address,
+          signature: signature,
+        }
+        const paramsBase64 = Buffer.from(JSON.stringify(params) as string, 'utf-8').toString('base64').replaceAll('=', '');
+        window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsBase64}`;
+      }
     }
-  }, [search, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id]);
+  }, [address, signature, search, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id]);
 
   return (
     <div className={styles.bridgeContainer}>
@@ -72,6 +83,12 @@ const Bridge: React.FC = () => {
             )}
             {!!telegramDataString && isConnected && currentChain?.id !== chains[0]?.id && (
               <SwitchNetwork />
+            )}
+            {!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id && !signature && (
+              <SignMessage />
+            )}
+            {!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id && !!signature && (
+              <Loading />
             )}
           </div>
         </>

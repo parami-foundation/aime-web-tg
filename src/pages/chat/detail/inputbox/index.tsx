@@ -6,6 +6,7 @@ import { CgKeyboard } from "react-icons/cg";
 import { Input } from "antd";
 import { useModel } from "@umijs/max";
 import BuyModal from "../buyModal";
+import { PROJECT_CONFIG } from "@/constants/global";
 
 const InputBox: React.FC<{
   isTextMode: boolean;
@@ -17,10 +18,11 @@ const InputBox: React.FC<{
 }> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode, setDisableMic }) => {
   const { SendMessageType, sendOverSocket } = useModel("useWebsocket");
   const { address, accessToken } = useModel("useAccess");
-  const { telegramDataString } = useModel("useTelegram");
+  const { telegramDataString, isInMiniApp, miniAppUtils } = useModel("useTelegram");
   const { transactionHashs } = useModel("useContract");
   const { isRecording } = useModel("useRecorder");
   const { speechInterim } = useModel("useChat");
+  const { character } = useModel("useSetting");
 
   const [inputValue, setInputValue] = React.useState<string>();
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
@@ -139,7 +141,7 @@ const InputBox: React.FC<{
               <div
                 className={styles.buyButton}
                 onClick={() => {
-                  !!telegramDataString ? window.open(`https://aime-tg.parami.io/bridge?token=${accessToken}&action=buypower&aime=justinsuntron#tgWebAppData=${encodeURIComponent(telegramDataString)}`, "_blank") : setIsBuyModalVisible(true);
+                  !!telegramDataString && isInMiniApp ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&character=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
                 }}
               >
                 Buy
