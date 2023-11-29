@@ -9,10 +9,12 @@ import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 import { Button, Result, message } from "antd";
 import queryString from 'query-string';
 import BuyModal from "../chat/detail/buyModal";
+import { charactersData } from "@/mocks/character";
 
 const Bridge: React.FC = () => {
   const { telegramDataString } = useModel('useTelegram');
   const { setAddress } = useModel('useAccess');
+  const { setCharacter } = useModel('useSetting');
 
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
 
@@ -39,6 +41,9 @@ const Bridge: React.FC = () => {
   const search = queryString.parse(window.location.search);
 
   useEffect(() => {
+    if (search?.characterId) {
+      setCharacter(charactersData.get(search?.characterId as string) ?? {});
+    }
     if (!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id) {
       setBuyModalVisible(true);
     }
