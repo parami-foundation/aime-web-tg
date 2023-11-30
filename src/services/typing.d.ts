@@ -39,7 +39,7 @@ export interface ChatHistory {
 }
 
 export interface StartParam {
-  character_id?: string;
+  characterId?: string;
   address?: string;
   signature?: string;
 }

@@ -1,16 +1,21 @@
 import React, { useEffect } from "react";
 import styles from '../style.less';
 import { FaAngleRight } from "react-icons/fa";
-import { useConnect } from "wagmi";
-import { Button, ConfigProvider, Tag, notification, theme } from "antd";
+import { useAccount, useConnect } from "wagmi";
+import { Button, ConfigProvider, notification, theme } from "antd";
 import { ReactComponent as MetamaskIcon } from "@/assets/brand/metamask.svg";
 import { ReactComponent as CoinbaseIcon } from "@/assets/brand/coinbase.svg";
 import { ReactComponent as WalletConnectIcon } from "@/assets/brand/walletconnect.svg";
 import { ReactComponent as InjectedIcon } from "@/assets/brand/injected.svg";
 import { THEME_CONFIG } from "@/constants/theme";
+import { useModel } from "@umijs/max";
 
 const ConnectWallet: React.FC = () => {
-  const { connect, connectors, error } = useConnect();
+  const { wagmiInitialized } = useModel("useWagmi");
+
+  const { connector, isReconnecting } = useAccount();
+  const { connect, connectors, isLoading, error, pendingConnector } =
+    useConnect();
 
   useEffect(() => {
     if (error) {
@@ -28,10 +33,7 @@ const ConnectWallet: React.FC = () => {
         Log in with wallet
       </div>
       <div className={styles.bridgeContent}>
-        {connectors.map((connector) => {
-          if (!connector.ready) {
-            return null;
-          }
+        {connectors.map((x) => {
           return (
             <ConfigProvider
               theme={{
@@ -43,47 +45,42 @@ const ConnectWallet: React.FC = () => {
                   boxShadow: THEME_CONFIG.boxShadow,
                 },
               }}
+              key={x.name}
             >
               <Button
                 block
                 type="primary"
                 size="large"
                 className={styles.bridgeContentItem}
-                onClick={() => {
-                  connect({ connector });
-                }}
+                disabled={!x.ready || isReconnecting || connector?.id === x.id}
+                onClick={() => connect({ connector: x })}
+                key={x.name}
               >
                 <div className={styles.bridgeContentItemLeft}>
-                  {connector.id === 'metaMask' && (
+                  {x?.id === 'metaMask' && (
                     <MetamaskIcon
                       className={styles.bridgeContentItemIcon}
                     />
                   )}
-                  {connector.id === 'coinbaseWallet' && (
+                  {x?.id === 'coinbaseWallet' && (
                     <CoinbaseIcon
                       className={styles.bridgeContentItemIcon}
                     />
                   )}
-                  {connector.id === 'walletConnect' && (
+                  {x?.id === 'walletConnect' && (
                     <WalletConnectIcon
                       className={styles.bridgeContentItemIcon}
                     />
                   )}
-                  {connector.id === 'eip6963' && (
+                  {x?.id === 'injected' && (
                     <InjectedIcon
                       className={styles.bridgeContentItemIcon}
                     />
                   )}
                   <div className={styles.bridgeContentItemText}>
-                    {connector.name}
-                    {connector.id === 'walletConnect' && (
-                      <Tag
-                        color={THEME_CONFIG.colorSecondary}
-                        className={styles.bridgeContentItemTag}
-                      >
-                        HOT
-                      </Tag>
-                    )}
+                    {x.id === 'injected' ? (wagmiInitialized ? x.name : x.id) : x.name}
+                    {wagmiInitialized && !x.ready && ' (unsupported)'}
+                    {isLoading && x.id === pendingConnector?.id && '…'}
                   </div>
                 </div>
                 <div className={styles.bridgeContentItemRight}>

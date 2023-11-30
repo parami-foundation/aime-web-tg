@@ -6,15 +6,18 @@ import {
   WebSocketPublicClient,
 } from "wagmi";
 
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
-
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
+import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { walletConnectProvider, EIP6963Connector } from "@web3modal/wagmi";
+
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { infuraProvider } from "wagmi/providers/infura";
+import { publicProvider } from "wagmi/providers/public";
+
 import {
   ALCHEMY_CONFIG,
+  DEBUG,
   INFURA_CONFIG,
   NETWORK_CONFIG,
   PROJECT_CONFIG,
@@ -23,8 +26,6 @@ import { useEffect, useState } from "react";
 import { WALLETCONNECT_CONFIG } from "@/constants/walletconnect";
 import { FallbackTransport, createPublicClient, http } from "viem";
 import { EthereumClient } from "@web3modal/ethereum";
-import { infuraProvider } from "wagmi/providers/infura";
-import { createWeb3Modal } from "@web3modal/wagmi/react";
 
 export default () => {
   const [wagmiConfig, setWagmiConfig] =
@@ -35,14 +36,19 @@ export default () => {
       >
     >();
   const [ethereumClient, setEthereumClient] = useState<EthereumClient>();
+  const [wagmiInitialized, setWagmiInitialized] = useState<boolean>(false);
+
+  useEffect(() => setWagmiInitialized(true), []);
 
   useEffect(() => {
+    console.log("Initializing Wagmi");
     const { chains, publicClient, webSocketPublicClient } = configureChains(
       NETWORK_CONFIG.chains,
       [
-        walletConnectProvider({ projectId: WALLETCONNECT_CONFIG.projectId }),
+        alchemyProvider({
+          apiKey: DEBUG ? ALCHEMY_CONFIG.Georli : ALCHEMY_CONFIG.Arbitrum,
+        }),
         infuraProvider({ apiKey: INFURA_CONFIG.apiKey }),
-        alchemyProvider({ apiKey: ALCHEMY_CONFIG.Georli }),
         publicProvider(),
       ],
       {
@@ -54,7 +60,12 @@ export default () => {
     const config = createConfig({
       autoConnect: true,
       connectors: [
-        new EIP6963Connector({ chains }),
+        new MetaMaskConnector({
+          chains,
+          options: {
+            UNSTABLE_shimOnConnectSelectAccount: true,
+          },
+        }),
         new WalletConnectConnector({
           chains,
           options: {
@@ -67,28 +78,27 @@ export default () => {
             },
           },
         }),
-        new MetaMaskConnector({ chains }),
         new CoinbaseWalletConnector({
           chains,
           options: {
             appName: PROJECT_CONFIG.name,
           },
         }),
+        new InjectedConnector({
+          chains,
+          options: {
+            name: "Injected",
+            shimDisconnect: true,
+          },
+        }),
       ],
       publicClient,
       webSocketPublicClient,
     });
-
-    createWeb3Modal({
-      wagmiConfig: config,
-      projectId: WALLETCONNECT_CONFIG.projectId,
-      chains,
-    });
+    setWagmiConfig(config);
 
     const ethClient = new EthereumClient(config, WALLETCONNECT_CONFIG.chains);
     setEthereumClient(ethClient);
-
-    setWagmiConfig(config);
   }, []);
 
   const publicClient = createPublicClient({
@@ -100,5 +110,6 @@ export default () => {
     wagmiConfig,
     ethereumClient,
     publicClient,
+    wagmiInitialized,
   };
 };

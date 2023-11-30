@@ -5,17 +5,37 @@ import { ReactComponent as StampIcon } from '@/assets/icon/stamp.svg';
 import { BIND_WALLET_MESSAGE } from "@/constants/global";
 import { FaAngleRight } from "react-icons/fa";
 import { THEME_CONFIG } from "@/constants/theme";
-import { useSignMessage } from "wagmi";
+import { useSignMessage } from 'wagmi';
+import { recoverMessageAddress } from 'viem';
 import { useModel } from "@umijs/max";
 
 const SignMessage: React.FC = () => {
   const { setSignature } = useModel('useAccess');
 
-  const { error, isLoading, signMessage } = useSignMessage({
-    onSuccess: (data) => {
-      setSignature(data);
-    },
+  const [recoveredAddress, setRecoveredAddress] = React.useState<string>();
+
+  const {
+    data: signature,
+    variables,
+    error,
+    isLoading,
+    signMessage,
+  } = useSignMessage({
+    message: BIND_WALLET_MESSAGE,
   });
+
+  useEffect(() => {
+    ; (async () => {
+      if (variables?.message && signature) {
+        const recoveredAddress = await recoverMessageAddress({
+          message: variables?.message,
+          signature,
+        })
+        setRecoveredAddress(recoveredAddress);
+        setSignature(signature);
+      }
+    })();
+  }, [signature, variables?.message]);
 
   useEffect(() => {
     if (!!error) {
@@ -26,7 +46,6 @@ const SignMessage: React.FC = () => {
       });
     }
   }, [error]);
-
 
   return (
     <>
@@ -53,11 +72,10 @@ const SignMessage: React.FC = () => {
             type="primary"
             size="large"
             loading={isLoading}
+            disabled={isLoading}
             className={styles.bridgeContentItem}
-            onClick={() => {
-              signMessage({
-                message: BIND_WALLET_MESSAGE
-              })
+            onClick={async () => {
+              await signMessage();
             }}
           >
             <div className={styles.bridgeContentItemLeft}>
@@ -65,7 +83,7 @@ const SignMessage: React.FC = () => {
                 className={styles.bridgeContentItemIcon}
               />
               <div className={styles.bridgeContentItemText}>
-                Sign Message
+                {isLoading ? 'Check Wallet' : 'Sign Message'}
               </div>
             </div>
             <div className={styles.bridgeContentItemRight}>

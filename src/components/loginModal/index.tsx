@@ -17,22 +17,7 @@ const LoginModal: React.FC<{
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
 
-  const { address, isConnected } = useAccount({
-    onConnect: () => {
-      message.success({
-        key: 'connectWallet',
-        content: 'Connect wallet success'
-      });
-      setAddress(address);
-    },
-    onDisconnect: () => {
-      message.success({
-        key: 'disconnectWallet',
-        content: 'Disconnect wallet success'
-      });
-      setAddress(undefined);
-    }
-  });
+  const { address, isConnected } = useAccount();
 
   return (
     <Modal

@@ -3,8 +3,6 @@ import { DEBUG } from "@/constants/global";
 import { TelegramOauthDataOnauthProps } from "@/components/loginModal/telegramOauth";
 import { notification } from "antd";
 import { useEffect, useState } from "react";
-import { useSDKContext } from "@tma.js/sdk-react";
-import { StartParam } from "@/services/typing";
 
 export default () => {
   const [telegramData, setTelegramData] = useState<
@@ -14,43 +12,22 @@ export default () => {
   const [telegramAuthType, setTelegramAuthType] = useState<string>();
   const [telegramMiniAppHeight, setTelegramMiniAppHeight] = useState<number>();
   const [telegramWebApp, setTelegramWebApp] = useState<MiniApp>();
-  const [isInMiniApp, setIsInMiniApp] = useState<boolean>(false);
   const [miniAppParams, setMiniAppParams] = useState<LaunchParams>();
   const [miniAppUtils, setMiniAppUtils] = useState<Utils>();
 
-  const { loading, error } = useSDKContext();
-
   useEffect(() => {
     if (!miniAppParams) return;
-    const startParam: StartParam = JSON.parse(
-      Buffer.from(
-        JSON.parse(JSON.stringify(miniAppParams))?.StartParam + "=",
-        "base64"
-      ).toString()
-    );
-    if (!!startParam?.address && !!startParam?.signature) {
+    const startParam = JSON.parse(JSON.stringify(miniAppParams))?.startParam;
+
+    if (!!startParam) {
       notification.info({
-        key: "walletAddress",
-        message: "Wallet Address",
-        description: startParam?.address,
-        duration: 0,
-      });
-      notification.info({
-        key: "walletSignature",
-        message: "Wallet Signature",
-        description: startParam?.signature,
+        key: "telegramParams",
+        message: "Telegram Params",
+        description: startParam,
         duration: 0,
       });
     }
   }, [miniAppParams]);
-
-  useEffect(() => {
-    if (!loading && !error) {
-      setIsInMiniApp(true);
-    } else {
-      setIsInMiniApp(false);
-    }
-  }, [loading, error]);
 
   useEffect(() => {
     if (!telegramDataString) {
@@ -78,7 +55,6 @@ export default () => {
     setTelegramAuthType,
     telegramMiniAppHeight,
     setTelegramMiniAppHeight,
-    isInMiniApp,
     setTelegramWebApp,
     telegramWebApp,
     miniAppParams,

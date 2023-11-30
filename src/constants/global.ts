@@ -1,6 +1,6 @@
 import { arbitrum, goerli } from "wagmi/chains";
 
-export const DEBUG = true;
+export const DEBUG = false;
 
 export const PROJECT_CONFIG = {
   name: "AIME",
@@ -33,6 +33,7 @@ export const API_CONFIG = {
 
 export const ALCHEMY_CONFIG = {
   Georli: "bZy6cqaLUxCMRw2BJn76qNSK6gX7Ioij",
+  Arbitrum: "DFaa0Hz4Kc9nYeqmcNcGdaM9kFuhC5Zd",
 };
 
 export const INFURA_CONFIG = {

@@ -8,6 +8,7 @@ import { TMAInitData } from '@/components/telegram/initData';
 import { WagmiConfig } from 'wagmi';
 import { DEBUG } from '@/constants/global';
 import eruda from 'eruda';
+import { useEffect } from 'react';
 
 const Layout: React.FC = () => {
   const { wagmiConfig } = useModel('useWagmi');
@@ -23,16 +24,16 @@ const Layout: React.FC = () => {
   }
 
   return (
-    <SDKProvider
-      options={{
-        cssVars: true,
-        acceptCustomStyles: true,
-      }}
-    >
+    <>
       {!!wagmiConfig && (
-        <>
-          <WagmiConfig
-            config={wagmiConfig}
+        <WagmiConfig
+          config={wagmiConfig}
+        >
+          <SDKProvider
+            options={{
+              cssVars: true,
+              acceptCustomStyles: true,
+            }}
           >
             <ConfigProvider
               theme={{
@@ -60,10 +61,10 @@ const Layout: React.FC = () => {
                 </TMAInitData>
               </DisplayGate>
             </ConfigProvider>
-          </WagmiConfig>
-        </>
+          </SDKProvider>
+        </WagmiConfig>
       )}
-    </SDKProvider>
+    </>
   )
 };
 

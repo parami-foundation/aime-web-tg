@@ -6,7 +6,7 @@ import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
 import SwitchNetwork from "./switchNetwork";
 import ConnectWallet from "./connectWallet";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
-import { Button, Result, message } from "antd";
+import { Button, Result } from "antd";
 import queryString from 'query-string';
 import BuyModal from "../chat/detail/buyModal";
 import { charactersData } from "@/mocks/character";
@@ -23,22 +23,11 @@ const Bridge: React.FC = () => {
 
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
-  const { address, isConnected } = useAccount({
-    onConnect: () => {
-      message.success({
-        key: 'connectWallet',
-        content: 'Connect wallet success'
-      });
-      setAddress(address);
-    },
-    onDisconnect: () => {
-      message.success({
-        key: 'disconnectWallet',
-        content: 'Disconnect wallet success'
-      });
-      setAddress(undefined);
-    }
-  });
+  const { address, isConnected } = useAccount();
+
+  useEffect(() => {
+    setAddress(address);
+  }, [address, isConnected]);
 
   const search = queryString.parse(window.location.search);
 
@@ -50,12 +39,13 @@ const Bridge: React.FC = () => {
       // setBuyModalVisible(true);
       if (!!address && !!signature) {
         const params: StartParam = {
-          character_id: search?.characterId as string,
-          address: address,
-          signature: signature,
-        }
-        const paramsBase64 = Buffer.from(JSON.stringify(params) as string, 'utf-8').toString('base64').replaceAll('=', '');
-        window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsBase64}`;
+          characterId: search?.characterId as string,
+          address,
+          signature,
+        };
+        const paramsString = JSON.stringify(params).replace(/"/g, "'").replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '&').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
+
+        window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
       }
     }
   }, [address, signature, search, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id]);
@@ -72,22 +62,17 @@ const Bridge: React.FC = () => {
               <LogoTitle />
             </div>
           </div>
-          {!!address && isConnected && (
-            <div className={styles.accountContainer}>
-              <w3m-account-button />
-            </div>
-          )}
           <div className={styles.contentContainer}>
-            {!!telegramDataString && !isConnected && (
+            {(!address || !isConnected) && (
               <ConnectWallet />
             )}
-            {!!telegramDataString && isConnected && currentChain?.id !== chains[0]?.id && (
+            {address && currentChain?.id !== chains[0]?.id && (
               <SwitchNetwork />
             )}
-            {!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id && !signature && (
+            {address && currentChain?.id === chains[0]?.id && !signature && (
               <SignMessage />
             )}
-            {!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id && !!signature && (
+            {address && currentChain?.id === chains[0]?.id && !!signature && (
               <Loading />
             )}
           </div>

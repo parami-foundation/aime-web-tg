@@ -8,22 +8,7 @@ import { useAccount } from 'wagmi';
 export const AccessLayout = ({ children }: PropsWithChildren) => {
   const { accessToken, telegramOauthModalVisible, setTelegramOauthModalVisible, walletModalVisible, setWalletModalVisible, setAddress } = useModel('useAccess');
 
-  const { isConnected, address } = useAccount({
-    onConnect: () => {
-      message.success({
-        key: 'connectWallet',
-        content: 'Connect wallet success'
-      });
-      setAddress(address);
-    },
-    onDisconnect: () => {
-      message.success({
-        key: 'disconnectWallet',
-        content: 'Disconnect wallet success'
-      });
-      setAddress(undefined);
-    }
-  });
+  const { isConnected, address } = useAccount();
 
   useEffect(() => {
     if (!accessToken) {

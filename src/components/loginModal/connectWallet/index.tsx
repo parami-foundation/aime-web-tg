@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styles from '../style.less';
 import { FaAngleRight } from "react-icons/fa";
 import { useConnect } from "wagmi";
-import { Button, ConfigProvider, Tag, notification, theme } from "antd";
+import { Button, ConfigProvider, notification, theme } from "antd";
 import { ReactComponent as MetamaskIcon } from "@/assets/brand/metamask.svg";
 import { ReactComponent as CoinbaseIcon } from "@/assets/brand/coinbase.svg";
 import { ReactComponent as WalletConnectIcon } from "@/assets/brand/walletconnect.svg";
@@ -10,7 +10,8 @@ import { ReactComponent as InjectedIcon } from "@/assets/brand/injected.svg";
 import { THEME_CONFIG } from "@/constants/theme";
 
 const ConnectWallet: React.FC = () => {
-  const { connect, connectors, error } = useConnect();
+  const { connect, connectors, error, isLoading, pendingConnector } =
+    useConnect();
 
   useEffect(() => {
     if (error) {
@@ -43,15 +44,16 @@ const ConnectWallet: React.FC = () => {
                   boxShadow: THEME_CONFIG.boxShadow,
                 },
               }}
+              key={connector.id}
             >
               <Button
                 block
                 type="primary"
                 size="large"
                 className={styles.loginModalContentItem}
-                onClick={() => {
-                  connect({ connector });
-                }}
+                disabled={!connector.ready}
+                onClick={() => connect({ connector })}
+                key={connector.id}
               >
                 <div className={styles.loginModalContentItemLeft}>
                   {connector.id === 'metaMask' && (
@@ -69,21 +71,17 @@ const ConnectWallet: React.FC = () => {
                       className={styles.loginModalContentItemIcon}
                     />
                   )}
-                  {connector.id === 'eip6963' && (
+                  {connector.id === 'injected' && (
                     <InjectedIcon
                       className={styles.loginModalContentItemIcon}
                     />
                   )}
                   <div className={styles.loginModalContentItemText}>
                     {connector.name}
-                    {connector.id === 'walletConnect' && (
-                      <Tag
-                        color={THEME_CONFIG.colorSecondary}
-                        className={styles.loginModalContentItemTag}
-                      >
-                        HOT
-                      </Tag>
-                    )}
+                    {!connector.ready && ' (unsupported)'}
+                    {isLoading &&
+                      connector.id === pendingConnector?.id &&
+                      ' (connecting)'}
                   </div>
                 </div>
                 <div className={styles.loginModalContentItemRight}>
