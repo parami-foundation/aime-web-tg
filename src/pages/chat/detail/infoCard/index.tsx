@@ -94,7 +94,7 @@ export const BuyPower: React.FC = () => {
               size="large"
               className={styles.chatHeaderInfoButtonDark}
               onClick={() => {
-                !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&character=${character}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&characterId=${character}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
               }}
             >
               Buy AIME Power

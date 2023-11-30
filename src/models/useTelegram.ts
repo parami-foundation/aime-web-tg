@@ -16,20 +16,6 @@ export default () => {
   const [miniAppUtils, setMiniAppUtils] = useState<Utils>();
 
   useEffect(() => {
-    if (!miniAppParams) return;
-    const startParam = JSON.parse(JSON.stringify(miniAppParams))?.startParam;
-
-    if (!!startParam) {
-      notification.info({
-        key: "telegramParams",
-        message: "Telegram Params",
-        description: startParam,
-        duration: 0,
-      });
-    }
-  }, [miniAppParams]);
-
-  useEffect(() => {
     if (!telegramDataString) {
       const params = new URLSearchParams(window.location.hash.slice(1));
       const initDataString = params.get("tgWebAppData");

@@ -18,7 +18,7 @@ const InputBox: React.FC<{
 }> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode, setDisableMic }) => {
   const { SendMessageType, sendOverSocket } = useModel("useWebsocket");
   const { address, accessToken } = useModel("useAccess");
-  const { telegramDataString, isInMiniApp, miniAppUtils } = useModel("useTelegram");
+  const { telegramDataString, miniAppUtils } = useModel("useTelegram");
   const { transactionHashs } = useModel("useContract");
   const { isRecording } = useModel("useRecorder");
   const { speechInterim } = useModel("useChat");
@@ -141,7 +141,7 @@ const InputBox: React.FC<{
               <div
                 className={styles.buyButton}
                 onClick={() => {
-                  !!telegramDataString && isInMiniApp ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&character=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                  !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&characterId=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
                 }}
               >
                 Buy

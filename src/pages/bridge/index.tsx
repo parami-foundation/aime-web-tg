@@ -43,9 +43,9 @@ const Bridge: React.FC = () => {
           address,
           signature,
         };
-        const paramsString = JSON.stringify(params).replace(/"/g, "'").replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '&').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
+        const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '&').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
 
-        window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
+        window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${params}`;
       }
     }
   }, [address, signature, search, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id]);

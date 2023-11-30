@@ -33,7 +33,7 @@ const Home: React.FC = () => {
               <Col xs={12} sm={12} md={8} lg={6} xl={4}>
                 <CardItem
                   onClick={() => {
-                    history.push('/chat/demo');
+                    history.push('/chat/justin_sun');
                   }}
                 />
               </Col>
