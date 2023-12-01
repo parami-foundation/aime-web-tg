@@ -35,20 +35,42 @@ const Bridge: React.FC = () => {
     if (search?.characterId) {
       setCharacter(charactersData.get(search?.characterId as string) ?? {});
     }
-    if (!!telegramDataString && isConnected && currentChain?.id === chains[0]?.id) {
-      // setBuyModalVisible(true);
-      if (!!address && !!signature) {
-        const params: StartParam = {
-          characterId: search?.characterId as string,
-          address,
-          signature,
-        };
-        const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '&').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
+  }, [search]);
 
-        window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${params}`;
+  useEffect(() => {
+    if (!!telegramDataString && !!address && currentChain?.id === chains[0]?.id) {
+      if (!!search?.action) {
+        switch (search?.action) {
+          case "bind":
+            if (!!address && !!signature) {
+              const params: StartParam = {
+                characterId: search?.characterId as string,
+                address,
+                signature,
+              };
+              const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '&').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
+
+              window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
+            }
+            break;
+
+          case "buypower":
+            setBuyModalVisible(true);
+            // TODO: Send Hash
+            if (!!address && !!signature) {
+              const params: StartParam = {
+                characterId: search?.characterId as string,
+                address,
+              };
+              const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '&').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
+
+              window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
+            }
+            break;
+        }
       }
     }
-  }, [address, signature, search, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id]);
+  }, [address, signature, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id]);
 
   return (
     <div className={styles.bridgeContainer}>
@@ -66,13 +88,13 @@ const Bridge: React.FC = () => {
             {(!address || !isConnected) && (
               <ConnectWallet />
             )}
-            {address && currentChain?.id !== chains[0]?.id && (
+            {!!address && currentChain?.id !== chains[0]?.id && (
               <SwitchNetwork />
             )}
-            {address && currentChain?.id === chains[0]?.id && !signature && (
+            {!!address && currentChain?.id === chains[0]?.id && !signature && (
               <SignMessage />
             )}
-            {address && currentChain?.id === chains[0]?.id && !!signature && (
+            {!!address && currentChain?.id === chains[0]?.id && !!signature && (
               <Loading />
             )}
           </div>

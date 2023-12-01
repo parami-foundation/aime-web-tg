@@ -6,7 +6,9 @@ import { CgKeyboard } from "react-icons/cg";
 import { Input } from "antd";
 import { useModel } from "@umijs/max";
 import BuyModal from "../buyModal";
-import { PROJECT_CONFIG } from "@/constants/global";
+import { AIME_CONTRACT, DEBUG, PROJECT_CONFIG } from "@/constants/global";
+import { useContractRead } from "wagmi";
+import { formatEther } from "viem";
 
 const InputBox: React.FC<{
   isTextMode: boolean;
@@ -18,7 +20,7 @@ const InputBox: React.FC<{
 }> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode, setDisableMic }) => {
   const { SendMessageType, sendOverSocket } = useModel("useWebsocket");
   const { address, accessToken } = useModel("useAccess");
-  const { telegramDataString, miniAppUtils } = useModel("useTelegram");
+  const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
   const { transactionHashs } = useModel("useContract");
   const { isRecording } = useModel("useRecorder");
   const { speechInterim } = useModel("useChat");
@@ -38,6 +40,25 @@ const InputBox: React.FC<{
     }
   }, [isTextMode]);
 
+  const getPowerBalance = () => {
+    const { data: balance }: {
+      data?: bigint;
+      isError: boolean;
+      isLoading: boolean;
+    } = useContractRead({
+      address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+      abi: require("@/abis/AIMePowers.json"),
+      functionName: "powerBalance",
+      args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, `0x${address}`],
+    });
+
+    return balance;
+  };
+
+  function getEthValue(manualInput: any): bigint {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <>
       <div
@@ -48,7 +69,7 @@ const InputBox: React.FC<{
           {!!address && (
             <div className={styles.inputBoxWrapperRow}>
               <div className={styles.inputBoxWrapperTip}>
-                You own 1 Power of Justinsuntron
+                You own {formatEther(getPowerBalance() ?? 0n)} Power of {character?.name}
               </div>
             </div>
           )}
@@ -137,11 +158,12 @@ const InputBox: React.FC<{
                 </div>
               )}
             </div>
-            {!!address && (
+            {!!address && formatEther(getPowerBalance() ?? 0n) === "0" && (
               <div
                 className={styles.buyButton}
                 onClick={() => {
                   !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&characterId=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                  !!telegramDataString && telegramWebApp?.close();
                 }}
               >
                 Buy

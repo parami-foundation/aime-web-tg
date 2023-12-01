@@ -46,7 +46,7 @@ const Select: React.FC<{
           />
           <div className={styles.selectModalHeaderIconAvatar}>
             <img
-              src={character?.avatar_url || "https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"}
+              src={character?.avatar_url}
               alt="avatar"
             />
           </div>
@@ -55,7 +55,7 @@ const Select: React.FC<{
           Buy
         </div>
         <div className={styles.selectModalHeaderSubtitle}>
-          <b>{character?.name || 'Justin Sun'}‘s</b> Power
+          <b>{character?.name}‘s</b> Power
         </div>
         <div className={styles.selectModalHeaderFlat}>
           1 Power ≈ {formatEther(getEthValue(1) ?? 0n)} ETH

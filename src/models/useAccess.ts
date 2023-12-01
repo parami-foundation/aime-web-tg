@@ -51,6 +51,7 @@ export default () => {
   useEffect(() => {
     const accessToken = localStorage.getItem("aime:accessToken");
     const accessTokenExpire = localStorage.getItem("aime:accessToken:expire");
+    const address = localStorage.getItem("aime:address");
     const now = new Date().getTime();
     if (!accessTokenExpire || parseInt(accessTokenExpire) * 1000 < now) {
       setAccessToken(undefined);
@@ -63,6 +64,9 @@ export default () => {
     }
     if (!!accessTokenExpire) {
       setAccessTokenExpire(parseInt(accessTokenExpire));
+    }
+    if (!!address) {
+      setAddress(address as `0x${string}`);
     }
   }, []);
 

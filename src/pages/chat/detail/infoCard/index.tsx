@@ -9,7 +9,7 @@ import BuyModal from "../buyModal";
 import { PROJECT_CONFIG } from "@/constants/global";
 
 export const ConnectWallet: React.FC = () => {
-  const { telegramDataString, miniAppUtils } = useModel("useTelegram");
+  const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
   const { setWalletModalVisible, accessToken } = useModel("useAccess");
 
   return (
@@ -24,7 +24,8 @@ export const ConnectWallet: React.FC = () => {
           size="large"
           className={styles.chatHeaderInfoButton}
           onClick={() => {
-            !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setWalletModalVisible(true);
+            !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=bind#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setWalletModalVisible(true);
+            !!telegramDataString && telegramWebApp?.close();
           }}
         >
           <RiWalletLine
@@ -64,7 +65,7 @@ export const ConnectTwitter: React.FC = () => {
 
 export const BuyPower: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { telegramDataString, miniAppUtils } = useModel("useTelegram");
+  const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
   const { character } = useModel("useSetting");
 
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
@@ -94,7 +95,8 @@ export const BuyPower: React.FC = () => {
               size="large"
               className={styles.chatHeaderInfoButtonDark}
               onClick={() => {
-                !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&characterId=${character}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&characterId=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                !!telegramDataString && telegramWebApp?.close();
               }}
             >
               Buy AIME Power

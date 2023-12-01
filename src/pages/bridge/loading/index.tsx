@@ -7,7 +7,7 @@ const Loading: React.FC = () => {
   return (
     <>
       <div className={styles.bridgeHeader}>
-        Loging in...
+        Loading...
       </div>
       <div className={styles.bridgeContent}>
         <Spin
