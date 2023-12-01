@@ -5,9 +5,7 @@ import {
   Utils,
   CloudStorage,
 } from "@tma.js/sdk";
-import { DEBUG } from "@/constants/global";
 import { TelegramOauthDataOnauthProps } from "@/components/loginModal/telegramOauth";
-import { notification } from "antd";
 import { useEffect, useState } from "react";
 
 export default () => {
@@ -27,18 +25,38 @@ export default () => {
     if (!telegramDataString) {
       const params = new URLSearchParams(window.location.hash.slice(1));
       const initDataString = params.get("tgWebAppData");
-      setTelegramDataString(initDataString || "");
+      if (!!initDataString) {
+        setTelegramDataString(initDataString || "");
+        localStorage.setItem("aime:telegramDataString", initDataString);
+        telegramCloudStorage?.set("aime:telegramDataString", initDataString);
+      }
     }
+  }, [telegramDataString, telegramCloudStorage]);
 
-    if (DEBUG) {
-      notification.info({
-        key: "initData",
-        message: "Telegram InitData",
-        description: telegramDataString ? telegramDataString : "No data",
-        duration: 0,
-      });
-    }
-  }, [telegramData, telegramDataString]);
+  useEffect(() => {
+    (async () => {
+      const telegramDataString =
+        localStorage.getItem("aime:telegramDataString") ||
+        (await telegramCloudStorage?.get("aime:telegramDataString"));
+      if (!!telegramDataString) {
+        setTelegramDataString(telegramDataString);
+      }
+
+      const telegramData =
+        JSON.parse(localStorage.getItem("aime:telegramData") || "{}") ||
+        (await telegramCloudStorage?.get("aime:telegramData"));
+      if (!!telegramData) {
+        setTelegramData(telegramData);
+      }
+
+      const telegramAuthType =
+        localStorage.getItem("aime:telegramAuthType") ||
+        (await telegramCloudStorage?.get("aime:telegramAuthType"));
+      if (!!telegramAuthType) {
+        setTelegramAuthType(telegramAuthType);
+      }
+    })();
+  }, []);
 
   return {
     telegramData,

@@ -1,15 +1,16 @@
-import { useInitData, useSDKContext, useViewport, useMiniApp, useLaunchParams, useUtils, useCloudStorage } from "@tma.js/sdk-react";
+import { useInitData, useInitDataRaw, useSDKContext, useViewport, useMiniApp, useLaunchParams, useUtils, useCloudStorage } from "@tma.js/sdk-react";
 import { InitData, MiniApp, LaunchParams, Utils, CloudStorage } from "@tma.js/sdk";
 import { useModel } from "@umijs/max";
 import { PropsWithChildren, useEffect } from "react";
 
 export const TMAInitData = ({ children }: PropsWithChildren) => {
-  const { setTelegramData, setTelegramAuthType, setTelegramMiniAppHeight, setTelegramWebApp, setMiniAppParams, setMiniAppUtils, setTelegramCloudStorage } = useModel('useTelegram');
+  const { setTelegramData, setTelegramDataString, setTelegramAuthType, setTelegramMiniAppHeight, setTelegramWebApp, setMiniAppParams, setMiniAppUtils, setTelegramCloudStorage } = useModel('useTelegram');
 
   const { loading, error } = useSDKContext();
 
   let webApp: MiniApp | null = null;
   let initData: InitData | undefined = undefined;
+  let initDataString: string | undefined = undefined;
   let miniAppParams: LaunchParams;
   let miniAppUtils: Utils;
   let cloudstorage: CloudStorage;
@@ -23,6 +24,7 @@ export const TMAInitData = ({ children }: PropsWithChildren) => {
     setTelegramMiniAppHeight(viewport.height);
 
     initData = useInitData();
+    initDataString = useInitDataRaw();
 
     miniAppParams = useLaunchParams();
     setMiniAppParams(miniAppParams);
@@ -37,9 +39,19 @@ export const TMAInitData = ({ children }: PropsWithChildren) => {
   useEffect(() => {
     if (!!initData) {
       setTelegramData(initData);
+      localStorage.setItem('aime:telegramData', JSON.stringify(initData));
+      cloudstorage?.set('aime:telegramData', JSON.stringify(initData));
+
       setTelegramAuthType('webapp');
+      localStorage.setItem('aime:telegramAuthType', 'webapp');
     }
-  }, [initData]);
+
+    if (!!initDataString) {
+      setTelegramDataString(initDataString);
+      localStorage.setItem('aime:telegramDataString', initDataString);
+      cloudstorage?.set('aime:telegramDataString', initDataString);
+    }
+  }, [initData, initDataString]);
 
   return (
     <>{children}</>

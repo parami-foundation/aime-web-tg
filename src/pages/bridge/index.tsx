@@ -20,6 +20,7 @@ const Bridge: React.FC = () => {
   const { setCharacter } = useModel('useSetting');
 
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
+  const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
 
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
@@ -48,7 +49,7 @@ const Bridge: React.FC = () => {
                 address,
                 signature,
               };
-              const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '&').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
+              const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '____').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
 
               window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
             }
@@ -56,8 +57,7 @@ const Bridge: React.FC = () => {
 
           case "buypower":
             setBuyModalVisible(true);
-            // TODO: Send Hash
-            if (!!address && !!signature) {
+            if (!!address && !!transactionHash) {
               const params: StartParam = {
                 characterId: search?.characterId as string,
                 address,
@@ -133,6 +133,8 @@ const Bridge: React.FC = () => {
         visible={buyModalVisible}
         setVisible={setBuyModalVisible}
         closeable={false}
+        propsTransactionHash={transactionHash}
+        propsSetTransactionHash={setTransactionHash}
       />
     </div>
   )

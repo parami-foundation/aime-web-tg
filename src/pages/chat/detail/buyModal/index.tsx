@@ -382,7 +382,9 @@ const BuyModal: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
   closeable?: boolean;
-}> = ({ visible, setVisible, closeable }) => {
+  propsTransactionHash?: `0x${string}` | undefined;
+  propsSetTransactionHash?: React.Dispatch<React.SetStateAction<`0x${string}` | undefined>>
+}> = ({ visible, setVisible, closeable, propsTransactionHash, propsSetTransactionHash }) => {
   const [powerValue, setPowerValue] = React.useState<number>(0);
   const [purchaseSuccessVisible, setPurchaseSuccessVisible] = React.useState<boolean>(false);
   const [purchaseFailedVisible, setPurchaseFailedVisible] = React.useState<boolean>(false);
@@ -421,7 +423,7 @@ const BuyModal: React.FC<{
             setPurchaseSuccessVisible={setPurchaseSuccessVisible}
             setPurchaseFailedVisible={setPurchaseFailedVisible}
             setError={setError}
-            setTransactionHash={setTransactionHash}
+            setTransactionHash={propsSetTransactionHash || setTransactionHash}
             setBuyModalVisible={setVisible}
           />
         )}
@@ -429,7 +431,7 @@ const BuyModal: React.FC<{
       <PurchaseSuccess
         visible={purchaseSuccessVisible}
         setVisible={setPurchaseSuccessVisible}
-        transactionHash={transactionHash}
+        transactionHash={propsTransactionHash || transactionHash}
       />
       <PurchaseFailed
         visible={purchaseFailedVisible}

@@ -23,7 +23,7 @@ const TelegramOauth: React.FC<{
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   closeable?: boolean;
 }> = ({ visible, setVisible, closeable }) => {
-  const { telegramDataString, setTelegramData, setTelegramDataString, setTelegramAuthType } = useModel('useTelegram');
+  const { telegramCloudStorage, setTelegramData, setTelegramDataString, setTelegramAuthType } = useModel('useTelegram');
 
   return (
     <Modal
@@ -62,6 +62,12 @@ const TelegramOauth: React.FC<{
                 dataOnauth={(response: TelegramOauthDataOnauthProps) => {
                   setTelegramData(response);
                   setTelegramAuthType('oauth2');
+                  localStorage.setItem('aime:telegramData', JSON.stringify(response));
+                  telegramCloudStorage?.set('aime:telegramData', JSON.stringify(response));
+
+                  localStorage.setItem('aime:telegramAuthType', 'oauth2');
+                  telegramCloudStorage?.set('aime:telegramAuthType', 'oauth2');
+
                   let initDataString = "";
                   for (let key in response) {
                     if (initDataString != "") {
@@ -71,6 +77,8 @@ const TelegramOauth: React.FC<{
                       key + "=" + encodeURIComponent((response as any)[key]);
                   }
                   setTelegramDataString(initDataString);
+                  localStorage.setItem('aime:telegramDataString', initDataString);
+                  telegramCloudStorage?.set('aime:telegramDataString', initDataString);
                 }}
                 botName={TELEGRAM_BOT}
                 className={styles.telegramLoginBtn}

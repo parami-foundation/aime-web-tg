@@ -9,7 +9,7 @@ export default () => {
 
   useEffect(() => {
     if (!miniAppParams) return;
-    miniAppParams?.initData?.startParam?.split("&")?.forEach((item) => {
+    miniAppParams?.initData?.startParam?.split("____")?.forEach((item) => {
       const [key, value] = item.split("__");
       if (key === "address" && !!value) {
         setAddress(value as `0x${string}`);

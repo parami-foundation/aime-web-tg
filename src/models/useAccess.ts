@@ -77,6 +77,8 @@ export default () => {
         setAccessTokenExpire(0);
         localStorage.removeItem("aime:accessToken");
         localStorage.removeItem("aime:accessToken:expire");
+        telegramCloudStorage?.delete("aime:accessToken");
+        telegramCloudStorage?.delete("aime:accessToken:expire");
       }
       if (!!accessToken) {
         setAccessToken(accessToken);
