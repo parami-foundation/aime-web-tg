@@ -4,7 +4,8 @@ import { message } from "antd";
 import { useEffect, useState } from "react";
 
 export default () => {
-  const { telegramDataString, telegramAuthType } = useModel("useTelegram");
+  const { telegramDataString, telegramAuthType, telegramCloudStorage } =
+    useModel("useTelegram");
   const [accessToken, setAccessToken] = useState<string>();
   const [accessTokenExpire, setAccessTokenExpire] = useState<number>(0);
 
@@ -28,12 +29,22 @@ export default () => {
             key: "loginSuccess",
             content: "Login success",
           });
+
+          // Store access token
           !!data?.access_token &&
             localStorage.setItem("aime:accessToken", data?.access_token);
+          !!data?.access_token &&
+            telegramCloudStorage?.set("aime:accessToken", data?.access_token);
           !!data?.access_token && setAccessToken(data?.access_token);
 
+          // Store access token expire
           !!data?.expire &&
             localStorage.setItem(
+              "aime:accessToken:expire",
+              data?.expire.toString()
+            );
+          !!data?.expire &&
+            telegramCloudStorage?.set(
               "aime:accessToken:expire",
               data?.expire.toString()
             );
@@ -49,25 +60,34 @@ export default () => {
   }, [telegramDataString, accessToken]);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("aime:accessToken");
-    const accessTokenExpire = localStorage.getItem("aime:accessToken:expire");
-    const address = localStorage.getItem("aime:address");
-    const now = new Date().getTime();
-    if (!accessTokenExpire || parseInt(accessTokenExpire) * 1000 < now) {
-      setAccessToken(undefined);
-      setAccessTokenExpire(0);
-      localStorage.removeItem("aime:accessToken");
-      localStorage.removeItem("aime:accessToken:expire");
-    }
-    if (!!accessToken) {
-      setAccessToken(accessToken);
-    }
-    if (!!accessTokenExpire) {
-      setAccessTokenExpire(parseInt(accessTokenExpire));
-    }
-    if (!!address) {
-      setAddress(address as `0x${string}`);
-    }
+    (async () => {
+      const accessToken =
+        localStorage.getItem("aime:accessToken") ||
+        (await telegramCloudStorage?.get("aime:accessToken"));
+      const accessTokenExpire =
+        localStorage.getItem("aime:accessToken:expire") ||
+        (await telegramCloudStorage?.get("aime:accessToken:expire"));
+      const address =
+        localStorage.getItem("aime:address") ||
+        (await telegramCloudStorage?.get("aime:address"));
+
+      const now = new Date().getTime();
+      if (!accessTokenExpire || parseInt(accessTokenExpire) * 1000 < now) {
+        setAccessToken(undefined);
+        setAccessTokenExpire(0);
+        localStorage.removeItem("aime:accessToken");
+        localStorage.removeItem("aime:accessToken:expire");
+      }
+      if (!!accessToken) {
+        setAccessToken(accessToken);
+      }
+      if (!!accessTokenExpire) {
+        setAccessTokenExpire(parseInt(accessTokenExpire));
+      }
+      if (!!address) {
+        setAddress(address as `0x${string}`);
+      }
+    })();
   }, []);
 
   useEffect(() => {

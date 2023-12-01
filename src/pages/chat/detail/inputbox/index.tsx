@@ -55,10 +55,6 @@ const InputBox: React.FC<{
     return balance;
   };
 
-  function getEthValue(manualInput: any): bigint {
-    throw new Error("Function not implemented.");
-  }
-
   return (
     <>
       <div

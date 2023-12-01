@@ -7,6 +7,7 @@ import { GetContractResult, getContract } from "wagmi/actions";
 
 export default () => {
   const { ethereumClient } = useModel("useWagmi");
+  const { telegramCloudStorage } = useModel("useTelegram");
   const [AIMePowers, setAIMePowers] =
     useState<GetContractResult<any, EthereumClient>>();
   const [transactionHashs, setTransactionHashs] = React.useState<
@@ -44,14 +45,22 @@ export default () => {
         "aime:transactionHashs",
         JSON.stringify(Array.from(transactionHashs.entries()))
       );
+      telegramCloudStorage?.set(
+        "transactionHashs",
+        JSON.stringify(Array.from(transactionHashs.entries()))
+      );
     };
   }, [transactionHashs]);
 
   useEffect(() => {
-    const transactionHashs = localStorage.getItem("aime:transactionHashs");
-    if (!!transactionHashs) {
-      setTransactionHashs(new Map(JSON.parse(transactionHashs)));
-    }
+    (async () => {
+      const transactionHashs =
+        localStorage.getItem("aime:transactionHashs") ||
+        (await telegramCloudStorage?.get("aime:transactionHashs"));
+      if (!!transactionHashs) {
+        setTransactionHashs(new Map(JSON.parse(transactionHashs)));
+      }
+    })();
   }, []);
 
   return {

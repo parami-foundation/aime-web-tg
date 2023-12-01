@@ -1,10 +1,10 @@
-import { useInitData, useSDKContext, useViewport, useMiniApp, useLaunchParams, useUtils } from "@tma.js/sdk-react";
-import { InitData, MiniApp, LaunchParams, Utils } from "@tma.js/sdk";
+import { useInitData, useSDKContext, useViewport, useMiniApp, useLaunchParams, useUtils, useCloudStorage } from "@tma.js/sdk-react";
+import { InitData, MiniApp, LaunchParams, Utils, CloudStorage } from "@tma.js/sdk";
 import { useModel } from "@umijs/max";
 import { PropsWithChildren, useEffect } from "react";
 
 export const TMAInitData = ({ children }: PropsWithChildren) => {
-  const { setTelegramData, setTelegramAuthType, setTelegramMiniAppHeight, setTelegramWebApp, setMiniAppParams, setMiniAppUtils } = useModel('useTelegram');
+  const { setTelegramData, setTelegramAuthType, setTelegramMiniAppHeight, setTelegramWebApp, setMiniAppParams, setMiniAppUtils, setTelegramCloudStorage } = useModel('useTelegram');
 
   const { loading, error } = useSDKContext();
 
@@ -12,6 +12,7 @@ export const TMAInitData = ({ children }: PropsWithChildren) => {
   let initData: InitData | undefined = undefined;
   let miniAppParams: LaunchParams;
   let miniAppUtils: Utils;
+  let cloudstorage: CloudStorage;
 
   if (!error && !loading) {
     webApp = useMiniApp();
@@ -28,6 +29,9 @@ export const TMAInitData = ({ children }: PropsWithChildren) => {
 
     miniAppUtils = useUtils();
     setMiniAppUtils(miniAppUtils);
+
+    cloudstorage = useCloudStorage();
+    setTelegramCloudStorage(cloudstorage);
   };
 
   useEffect(() => {

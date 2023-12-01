@@ -1,4 +1,10 @@
-import { InitData, MiniApp, LaunchParams, Utils } from "@tma.js/sdk";
+import {
+  InitData,
+  MiniApp,
+  LaunchParams,
+  Utils,
+  CloudStorage,
+} from "@tma.js/sdk";
 import { DEBUG } from "@/constants/global";
 import { TelegramOauthDataOnauthProps } from "@/components/loginModal/telegramOauth";
 import { notification } from "antd";
@@ -14,6 +20,8 @@ export default () => {
   const [telegramWebApp, setTelegramWebApp] = useState<MiniApp>();
   const [miniAppParams, setMiniAppParams] = useState<LaunchParams>();
   const [miniAppUtils, setMiniAppUtils] = useState<Utils>();
+  const [telegramCloudStorage, setTelegramCloudStorage] =
+    useState<CloudStorage>();
 
   useEffect(() => {
     if (!telegramDataString) {
@@ -47,5 +55,7 @@ export default () => {
     setMiniAppParams,
     miniAppUtils,
     setMiniAppUtils,
+    telegramCloudStorage,
+    setTelegramCloudStorage,
   };
 };

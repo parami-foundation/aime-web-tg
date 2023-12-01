@@ -67,6 +67,7 @@ export default () => {
     setCharacter,
   } = useModel("useSetting");
   const { accessToken } = useModel("useAccess");
+  const { telegramCloudStorage } = useModel("useTelegram");
 
   const [socket, setSocket] = React.useState<WebSocket | null>(null);
   const [socketIsOpen, setSocketIsOpen] = React.useState<boolean>(false);
@@ -76,11 +77,15 @@ export default () => {
   >(new Map());
 
   useEffect(() => {
-    const storedSession = localStorage.getItem("aime:messageSession");
-    if (!!storedSession && JSON.parse(storedSession).length > 0) {
-      const session = new Map(JSON.parse(storedSession));
-      setStoredMessageSession(session as Map<string, string>);
-    }
+    (async () => {
+      const storedSession =
+        localStorage.getItem("aime:messageSession") ||
+        (await telegramCloudStorage?.get("aime:messageSession"));
+      if (!!storedSession && JSON.parse(storedSession).length > 0) {
+        const session = new Map(JSON.parse(storedSession));
+        setStoredMessageSession(session as Map<string, string>);
+      }
+    })();
   }, []);
 
   const sendOverSocket = (
@@ -327,6 +332,10 @@ export default () => {
         const session = prev;
         session.set(character.id ?? "", session_Id);
         localStorage.setItem(
+          "aime:messageSession",
+          JSON.stringify([...session])
+        );
+        telegramCloudStorage?.set(
           "aime:messageSession",
           JSON.stringify([...session])
         );
