@@ -69,6 +69,7 @@ export const BuyPower: React.FC = () => {
   const { character } = useModel("useSetting");
 
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
+  const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
 
   return (
     <>
@@ -107,6 +108,8 @@ export const BuyPower: React.FC = () => {
       <BuyModal
         visible={isBuyModalVisible}
         setVisible={setIsBuyModalVisible}
+        transactionHash={transactionHash}
+        setTransactionHash={setTransactionHash}
       />
     </>
   )

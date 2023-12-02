@@ -28,6 +28,7 @@ const InputBox: React.FC<{
 
   const [inputValue, setInputValue] = React.useState<string>();
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
+  const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
 
   useEffect(() => {
     if (!isTextMode) {
@@ -171,6 +172,8 @@ const InputBox: React.FC<{
       <BuyModal
         visible={isBuyModalVisible}
         setVisible={setIsBuyModalVisible}
+        transactionHash={transactionHash}
+        setTransactionHash={setTransactionHash}
       />
     </>
   )

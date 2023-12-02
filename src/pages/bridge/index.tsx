@@ -5,7 +5,7 @@ import { ReactComponent as Logo } from '@/assets/logo.svg';
 import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
 import SwitchNetwork from "./switchNetwork";
 import ConnectWallet from "./connectWallet";
-import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 import { Button, Result } from "antd";
 import queryString from 'query-string';
 import BuyModal from "../chat/detail/buyModal";
@@ -25,6 +25,11 @@ const Bridge: React.FC = () => {
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
   const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
+
+  useEffect(() => {
+    disconnect();
+  }, [address, isConnected]);
 
   useEffect(() => {
     setAddress(address);
@@ -39,7 +44,7 @@ const Bridge: React.FC = () => {
   }, [search]);
 
   useEffect(() => {
-    if (!!telegramDataString && !!address && currentChain?.id === chains[0]?.id) {
+    if (!!telegramDataString && !!address && isConnected && currentChain?.id === chains[0]?.id) {
       if (!!search?.action) {
         switch (search?.action) {
           case "bind":
@@ -133,8 +138,8 @@ const Bridge: React.FC = () => {
         visible={buyModalVisible}
         setVisible={setBuyModalVisible}
         closeable={false}
-        propsTransactionHash={transactionHash}
-        propsSetTransactionHash={setTransactionHash}
+        transactionHash={transactionHash}
+        setTransactionHash={setTransactionHash}
       />
     </div>
   )

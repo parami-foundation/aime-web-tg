@@ -382,14 +382,13 @@ const BuyModal: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
   closeable?: boolean;
-  propsTransactionHash?: `0x${string}` | undefined;
-  propsSetTransactionHash?: React.Dispatch<React.SetStateAction<`0x${string}` | undefined>>
-}> = ({ visible, setVisible, closeable, propsTransactionHash, propsSetTransactionHash }) => {
+  transactionHash: `0x${string}` | undefined;
+  setTransactionHash: React.Dispatch<React.SetStateAction<`0x${string}` | undefined>>
+}> = ({ visible, setVisible, closeable, transactionHash, setTransactionHash }) => {
   const [powerValue, setPowerValue] = React.useState<number>(0);
   const [purchaseSuccessVisible, setPurchaseSuccessVisible] = React.useState<boolean>(false);
   const [purchaseFailedVisible, setPurchaseFailedVisible] = React.useState<boolean>(false);
   const [error, setError] = React.useState<Error>(new Error(""));
-  const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
 
   useEffect(() => {
     if (!visible) {
@@ -423,7 +422,7 @@ const BuyModal: React.FC<{
             setPurchaseSuccessVisible={setPurchaseSuccessVisible}
             setPurchaseFailedVisible={setPurchaseFailedVisible}
             setError={setError}
-            setTransactionHash={propsSetTransactionHash || setTransactionHash}
+            setTransactionHash={setTransactionHash}
             setBuyModalVisible={setVisible}
           />
         )}
@@ -431,7 +430,7 @@ const BuyModal: React.FC<{
       <PurchaseSuccess
         visible={purchaseSuccessVisible}
         setVisible={setPurchaseSuccessVisible}
-        transactionHash={propsTransactionHash || transactionHash}
+        transactionHash={transactionHash}
       />
       <PurchaseFailed
         visible={purchaseFailedVisible}
