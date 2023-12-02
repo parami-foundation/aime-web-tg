@@ -32,6 +32,7 @@ const Chat: React.FC = () => {
   const [disableMic, setDisableMic] = React.useState<boolean>(true);
   const [isTextMode, setIsTextMode] = React.useState<boolean>(true);
   const [shareModalVisible, setShareModalVisible] = React.useState<boolean>(false);
+  const [msgScrolled, setMsgScrolled] = React.useState<boolean>(false);
 
   // Audio player
   const audioPlayerRef = useRef<LBAudioElement>(null);
@@ -174,6 +175,9 @@ const Chat: React.FC = () => {
   useEffect(() => {
     if (msgList.current) {
       msgList.current.scrollTop = msgList.current.scrollHeight;
+      msgList.current.addEventListener("scroll", () => {
+        setMsgScrolled(msgList.current?.scrollTop !== msgList.current?.scrollHeight)
+      });
     }
   }, [messages, msgList.current]);
 
@@ -231,7 +235,13 @@ const Chat: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className={styles.chatHeaderAvatar}>
+            <div
+              className={styles.chatHeaderAvatar}
+              style={{
+                height: msgScrolled ? "80px" : "180px",
+                width: msgScrolled ? "80px" : "180px",
+              }}
+            >
               <img
                 src={character?.avatar_url}
                 alt="avatar"

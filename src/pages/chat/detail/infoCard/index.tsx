@@ -6,7 +6,8 @@ import { RiTwitterXFill, RiWalletLine } from "react-icons/ri";
 import { THEME_CONFIG } from "@/constants/theme";
 import ShareModal from "../shareModal";
 import BuyModal from "../buyModal";
-import { PROJECT_CONFIG } from "@/constants/global";
+import { AIME_CONTRACT, DEBUG, PROJECT_CONFIG } from "@/constants/global";
+import { useContractRead } from "wagmi";
 
 export const ConnectWallet: React.FC = () => {
   const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
@@ -151,21 +152,40 @@ export const Share: React.FC = () => {
 
 const InfoCard: React.FC = () => {
   const { address, twitterBinded } = useModel("useAccess");
+  const { character } = useModel("useSetting");
 
-  if (!address) {
+  const [balance, setBalance] = React.useState<bigint>(0n);
+
+  const { data }: {
+    data?: bigint;
+    isError: boolean;
+    isLoading: boolean;
+  } = useContractRead({
+    address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+    abi: require("@/abis/AIMePowers.json"),
+    functionName: "powerBalance",
+    args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, address],
+    onSuccess: (data) => {
+      setBalance(data ?? 0n);
+    }
+  });
+
+  if (!address && balance === 0n) {
     return (
       <ConnectWallet />
     )
-  } else if (!!address && !twitterBinded) {
+  } else if (!!address && !twitterBinded && balance === 0n) {
     return (
       <ConnectTwitter />
     )
-  } else if (!!address && twitterBinded) {
+  } else if (!!address && twitterBinded && balance === 0n) {
     return (
       <BuyPower />
     )
-  } else {
-    <Share />
+  } else if (!!address && twitterBinded && balance > 0n) {
+    return (
+      <Share />
+    )
   }
 };
 

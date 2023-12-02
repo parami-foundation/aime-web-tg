@@ -8,6 +8,7 @@ import { PiCopySimple } from "react-icons/pi";
 import { ReactComponent as FirstIcon } from '@/assets/icon/1st.svg';
 import { BiChevronRight } from "react-icons/bi";
 import Airdrop from "./airdrop";
+import AvatarRegistered from "./registered";
 
 const Me: React.FC = () => {
   const [airdropVisible, setAirdropVisible] = React.useState<boolean>(false);
@@ -16,32 +17,7 @@ const Me: React.FC = () => {
     <AccessLayout>
       <div className={styles.meContainer}>
         <div className={styles.meWrapper}>
-          <div className={styles.meAvatar}>
-            <div className={styles.meAvatarWrapper}>
-              <AvatarCircle
-                className={styles.meAvatarCircle}
-              />
-              <div className={styles.meAvatarCirclePoint}>
-                <div className={styles.meAvatarCirclePointWrapper} />
-              </div>
-              <img
-                className={styles.meAvatarImage}
-                src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
-                alt="avatar"
-              />
-              <div className={styles.meAvatarToken}>
-                <FaEthereum
-                  className={styles.meAvatarTokenIcon}
-                />
-                <span>3.655</span>
-              </div>
-            </div>
-            <div className={styles.meAvatarPop}>
-              <div className={styles.meAvatarPopWrapper}>
-                👋 Hi, Nana
-              </div>
-            </div>
-          </div>
+          <AvatarRegistered />
           <div className={styles.meInfo}>
             <div className={styles.meInfoAvatar}>
               <img

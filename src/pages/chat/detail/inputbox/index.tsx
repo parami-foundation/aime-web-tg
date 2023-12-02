@@ -50,10 +50,10 @@ const InputBox: React.FC<{
       address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
       abi: require("@/abis/AIMePowers.json"),
       functionName: "powerBalance",
-      args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, `0x${address}`],
+      args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, address],
     });
 
-    return balance;
+    return balance ?? 0n;
   };
 
   return (
@@ -66,7 +66,7 @@ const InputBox: React.FC<{
           {!!address && (
             <div className={styles.inputBoxWrapperRow}>
               <div className={styles.inputBoxWrapperTip}>
-                You own {formatEther(getPowerBalance() ?? 0n)} Power of {character?.name}
+                You own {getPowerBalance()?.toString() ?? "0"} Power of {character?.name}
               </div>
             </div>
           )}
@@ -74,7 +74,7 @@ const InputBox: React.FC<{
             <div
               className={styles.inputBox}
               style={{
-                width: !!address ? "calc(100% - 55px)" : "100%",
+                width: getPowerBalance() === 0n ? "calc(100% - 55px)" : "100%",
               }}
             >
               <div

@@ -25,11 +25,6 @@ const Bridge: React.FC = () => {
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
   const { address, isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
-
-  useEffect(() => {
-    disconnect();
-  }, [address, isConnected]);
 
   useEffect(() => {
     setAddress(address);
