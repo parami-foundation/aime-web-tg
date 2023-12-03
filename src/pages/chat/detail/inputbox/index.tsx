@@ -19,7 +19,8 @@ const InputBox: React.FC<{
   setDisableMic: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode, setDisableMic }) => {
   const { SendMessageType, sendOverSocket } = useModel("useWebsocket");
-  const { address, accessToken } = useModel("useAccess");
+  const { accessToken } = useModel("useAccess");
+  const { address } = useModel("useWallet");
   const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
   const { transactionHashs } = useModel("useContract");
   const { isRecording } = useModel("useRecorder");

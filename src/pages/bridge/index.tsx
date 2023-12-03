@@ -3,20 +3,18 @@ import styles from "./style.less";
 import { useModel } from "@umijs/max";
 import { ReactComponent as Logo } from '@/assets/logo.svg';
 import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
-import SwitchNetwork from "./switchNetwork";
-import ConnectWallet from "./connectWallet";
 import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 import { Button, Result } from "antd";
 import queryString from 'query-string';
 import BuyModal from "../chat/detail/buyModal";
 import { charactersData } from "@/mocks/character";
-import SignMessage from "./signMessage";
-import Loading from "./loading";
 import { StartParam } from "@/services/typing";
+import LoginModal from "@/components/loginModal";
+import TelegramOauth from "@/components/telegram/oauth";
 
 const Bridge: React.FC = () => {
-  const { telegramDataString } = useModel('useTelegram');
-  const { setAddress, signature } = useModel('useAccess');
+  const { telegramDataString, setTelegramOauthModalVisible } = useModel('useTelegram');
+  const { address, signature, walletBinded, walletModalVisible, setWalletModalVisible } = useModel('useWallet');
   const { setCharacter } = useModel('useSetting');
 
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
@@ -24,11 +22,7 @@ const Bridge: React.FC = () => {
 
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
-  const { address, isConnected } = useAccount();
-
-  useEffect(() => {
-    setAddress(address);
-  }, [address, isConnected]);
+  const { isConnected } = useAccount();
 
   const search = queryString.parse(window.location.search);
 
@@ -43,7 +37,7 @@ const Bridge: React.FC = () => {
       if (!!search?.action) {
         switch (search?.action) {
           case "bind":
-            if (!!address && !!signature) {
+            if (!!address && !!signature && walletBinded) {
               const params: StartParam = {
                 characterId: search?.characterId as string,
                 address,
@@ -51,7 +45,7 @@ const Bridge: React.FC = () => {
               };
               const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '____').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
 
-              window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
+              // window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
             }
             break;
 
@@ -74,8 +68,13 @@ const Bridge: React.FC = () => {
 
   return (
     <div className={styles.bridgeContainer}>
-      {!!telegramDataString && (
+      {!!telegramDataString && !!search?.action && (
         <>
+          <LoginModal
+            visible={true}
+            setVisible={setWalletModalVisible}
+            closeable={false}
+          />
           <div className={styles.logoContainer}>
             <div className={styles.logo}>
               <Logo />
@@ -84,50 +83,23 @@ const Bridge: React.FC = () => {
               <LogoTitle />
             </div>
           </div>
-          <div className={styles.contentContainer}>
-            {(!address || !isConnected) && (
-              <ConnectWallet />
-            )}
-            {!!address && currentChain?.id !== chains[0]?.id && (
-              <SwitchNetwork />
-            )}
-            {!!address && currentChain?.id === chains[0]?.id && !signature && (
-              <SignMessage />
-            )}
-            {!!address && currentChain?.id === chains[0]?.id && !!signature && (
-              <Loading />
-            )}
-          </div>
         </>
       )}
-      {!telegramDataString && (
-        <Result
-          icon={
-            <div className={styles.logoContainer}>
-              <div className={styles.logo}>
-                <Logo />
-              </div>
-              <div className={styles.title}>
-                <LogoTitle />
-              </div>
+      {(!telegramDataString || !search?.action) && (
+        <>
+          <TelegramOauth
+            visible={true}
+            setVisible={setTelegramOauthModalVisible}
+          />
+          <div className={styles.logoContainer}>
+            <div className={styles.logo}>
+              <Logo />
             </div>
-          }
-          status="error"
-          title="SDK init error"
-          subTitle="SDK init function is not yet called."
-          extra={[
-            <Button
-              type="primary"
-              key="retry"
-              size='large'
-              onClick={() => {
-                window.location.reload();
-              }}
-            >
-              Retry
-            </Button>,
-          ]}
-        />
+            <div className={styles.title}>
+              <LogoTitle />
+            </div>
+          </div>
+        </>
       )}
       <BuyModal
         visible={buyModalVisible}

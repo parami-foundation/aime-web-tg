@@ -11,7 +11,8 @@ import { useContractRead } from "wagmi";
 
 export const ConnectWallet: React.FC = () => {
   const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
-  const { setWalletModalVisible, accessToken } = useModel("useAccess");
+  const { accessToken } = useModel("useAccess");
+  const { setWalletModalVisible } = useModel("useWallet");
 
   return (
     <div className={styles.infoCardContainer}>
@@ -151,7 +152,8 @@ export const Share: React.FC = () => {
 };
 
 const InfoCard: React.FC = () => {
-  const { address, twitterBinded } = useModel("useAccess");
+  const { twitterBinded } = useModel("useAccess");
+  const { address } = useModel("useWallet");
   const { character } = useModel("useSetting");
 
   const [balance, setBalance] = React.useState<bigint>(0n);

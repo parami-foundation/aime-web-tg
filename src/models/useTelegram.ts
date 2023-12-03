@@ -5,10 +5,21 @@ import {
   Utils,
   CloudStorage,
 } from "@tma.js/sdk";
-import { TelegramOauthDataOnauthProps } from "@/components/loginModal/telegramOauth";
 import { useEffect, useState } from "react";
 
+export interface TelegramOauthDataOnauthProps {
+  id?: number;
+  first_name?: string;
+  last_name?: string;
+  username?: string;
+  photo_url?: string;
+  auth_date?: number;
+  hash?: string;
+}
+
 export default () => {
+  const [telegramOauthModalVisible, setTelegramOauthModalVisible] =
+    useState<boolean>(false);
   const [telegramData, setTelegramData] = useState<
     InitData | TelegramOauthDataOnauthProps | null
   >(null);
@@ -75,5 +86,7 @@ export default () => {
     setMiniAppUtils,
     telegramCloudStorage,
     setTelegramCloudStorage,
+    telegramOauthModalVisible,
+    setTelegramOauthModalVisible,
   };
 };

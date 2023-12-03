@@ -7,7 +7,7 @@ const Loading: React.FC = () => {
   return (
     <>
       <div className={styles.loginModalHeader}>
-        Loging in...
+        Loading...
       </div>
       <div className={styles.loginModalContent}>
         <Spin

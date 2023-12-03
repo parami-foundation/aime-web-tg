@@ -28,7 +28,8 @@ export const WEBSOCKET_CONFIG = {
 
 export const API_CONFIG = {
   scheme: "https",
-  host: "beta-parami.quaere.app",
+  host: "aime-api-beta.parami.io",
+  grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
 };
 
 export const ALCHEMY_CONFIG = {
@@ -39,8 +40,6 @@ export const ALCHEMY_CONFIG = {
 export const INFURA_CONFIG = {
   apiKey: "912a4876d6f449dea2143b0c6cf07e13",
 };
-
-export const BIND_WALLET_MESSAGE = "AIME:bind_wallet";
 
 export const WAITLIST_LINK = "https://form.typeform.com/to/Q7qTVjQW";
 

@@ -46,11 +46,26 @@ export interface StartParam {
 
 export declare namespace Req {
   interface OauthTelegram {
-    init_data?: string;
+    grant_type?: string;
+    subject_token?: string;
+    subject_issuer?: string;
+  }
+
+  interface BindWalletNonce {
+    chain_id?: string;
     address?: string;
-    message?: string;
+  }
+
+  interface BindWallet {
+    chain_id?: string;
+    address?: string;
     signature?: string;
-    type?: string;
+  }
+
+  interface CreateTransaction {
+    chain_id?: string;
+    address?: string;
+    hash?: string;
   }
 
   interface GetTokenPrice {
@@ -65,11 +80,26 @@ export declare namespace Resp {
     data?: any;
   }
 
+  interface Error extends Body {
+    error?: string;
+    error_description?: string;
+  }
+
   interface OauthTelegram extends Body {
-    status?: string;
+    error?: string;
+    error_description?: string;
     access_token?: string;
-    type?: string;
-    expire?: number;
+    expires_in?: number;
+    expired_at?: string;
+    token_type?: string;
+  }
+
+  interface BindWalletNonce extends Body {
+    error?: string;
+    error_description?: string;
+    chain_id?: string;
+    nonce?: string;
+    message?: string;
   }
 
   interface GetTokenPrice extends Body {

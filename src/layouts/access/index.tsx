@@ -1,12 +1,13 @@
 import LoginModal from '@/components/loginModal';
 import TelegramOauth from '@/components/telegram/oauth';
 import { useModel } from '@umijs/max';
-import { message } from 'antd';
 import { useEffect, type PropsWithChildren } from 'react';
 import { useAccount } from 'wagmi';
 
 export const AccessLayout = ({ children }: PropsWithChildren) => {
-  const { accessToken, telegramOauthModalVisible, setTelegramOauthModalVisible, walletModalVisible, setWalletModalVisible, setAddress } = useModel('useAccess');
+  const { accessToken } = useModel('useAccess');
+  const { walletModalVisible, setWalletModalVisible } = useModel('useWallet');
+  const { telegramOauthModalVisible, setTelegramOauthModalVisible } = useModel('useTelegram');
 
   const { isConnected, address } = useAccount();
 

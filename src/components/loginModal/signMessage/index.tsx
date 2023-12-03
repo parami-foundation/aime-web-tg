@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import styles from "../style.less";
 import { Button, ConfigProvider, Tag, notification, theme } from "antd";
 import { ReactComponent as StampIcon } from '@/assets/icon/stamp.svg';
-import { BIND_WALLET_MESSAGE } from "@/constants/global";
 import { FaAngleRight } from "react-icons/fa";
 import { THEME_CONFIG } from "@/constants/theme";
 import { useSignMessage } from 'wagmi';
@@ -10,32 +9,64 @@ import { recoverMessageAddress } from 'viem';
 import { useModel } from "@umijs/max";
 
 const SignMessage: React.FC = () => {
-  const { setSignature } = useModel('useAccess');
+  const { accessToken } = useModel('useAccess');
+  const { address, message, nonce, setSignature, setWalletBinded, getBindWalletNonce, bindWallet } = useModel('useWallet');
 
   const [recoveredAddress, setRecoveredAddress] = React.useState<string>();
 
   const {
-    data: signature,
+    data,
     variables,
     error,
     isLoading,
     signMessage,
   } = useSignMessage({
-    message: BIND_WALLET_MESSAGE,
+    message,
   });
 
   useEffect(() => {
+    if (!!accessToken) {
+      getBindWalletNonce({
+        address,
+        accessToken,
+      });
+    }
+  }, [address]);
+
+  useEffect(() => {
     ; (async () => {
-      if (variables?.message && signature) {
-        const recoveredAddress = await recoverMessageAddress({
-          message: variables?.message,
-          signature,
-        })
-        setRecoveredAddress(recoveredAddress);
-        setSignature(signature);
+      if (!!data && !!nonce && !!address && !!accessToken) {
+        const bindResult = await bindWallet({
+          nonce,
+          address,
+          signature: data,
+          accessToken,
+        });
+        if (!bindResult) {
+          setWalletBinded(true);
+        } else {
+          notification.error({
+            key: 'bindWalletError',
+            message: 'Bind wallet failed',
+            description: bindResult?.error_description,
+          });
+        }
       }
     })();
-  }, [signature, variables?.message]);
+  }, [data, nonce, address, accessToken]);
+
+  useEffect(() => {
+    ; (async () => {
+      if (variables?.message && data) {
+        const recoveredAddress = await recoverMessageAddress({
+          message: variables?.message,
+          signature: data,
+        })
+        setRecoveredAddress(recoveredAddress);
+        setSignature(data);
+      }
+    })();
+  }, [data, variables?.message]);
 
   useEffect(() => {
     if (!!error) {
@@ -49,13 +80,13 @@ const SignMessage: React.FC = () => {
 
   return (
     <>
-      <div className={styles.bridgeHeader}>
+      <div className={styles.loginModalHeader}>
         Need to verify your wallet
-        <div className={styles.bridgeHeaderDescription}>
-          Please sign the message <Tag>{BIND_WALLET_MESSAGE}</Tag> with your wallet
+        <div className={styles.loginModalHeaderDescription}>
+          Please sign the message with your wallet
         </div>
       </div>
-      <div className={styles.bridgeContent}>
+      <div className={styles.loginModalContent}>
         <ConfigProvider
           theme={{
             algorithm: theme.defaultAlgorithm,
@@ -73,22 +104,22 @@ const SignMessage: React.FC = () => {
             size="large"
             loading={isLoading}
             disabled={isLoading}
-            className={styles.bridgeContentItem}
+            className={styles.loginModalContentItem}
             onClick={async () => {
               await signMessage();
             }}
           >
-            <div className={styles.bridgeContentItemLeft}>
+            <div className={styles.loginModalContentItemLeft}>
               <StampIcon
-                className={styles.bridgeContentItemIcon}
+                className={styles.loginModalContentItemIcon}
               />
-              <div className={styles.bridgeContentItemText}>
+              <div className={styles.loginModalContentItemText}>
                 {isLoading ? 'Check Wallet' : 'Sign Message'}
               </div>
             </div>
-            <div className={styles.bridgeContentItemRight}>
+            <div className={styles.loginModalContentItemRight}>
               <FaAngleRight
-                className={styles.bridgeContentItemRightIcon}
+                className={styles.loginModalContentItemRightIcon}
               />
             </div>
           </Button>

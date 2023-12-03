@@ -3,7 +3,7 @@ import { useModel, history } from "@umijs/max";
 import { useEffect } from "react";
 
 export default () => {
-  const { setAddress, setSignature } = useModel("useAccess");
+  const { setAddress, setSignature } = useModel("useWallet");
   const { setCharacter } = useModel("useSetting");
   const { miniAppParams } = useModel("useTelegram");
 

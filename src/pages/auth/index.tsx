@@ -8,7 +8,8 @@ import { useModel, history } from '@umijs/max';
 import { AccessLayout } from '@/layouts/access';
 
 const Auth: React.FC = () => {
-  const { accessToken, setTelegramOauthModalVisible } = useModel('useAccess');
+  const { accessToken } = useModel('useAccess');
+  const { setTelegramOauthModalVisible } = useModel('useTelegram');
 
   useEffect(() => {
     if (!!accessToken) {

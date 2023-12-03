@@ -2,6 +2,7 @@ import { useInitData, useInitDataRaw, useSDKContext, useViewport, useMiniApp, us
 import { InitData, MiniApp, LaunchParams, Utils, CloudStorage } from "@tma.js/sdk";
 import { useModel } from "@umijs/max";
 import { PropsWithChildren, useEffect } from "react";
+import { TelegramAuth } from "@/services/enum.d";
 
 export const TMAInitData = ({ children }: PropsWithChildren) => {
   const { setTelegramData, setTelegramDataString, setTelegramAuthType, setTelegramMiniAppHeight, setTelegramWebApp, setMiniAppParams, setMiniAppUtils, setTelegramCloudStorage } = useModel('useTelegram');
@@ -42,14 +43,14 @@ export const TMAInitData = ({ children }: PropsWithChildren) => {
       localStorage.setItem('aime:telegramData', JSON.stringify(initData));
       cloudstorage?.set('aime:telegramData', JSON.stringify(initData));
 
-      setTelegramAuthType('webapp');
-      localStorage.setItem('aime:telegramAuthType', 'webapp');
+      setTelegramAuthType(TelegramAuth.WEB);
+      localStorage.setItem('aime:telegramAuthType', TelegramAuth.WEB);
     }
 
     if (!!initDataString) {
-      setTelegramDataString(initDataString);
-      localStorage.setItem('aime:telegramDataString', initDataString);
-      cloudstorage?.set('aime:telegramDataString', initDataString);
+      setTelegramDataString(decodeURIComponent(initDataString));
+      localStorage.setItem('aime:telegramDataString', decodeURIComponent(initDataString));
+      cloudstorage?.set('aime:telegramDataString', decodeURIComponent(initDataString));
     }
   }, [initData, initDataString]);
 

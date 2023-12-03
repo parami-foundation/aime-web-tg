@@ -51,6 +51,13 @@ export default defineConfig({
   jsMinifierOptions: {
     target: ["chrome80", "es2020"],
   },
+  proxy: {
+    "/proxy": {
+      target: "https://aime-api-beta.parami.io",
+      changeOrigin: true,
+      pathRewrite: { "^/proxy": "" },
+    },
+  },
   hash: true,
   cssMinifier: "cssnano",
 });

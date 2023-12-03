@@ -7,6 +7,7 @@ import { THEME_CONFIG } from "@/constants/theme";
 import { TELEGRAM_BOT } from "@/constants/global";
 import { ReactComponent as TelegramIcon } from "@/assets/brand/telegram.svg";
 import { FaAngleRight } from "react-icons/fa";
+import { TelegramAuth } from "@/services/enum.d";
 
 export interface TelegramOauthDataOnauthProps {
   id?: number;
@@ -61,12 +62,12 @@ const TelegramOauth: React.FC<{
               <TelegramLoginButton
                 dataOnauth={(response: TelegramOauthDataOnauthProps) => {
                   setTelegramData(response);
-                  setTelegramAuthType('oauth2');
+                  setTelegramAuthType(TelegramAuth.WEB);
                   localStorage.setItem('aime:telegramData', JSON.stringify(response));
                   telegramCloudStorage?.set('aime:telegramData', JSON.stringify(response));
 
-                  localStorage.setItem('aime:telegramAuthType', 'oauth2');
-                  telegramCloudStorage?.set('aime:telegramAuthType', 'oauth2');
+                  localStorage.setItem('aime:telegramAuthType', TelegramAuth.WEB);
+                  telegramCloudStorage?.set('aime:telegramAuthType', TelegramAuth.WEB);
 
                   let initDataString = "";
                   for (let key in response) {
@@ -74,11 +75,11 @@ const TelegramOauth: React.FC<{
                       initDataString += "&";
                     }
                     initDataString +=
-                      key + "=" + encodeURIComponent((response as any)[key]);
+                      key + "=" + (response as any)[key];
                   }
-                  setTelegramDataString(initDataString);
-                  localStorage.setItem('aime:telegramDataString', initDataString);
-                  telegramCloudStorage?.set('aime:telegramDataString', initDataString);
+                  setTelegramDataString(decodeURIComponent(initDataString));
+                  localStorage.setItem('aime:telegramDataString', decodeURIComponent(initDataString));
+                  telegramCloudStorage?.set('aime:telegramDataString', decodeURIComponent(initDataString));
                 }}
                 botName={TELEGRAM_BOT}
                 className={styles.telegramLoginBtn}

@@ -1,3 +1,4 @@
+import { API_CONFIG } from "@/constants/global";
 import { OauthTelegram } from "@/services/api";
 import { useModel } from "@umijs/max";
 import { message } from "antd";
@@ -9,54 +10,61 @@ export default () => {
   const [accessToken, setAccessToken] = useState<string>();
   const [accessTokenExpire, setAccessTokenExpire] = useState<number>(0);
 
-  const [address, setAddress] = useState<`0x${string}` | undefined>();
-  const [signature, setSignature] = useState<string>();
   const [twitterBinded, setTwitterBinded] = useState<boolean>(true);
-  const [telegramOauthModalVisible, setTelegramOauthModalVisible] =
-    useState<boolean>(false);
-  const [walletModalVisible, setWalletModalVisible] = useState<boolean>(false);
+
+  const oauthTelegram = async () => {
+    const { response, data } = await OauthTelegram({
+      grant_type: API_CONFIG.grant_type,
+      subject_token: telegramDataString,
+      subject_issuer: telegramAuthType,
+    });
+
+    if (response?.status === 200) {
+      message.success({
+        key: "loginSuccess",
+        content: "Login success",
+      });
+
+      // Store access token
+      !!data?.access_token &&
+        localStorage.setItem("aime:accessToken", data?.access_token);
+      !!data?.access_token &&
+        telegramCloudStorage?.set("aime:accessToken", data?.access_token);
+      !!data?.access_token && setAccessToken(data?.access_token);
+
+      // Store access token expire
+      const now = new Date().getTime();
+      !!data?.expires_in &&
+        localStorage.setItem(
+          "aime:accessToken:expire",
+          (now + data?.expires_in * 1000).toString()
+        );
+      !!data?.expires_in &&
+        telegramCloudStorage?.set(
+          "aime:accessToken:expire",
+          (now + data?.expires_in * 1000).toString()
+        );
+      !!data?.expires_in && setAccessTokenExpire(now + data?.expires_in * 1000);
+    } else {
+      if (data?.error === "invalid_token") {
+        localStorage.removeItem("aime:telegramAuthType");
+        telegramCloudStorage?.delete("aime:telegramAuthType");
+        localStorage.removeItem("aime:telegramDataString");
+        telegramCloudStorage?.delete("aime:telegramDataString");
+        localStorage.removeItem("aime:telegramData");
+        telegramCloudStorage?.delete("aime:telegramData");
+      }
+      message.error({
+        key: "loginFailed",
+        content: "Login failed",
+      });
+    }
+  };
 
   useEffect(() => {
-    (async () => {
-      if (!!telegramDataString && !accessToken) {
-        const { response, data } = await OauthTelegram({
-          init_data: telegramDataString,
-          type: telegramAuthType,
-        });
-
-        if (response?.status === 200 && data?.status === "success") {
-          message.success({
-            key: "loginSuccess",
-            content: "Login success",
-          });
-
-          // Store access token
-          !!data?.access_token &&
-            localStorage.setItem("aime:accessToken", data?.access_token);
-          !!data?.access_token &&
-            telegramCloudStorage?.set("aime:accessToken", data?.access_token);
-          !!data?.access_token && setAccessToken(data?.access_token);
-
-          // Store access token expire
-          !!data?.expire &&
-            localStorage.setItem(
-              "aime:accessToken:expire",
-              data?.expire.toString()
-            );
-          !!data?.expire &&
-            telegramCloudStorage?.set(
-              "aime:accessToken:expire",
-              data?.expire.toString()
-            );
-          !!data?.expire && setAccessTokenExpire(data?.expire);
-        } else {
-          message.error({
-            key: "loginFailed",
-            content: "Login failed",
-          });
-        }
-      }
-    })();
+    if (!!telegramDataString && !accessToken) {
+      oauthTelegram();
+    }
   }, [telegramDataString, accessToken]);
 
   useEffect(() => {
@@ -67,12 +75,10 @@ export default () => {
       const accessTokenExpire =
         localStorage.getItem("aime:accessToken:expire") ||
         (await telegramCloudStorage?.get("aime:accessToken:expire"));
-      const address =
-        localStorage.getItem("aime:address") ||
-        (await telegramCloudStorage?.get("aime:address"));
 
       const now = new Date().getTime();
-      if (!accessTokenExpire || parseInt(accessTokenExpire) * 1000 < now) {
+
+      if (!accessTokenExpire || parseInt(accessTokenExpire) < now) {
         setAccessToken(undefined);
         setAccessTokenExpire(0);
         localStorage.removeItem("aime:accessToken");
@@ -86,32 +92,16 @@ export default () => {
       if (!!accessTokenExpire) {
         setAccessTokenExpire(parseInt(accessTokenExpire));
       }
-      if (!!address) {
-        setAddress(address as `0x${string}`);
-      }
     })();
   }, []);
 
-  useEffect(() => {
-    if (!!address) {
-      localStorage.setItem("aime:address", address);
-    }
-  }, [address]);
-
   return {
-    signature,
     accessToken,
     accessTokenExpire,
-    address,
     twitterBinded,
-    telegramOauthModalVisible,
-    walletModalVisible,
     setAccessToken,
-    setSignature,
     setAccessTokenExpire,
-    setAddress,
     setTwitterBinded,
-    setTelegramOauthModalVisible,
-    setWalletModalVisible,
+    oauthTelegram,
   };
 };
