@@ -248,7 +248,7 @@ const Detail: React.FC<{
         setTokenPrice(data?.ethereum?.usd);
       }
     });
-  }, [powerValue]);
+  }, []);
 
   return (
     <div className={styles.detailModalContainer}>

@@ -1,23 +1,45 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { AccessLayout } from "@/layouts/access";
 import NavBar from "@/components/navBar";
-import { ReactComponent as AvatarCircle } from '@/assets/me/circle.svg';
-import { FaEthereum } from "react-icons/fa";
 import { PiCopySimple } from "react-icons/pi";
 import { ReactComponent as FirstIcon } from '@/assets/icon/1st.svg';
 import { BiChevronRight } from "react-icons/bi";
 import Airdrop from "./airdrop";
 import AvatarRegistered from "./registered";
+import AvatarNew from "./new";
+import { useBalance } from "wagmi";
+import { useModel } from "@umijs/max";
+import { GetTokenPrice } from "@/services/third";
+import { formatEther } from "viem";
+import { message } from "antd";
 
 const Me: React.FC = () => {
+  const { address } = useModel("useWallet");
+
   const [airdropVisible, setAirdropVisible] = React.useState<boolean>(false);
+  const [tokenPrice, setTokenPrice] = React.useState<number>(0);
+
+  const { data: balance, isError: balanceError, isLoading: balanceLoading } = useBalance({
+    address: address,
+  });
+
+  useEffect(() => {
+    GetTokenPrice({
+      token: "ethereum",
+      currency: "usd",
+    }).then(({ response, data }) => {
+      if (response?.status === 200) {
+        setTokenPrice(data?.ethereum?.usd);
+      }
+    });
+  }, []);
 
   return (
     <AccessLayout>
       <div className={styles.meContainer}>
         <div className={styles.meWrapper}>
-          <AvatarRegistered />
+          <AvatarNew />
           <div className={styles.meInfo}>
             <div className={styles.meInfoAvatar}>
               <img
@@ -52,10 +74,14 @@ const Me: React.FC = () => {
               />
               <div className={styles.meBalanceContentRight}>
                 <div className={styles.meBalanceContentValue}>
-                  3.654805 ETH
+                  {balanceLoading ?? balanceError ? (
+                    <span>0.00 ETH</span>
+                  ) : (
+                    <span>{Number(balance?.formatted).toFixed(6)} {balance?.symbol}</span>
+                  )}
                 </div>
                 <div className={styles.meBalanceContentFlat}>
-                  $6547.663775
+                  ${!!balance?.value && (Number(formatEther(balance?.value)) * tokenPrice).toFixed(6)}
                 </div>
               </div>
             </div>
@@ -63,8 +89,14 @@ const Me: React.FC = () => {
               <div className={styles.meBalanceAddressTitle}>
                 My Wallet:
               </div>
-              <div className={styles.meBalanceAddressContent}>
-                <span>084a08...17a9C</span>
+              <div
+                className={styles.meBalanceAddressContent}
+                onClick={() => {
+                  !!address && navigator.clipboard.writeText(address);
+                  message.success("Copied");
+                }}
+              >
+                <span>{address?.slice(0, 6)}...{address?.slice(-4)}</span>
                 <PiCopySimple
                   className={styles.meBalanceAddressContentIcon}
                 />

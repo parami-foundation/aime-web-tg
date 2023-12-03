@@ -1,9 +1,19 @@
 import React from "react";
 import styles from "./style.less";
+import { Character } from "@/services/typing.d";
+import { history } from "@umijs/max";
 
-const CardItem: React.FC = () => {
+const CardItem: React.FC<{
+  character?: Character;
+  messageSession?: string;
+}> = ({ character, messageSession }) => {
   return (
-    <div className={styles.cardItemContainer}>
+    <div
+      className={styles.cardItemContainer}
+      onClick={() => {
+        history.push(`/chat/${character?.id}?session=${messageSession}`);
+      }}
+    >
       <div className={styles.cardItemWrapper}>
         <div className={styles.cardItemHeader}>
           <div className={styles.cardItemHeaderDate}>
@@ -13,13 +23,13 @@ const CardItem: React.FC = () => {
         <div className={styles.cardItemContent}>
           <div className={styles.cardItemContentAvatar}>
             <img
-              src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
+              src={character?.avatar_url}
               alt="avatar"
             />
           </div>
           <div className={styles.cardItemContentText}>
             <div className={styles.cardItemContentTextName}>
-              justinsuntron
+              {character?.name}
             </div>
             <div className={styles.cardItemContentTextMessage}>
               You’re wasting my time. I literally...

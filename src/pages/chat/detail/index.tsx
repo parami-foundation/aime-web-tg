@@ -13,6 +13,7 @@ import { AiOutlineStar } from "react-icons/ai";
 import { IoShareSocialOutline } from "react-icons/io5";
 import { playAudios } from "@/utils/audioUtils";
 import ShareModal from "./shareModal";
+import queryString from "query-string";
 
 export interface LBAudioElement extends HTMLAudioElement {
   setSinkId(id: string): Promise<void>;
@@ -34,6 +35,8 @@ const Chat: React.FC = () => {
   const [shareModalVisible, setShareModalVisible] = React.useState<boolean>(false);
   const [msgScrolled, setMsgScrolled] = React.useState<boolean>(false);
 
+  const search = queryString.parse(window.location.search);
+
   // Audio player
   const audioPlayerRef = useRef<LBAudioElement>(null);
   const audioQueueRef = useRef(audioQueue);
@@ -49,16 +52,19 @@ const Chat: React.FC = () => {
 
   // Demo
   useEffect(() => {
-    if (!accessToken || !charactersData.size) return;
-    setCharacter(Array.from(charactersData.values())[0]);
+    if (!accessToken || !charactersData.size) {
+      history.push("/home");
+      return;
+    }
+    setCharacter(charactersData.get(search?.id as string) ?? {});
     closeSocket();
     clearChatContent();
     connectSocket({
-      character: Array.from(charactersData.values())[0],
+      character: charactersData.get(search?.id as string) ?? {},
       onReturn: () => {
         setCharacter({});
       }
-    }, storedMessageSession.get(Array.from(charactersData.values())[0].id!) ?? undefined);
+    }, storedMessageSession.get((search?.session as string || Array.from(charactersData.values())[0].id!)) ?? undefined);
   }, [accessToken, charactersData]);
 
   useEffect(() => {
