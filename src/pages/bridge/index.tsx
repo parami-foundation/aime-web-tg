@@ -45,7 +45,7 @@ const Bridge: React.FC = () => {
               };
               const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '____').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
 
-              // window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
+              window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
             }
             break;
 
@@ -64,7 +64,7 @@ const Bridge: React.FC = () => {
         }
       }
     }
-  }, [address, signature, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id]);
+  }, [address, signature, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id, transactionHash]);
 
   return (
     <div className={styles.bridgeContainer}>

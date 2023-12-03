@@ -7,10 +7,11 @@ import { THEME_CONFIG } from "@/constants/theme";
 import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
 import { useAccount, useBalance, useContractRead, useContractWrite } from "wagmi";
-import { AIME_CONTRACT, DEBUG } from "@/constants/global";
+import { AIME_CONTRACT, DEBUG, NETWORK_CONFIG } from "@/constants/global";
 import { formatEther } from "viem";
 import { GetTokenPrice } from "@/services/third";
 import { useModel } from "@umijs/max";
+import { CreateTransaction } from "@/services/api";
 
 const Select: React.FC<{
   powerValue: number;
@@ -168,6 +169,7 @@ const Detail: React.FC<{
   setTransactionHash: React.Dispatch<React.SetStateAction<`0x${string}` | undefined>>;
   setBuyModalVisible: (visible: boolean) => void;
 }> = ({ powerValue, setPurchaseSuccessVisible, setPurchaseFailedVisible, setError, setTransactionHash, setBuyModalVisible }) => {
+  const { accessToken } = useModel("useAccess");
   const { publicClient } = useModel("useWagmi");
   const { storeTransactionHash } = useModel("useContract");
   const { character } = useModel("useSetting");
@@ -216,17 +218,26 @@ const Detail: React.FC<{
   }, [publicClient]);
 
   useEffect(() => {
-    if (isSuccess && !!data?.hash) {
-      setBuyModalVisible(false);
-      setPurchaseSuccessVisible(true);
-      storeTransactionHash(data?.hash, "success");
-      setTransactionHash(data?.hash);
-    }
-    if (!!error) {
-      setPurchaseFailedVisible(true);
-      setError(error);
-    }
-  }, [data, isLoading, isSuccess, error]);
+    ; (async () => {
+      if (isSuccess && !!data?.hash && !!address && !!accessToken) {
+        setBuyModalVisible(false);
+        setPurchaseSuccessVisible(true);
+        storeTransactionHash(data?.hash, "success");
+        setTransactionHash(data?.hash);
+
+        await CreateTransaction({
+          chain_id: NETWORK_CONFIG.chains[0].id.toString(),
+          address: address,
+          hash: data?.hash,
+        }, accessToken);
+      }
+
+      if (!!error) {
+        setPurchaseFailedVisible(true);
+        setError(error);
+      }
+    })();
+  }, [address, accessToken, data, isLoading, isSuccess, error]);
 
   useEffect(() => {
     GetTokenPrice({

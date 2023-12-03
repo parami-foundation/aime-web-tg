@@ -88,7 +88,7 @@ export async function CreateTransaction(
   return request(
     DEBUG
       ? "/proxy/api/transaction"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/transaction`,
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/transaction/`,
     {
       method: "POST",
       headers: {
