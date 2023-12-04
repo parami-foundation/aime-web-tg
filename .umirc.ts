@@ -60,4 +60,42 @@ export default defineConfig({
   },
   hash: true,
   cssMinifier: "cssnano",
+  metas: [
+    {
+      name: 'title',
+      content: 'AIME - AI-Powered ME for my Web3 Social Network',
+    },
+    {
+      name: 'og:title',
+      content: 'AIME - AI-Powered ME for my Web3 Social Network',
+    },
+    {
+      name: 'description',
+      content: 'Join AIME now and start earning today!'
+    },
+    {
+      name: 'og:description',
+      content: 'Join AIME now and start earning today!'
+    },
+    {
+      name: 'og:image',
+      content: 'https://ibb.co/XSXKn3R'
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image'
+    },
+    {
+      name: 'twitter:image',
+      content: 'https://ibb.co/XSXKn3R'
+    },
+    {
+      name: 'twitter:site:domain',
+      content: 'parami.io'
+    },
+    {
+      name: 'twitter:url',
+      content: 'https://t.me/aime_beta_bot/aimeapp'
+    }
+  ]
 });
