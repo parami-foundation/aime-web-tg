@@ -3,8 +3,13 @@ import styles from "./style.less";
 import { ReactComponent as AvatarCircle } from '@/assets/me/circle.svg';
 import { IoIosLock } from "react-icons/io";
 import { Image } from "antd";
+import { useModel } from "@umijs/max";
+import { InitData } from "@tma.js/sdk";
+import { TelegramOauthDataOnauthProps } from "@/services/typing.d";
 
 const AvatarNew: React.FC = () => {
+  const { telegramData } = useModel("useTelegram");
+
   return (
     <div className={styles.meAvatar}>
       <div className={styles.meAvatarWrapper}>
@@ -17,7 +22,7 @@ const AvatarNew: React.FC = () => {
         <div className={styles.meAvatarImage}>
           <Image
             className={styles.meAvatarImageSrc}
-            src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
+            src={(telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
             fallback={require('@/assets/me/avatar.png')}
           />
         </div>

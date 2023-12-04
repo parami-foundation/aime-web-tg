@@ -13,9 +13,12 @@ import { useModel } from "@umijs/max";
 import { GetTokenPrice } from "@/services/third";
 import { formatEther } from "viem";
 import { message, Image } from "antd";
+import { InitData } from "@tma.js/sdk";
+import { TelegramOauthDataOnauthProps } from "@/services/typing.d";
 
 const Me: React.FC = () => {
   const { address } = useModel("useWallet");
+  const { telegramData } = useModel("useTelegram");
 
   const [airdropVisible, setAirdropVisible] = React.useState<boolean>(false);
   const [tokenPrice, setTokenPrice] = React.useState<number>(0);
@@ -45,7 +48,7 @@ const Me: React.FC = () => {
               <div className={styles.meInfoAvatarImage}>
                 <Image
                   className={styles.meInfoAvatarImageSrc}
-                  src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
+                  src={(telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
                   fallback={require('@/assets/me/avatar.png')}
                 />
               </div>
@@ -57,7 +60,7 @@ const Me: React.FC = () => {
             </div>
             <div className={styles.meInfoText}>
               <div className={styles.meInfoTextName}>
-                Nana
+                {(telegramData as InitData)?.user?.firstName || (telegramData as TelegramOauthDataOnauthProps)?.first_name}
               </div>
               <div className={styles.meInfoTextDesc}>
                 Find something difference.
