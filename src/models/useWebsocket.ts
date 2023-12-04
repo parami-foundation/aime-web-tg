@@ -328,19 +328,21 @@ export default () => {
       const session_Id = sessionId ?? uuidv4();
       setCurrentSessionId(session_Id);
 
-      setStoredMessageSession((prev) => {
-        const session = prev;
-        session.set(character.id ?? "", session_Id);
-        localStorage.setItem(
-          "aime:messageSession",
-          JSON.stringify([...session])
-        );
-        telegramCloudStorage?.set(
-          "aime:messageSession",
-          JSON.stringify([...session])
-        );
-        return session;
-      });
+      if (!!character && !!character.id) {
+        setStoredMessageSession((prev) => {
+          const session = prev;
+          session.set(character.id!, session_Id);
+          localStorage.setItem(
+            "aime:messageSession",
+            JSON.stringify([...session])
+          );
+          telegramCloudStorage?.set(
+            "aime:messageSession",
+            JSON.stringify([...session])
+          );
+          return session;
+        });
+      }
 
       const ws_path =
         ws_url +

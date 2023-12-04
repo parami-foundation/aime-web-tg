@@ -4,7 +4,7 @@ import { MdOutlineAnalytics } from "react-icons/md";
 import InputBox from "./inputbox";
 import AiPop from "./pop/ai";
 import MePop from "./pop/me";
-import { history, useModel } from "@umijs/max";
+import { history, useModel, useParams } from "@umijs/max";
 import InfoCard from "./infoCard";
 import { charactersData } from "@/mocks/character";
 import { AccessLayout } from "@/layouts/access";
@@ -14,6 +14,7 @@ import { IoShareSocialOutline } from "react-icons/io5";
 import { playAudios } from "@/utils/audioUtils";
 import ShareModal from "./shareModal";
 import queryString from "query-string";
+import { message } from "antd";
 
 export interface LBAudioElement extends HTMLAudioElement {
   setSinkId(id: string): Promise<void>;
@@ -50,22 +51,30 @@ const Chat: React.FC = () => {
     setAudioPlayerRef(audioPlayerRef);
   }, []);
 
+  const { id } = useParams<{ id: string }>();
+
   // Demo
   useEffect(() => {
-    if (!accessToken || !charactersData.size) {
+    if (!accessToken || !charactersData.size || !id) {
       history.push("/home");
       return;
     }
-    setCharacter(charactersData.get(search?.id as string) ?? {});
+    if (!charactersData.get(id)) {
+      history.push("/home");
+      message.error("Character not found");
+      return;
+    }
+
+    setCharacter(charactersData.get(id) || {});
     closeSocket();
     clearChatContent();
     connectSocket({
-      character: charactersData.get(search?.id as string) ?? {},
+      character: charactersData.get(id) ?? {},
       onReturn: () => {
         setCharacter({});
       }
     }, storedMessageSession.get((search?.session as string || Array.from(charactersData.values())[0].id!)) ?? undefined);
-  }, [accessToken, charactersData]);
+  }, [id, accessToken, charactersData]);
 
   useEffect(() => {
     if (!!mediaRecorder) {
@@ -219,7 +228,7 @@ const Chat: React.FC = () => {
                   }}
                 >
                   <BiHomeAlt
-                    classNmame={styles.chatHeaderHomeIcon}
+                    className={styles.chatHeaderHomeIcon}
                   />
                   <span>Home</span>
                 </div>
