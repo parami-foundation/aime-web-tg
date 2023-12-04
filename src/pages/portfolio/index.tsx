@@ -4,6 +4,7 @@ import { AccessLayout } from "@/layouts/access";
 import classNames from "classnames";
 import NavBar from "@/components/navBar";
 import CardItem from "./cardItem";
+import { charactersData } from "@/mocks/character";
 
 const Portfolio: React.FC = () => {
   const [tab, setTab] = React.useState<string>("holding");
@@ -38,8 +39,16 @@ const Portfolio: React.FC = () => {
             </div>
           </div>
           <div className={styles.portfolioContent}>
-            <CardItem />
-            <CardItem />
+            {Array.from(charactersData).map((character, index) => {
+              const [id, data] = character;
+              return (
+                <CardItem
+                  key={id}
+                  character={data}
+                  onClick={() => { }}
+                />
+              )
+            })}
           </div>
         </div>
         <NavBar />

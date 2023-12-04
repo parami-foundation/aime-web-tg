@@ -12,7 +12,7 @@ import { useBalance } from "wagmi";
 import { useModel } from "@umijs/max";
 import { GetTokenPrice } from "@/services/third";
 import { formatEther } from "viem";
-import { message } from "antd";
+import { message, Image } from "antd";
 
 const Me: React.FC = () => {
   const { address } = useModel("useWallet");
@@ -42,11 +42,13 @@ const Me: React.FC = () => {
           <AvatarNew />
           <div className={styles.meInfo}>
             <div className={styles.meInfoAvatar}>
-              <img
-                className={styles.meInfoAvatarImage}
-                src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
-                alt="avatar"
-              />
+              <div className={styles.meInfoAvatarImage}>
+                <Image
+                  className={styles.meInfoAvatarImageSrc}
+                  src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
+                  fallback={require('@/assets/me/avatar.png')}
+                />
+              </div>
               <div className={styles.meInfoAvatarBadge}>
                 <FirstIcon
                   className={styles.meInfoAvatarBadgeIcon}

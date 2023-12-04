@@ -6,6 +6,7 @@ import CardItem from "./cardItem";
 import { Col, Row } from "antd";
 import NavBar from "@/components/navBar";
 import { history } from "@umijs/max";
+import { charactersData } from "@/mocks/character";
 
 const Home: React.FC = () => {
   const [tab, setTab] = React.useState<string>("trend");
@@ -30,13 +31,20 @@ const Home: React.FC = () => {
           </div>
           <div className={styles.homeContent}>
             <Row gutter={[15, 15]}>
-              <Col xs={12} sm={12} md={8} lg={6} xl={4}>
-                <CardItem
-                  onClick={() => {
-                    history.push('/chat/justin_sun');
-                  }}
-                />
-              </Col>
+              {Array.from(charactersData).map((character, index) => {
+                const [id, data] = character;
+                return (
+                  <Col xs={12} sm={12} md={8} lg={6} xl={4}>
+                    <CardItem
+                      key={id}
+                      character={data}
+                      onClick={() => {
+                        history.push(`/chat/${id}`);
+                      }}
+                    />
+                  </Col>
+                )
+              })}
             </Row>
           </div>
         </div>

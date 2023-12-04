@@ -79,12 +79,12 @@ export default () => {
       const now = new Date().getTime();
 
       if (!accessTokenExpire || parseInt(accessTokenExpire) < now) {
-        setAccessToken(undefined);
-        setAccessTokenExpire(0);
         localStorage.removeItem("aime:accessToken");
         localStorage.removeItem("aime:accessToken:expire");
         telegramCloudStorage?.delete("aime:accessToken");
         telegramCloudStorage?.delete("aime:accessToken:expire");
+        setAccessToken(undefined);
+        setAccessTokenExpire(0);
       }
       if (!!accessToken) {
         setAccessToken(accessToken);

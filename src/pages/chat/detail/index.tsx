@@ -14,7 +14,7 @@ import { IoShareSocialOutline } from "react-icons/io5";
 import { playAudios } from "@/utils/audioUtils";
 import ShareModal from "./shareModal";
 import queryString from "query-string";
-import { message } from "antd";
+import { message, Image } from "antd";
 
 export interface LBAudioElement extends HTMLAudioElement {
   setSinkId(id: string): Promise<void>;
@@ -257,9 +257,10 @@ const Chat: React.FC = () => {
                 width: msgScrolled ? "80px" : "180px",
               }}
             >
-              <img
+              <Image
+                className={styles.chatHeaderAvatarImg}
                 src={character?.avatar_url}
-                alt="avatar"
+                fallback={require('@/assets/me/avatar.png')}
               />
             </div>
             <div className={styles.chatHeaderName}>

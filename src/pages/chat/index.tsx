@@ -17,6 +17,10 @@ const Chat: React.FC = () => {
             {Array.from(storedMessageSession.keys()).map((key) => {
               const character = charactersData.get(key);
               const messageSession = storedMessageSession.get(key);
+              if (!character || !messageSession) {
+                return null;
+              }
+
               return (
                 <CardItem
                   key={key}

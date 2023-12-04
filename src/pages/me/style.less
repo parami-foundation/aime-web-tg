@@ -33,13 +33,19 @@
         position: relative;
         width: 70px;
         height: 70px;
-        border-radius: 50%;
 
         .meInfoAvatarImage {
           width: 100%;
           height: 100%;
-          border-radius: 50%;
-          object-fit: cover;
+          border-radius: 100%;
+          overflow: hidden;
+          background-color: #eee;
+
+          .meInfoAvatarImageSrc {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
         }
 
         .meInfoAvatarBadge {

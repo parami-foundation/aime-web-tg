@@ -2,10 +2,11 @@ import React from "react";
 import styles from "./style.less";
 import { Character } from "@/services/typing.d";
 import { history } from "@umijs/max";
+import { Image } from "antd";
 
 const CardItem: React.FC<{
-  character?: Character;
-  messageSession?: string;
+  character: Character;
+  messageSession: string;
 }> = ({ character, messageSession }) => {
   return (
     <div
@@ -22,10 +23,13 @@ const CardItem: React.FC<{
         </div>
         <div className={styles.cardItemContent}>
           <div className={styles.cardItemContentAvatar}>
-            <img
-              src={character?.avatar_url}
-              alt="avatar"
-            />
+            <div className={styles.cardItemAvatar}>
+              <Image
+                className={styles.cardItemAvatarImg}
+                src={character?.avatar_url}
+                fallback={require('@/assets/me/avatar.png')}
+              />
+            </div>
           </div>
           <div className={styles.cardItemContentText}>
             <div className={styles.cardItemContentTextName}>

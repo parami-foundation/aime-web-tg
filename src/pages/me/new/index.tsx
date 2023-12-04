@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./style.less";
-import { FaEthereum } from "react-icons/fa";
 import { ReactComponent as AvatarCircle } from '@/assets/me/circle.svg';
 import { IoIosLock } from "react-icons/io";
+import { Image } from "antd";
 
 const AvatarNew: React.FC = () => {
   return (
@@ -14,11 +14,13 @@ const AvatarNew: React.FC = () => {
         <div className={styles.meAvatarCirclePoint}>
           <div className={styles.meAvatarCirclePointWrapper} />
         </div>
-        <img
-          className={styles.meAvatarImage}
-          src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
-          alt="avatar"
-        />
+        <div className={styles.meAvatarImage}>
+          <Image
+            className={styles.meAvatarImageSrc}
+            src="https://media.licdn.com/dms/image/C5103AQEjthnHx0FTLQ/profile-displayphoto-shrink_800_800/0/1536214237739?e=2147483647&v=beta&t=Th9UXbvF5Rc9oF6E-C4HFotvCZQbDj-AH5BVN2wtWbw"
+            fallback={require('@/assets/me/avatar.png')}
+          />
+        </div>
         <IoIosLock
           className={styles.meAvatarLock}
         />

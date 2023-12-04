@@ -4,6 +4,7 @@ export interface Character {
   handle?: string;
   avatar_url?: string;
   author_name?: string;
+  description?: string;
   background?: string;
   source?: string;
   twitter?: {
@@ -25,6 +26,9 @@ export interface Character {
     arbitrum?: string;
   };
   questions?: string[];
+  tags?: string[];
+  chat_count?: number;
+  value?: number;
 }
 
 export interface ChatHistory {
