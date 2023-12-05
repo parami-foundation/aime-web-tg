@@ -70,7 +70,7 @@ export default () => {
   const { accessToken } = useModel("useAccess");
   const { telegramCloudStorage } = useModel("useTelegram");
 
-  const [socket, setSocket] = React.useState<Socket | null>(null);
+  const [socket, setSocket] = React.useState<WebSocket | null>(null);
   const [socketIsOpen, setSocketIsOpen] = React.useState<boolean>(false);
   const [currentSessionId, setCurrentSessionId] = React.useState<string>();
   const [storedMessageSession, setStoredMessageSession] = React.useState<
@@ -93,7 +93,7 @@ export default () => {
     type: SendMessageType,
     data: string | SendMessage | ArrayBuffer | Blob
   ) => {
-    if (socket && socket.active) {
+    if (socket && socket.readyState === WebSocket.OPEN) {
       switch (type) {
         case SendMessageType.TEXT:
           socket?.send(data as string);
@@ -320,6 +320,7 @@ export default () => {
 
   const connectSocket = async (props: ChatbotProps, sessionId?: string) => {
     if (!socket || !!accessToken) {
+      const ws_url = `${WEBSOCKET_CONFIG.scheme}://${API_CONFIG.host}`;
       // const language = languageCode[preferredLanguage.values().next().value];
       const language = window.navigator.languages;
       const { character } = props;
@@ -344,28 +345,15 @@ export default () => {
         });
       }
 
-      let socket = io(`${WEBSOCKET_CONFIG.scheme}://${API_CONFIG.host}`, {
-        path: `/ws/${session_Id}`,
-        query: {
-          token: accessToken,
-          llm_model: selectedModel.values().next().value,
-          platform: "web",
-          use_search: enableGoogle,
-          use_quivr: enableQuivr,
-          use_multion: enableMultiOn,
-          character_id: character.id ?? "",
-          language: language,
-        },
-        auth: {
-          "Authorization": `Bearer ${accessToken}`,
-        },
-        transports: ["websocket"],
-        upgrade: true,
-        reconnection: true,
-        autoConnect: false,
-      });
+      const ws_path =
+        ws_url +
+        `/ws/${session_Id}/?llm_model=${selectedModel.values().next().value
+        }&platform=web&use_search=${enableGoogle}&use_quivr=${enableQuivr}&use_multion=${enableMultiOn}&character_id=${character.id ?? ""
+        }&language=${language}&token=${accessToken}`;
 
-      socket.connect();
+      let socket = new WebSocket(ws_path);
+
+      socket.binaryType = "arraybuffer";
       setSocket(socket);
     }
   };
@@ -378,26 +366,42 @@ export default () => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("connect", () => {
+    socket.onopen = () => {
       if (DEBUG) console.log("Socket connected");
 
       setSocketIsOpen(true);
-    });
+    };
 
-    socket.on("disconnect", async (event) => {
+    socket.onclose = async (event) => {
+      if (
+        !!currentSessionId &&
+        storedMessageSession.has(currentSessionId) &&
+        socketIsOpen
+      ) {
+        const aiSession = storedMessageSession.get(currentSessionId);
+
+        if (!!aiSession) {
+          await connectSocket(
+            {
+              character: charactersData.get(aiSession) ?? {},
+              onReturn: () => {
+                setCharacter({});
+              },
+            },
+            currentSessionId
+          );
+        }
+      }
+
       console.log("Socket closed", event);
       setSocketIsOpen(false);
-    });
+    };
 
-    socket.on("message", socketOnMessageHandler);
+    socket.onmessage = socketOnMessageHandler;
 
-    socket.on("connection", (socket) => {
-      console.log(socket);
-    });
-
-    socket.on("connect_error", (error) => {
-      console.log(`WebSocket Error: `, error);
-    });
+    socket.onerror = (error) => {
+      if (DEBUG) console.log(`WebSocket Error: `, error);
+    };
   }, [socket]);
 
   return {
