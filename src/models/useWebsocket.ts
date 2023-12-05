@@ -362,7 +362,8 @@ export default () => {
         transports: ["websocket"],
         upgrade: true,
         reconnection: true,
-        autoConnect: true,
+        autoConnect: false,
+        addTrailingSlash: false,
       });
 
       socket.connect();

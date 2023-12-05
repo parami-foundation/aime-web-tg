@@ -28,6 +28,7 @@ const CardItem: React.FC<{
                 className={styles.cardItemAvatarImg}
                 src={character?.avatar_url}
                 fallback={require('@/assets/me/avatar.png')}
+                preview={false}
               />
             </div>
           </div>

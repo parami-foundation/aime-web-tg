@@ -163,8 +163,8 @@ const InputBox: React.FC<{
               <div
                 className={styles.buyButton}
                 onClick={() => {
-                  !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&characterId=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
-                  !!telegramDataString && telegramWebApp?.close();
+                  (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&characterId=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                  (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
                 }}
               >
                 Buy

@@ -26,8 +26,8 @@ export const ConnectWallet: React.FC = () => {
           size="large"
           className={styles.chatHeaderInfoButton}
           onClick={() => {
-            !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=bind#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setWalletModalVisible(true);
-            !!telegramDataString && telegramWebApp?.close();
+            (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=bind#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setWalletModalVisible(true);
+            (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
           }}
         >
           <RiWalletLine
@@ -98,8 +98,8 @@ export const BuyPower: React.FC = () => {
               size="large"
               className={styles.chatHeaderInfoButtonDark}
               onClick={() => {
-                !!telegramDataString ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&characterId=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
-                !!telegramDataString && telegramWebApp?.close();
+                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&characterId=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
               }}
             >
               Buy AIME Power

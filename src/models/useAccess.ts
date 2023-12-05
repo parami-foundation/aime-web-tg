@@ -5,7 +5,7 @@ import { message } from "antd";
 import { useEffect, useState } from "react";
 
 export default () => {
-  const { telegramDataString, telegramAuthType, telegramCloudStorage } =
+  const { telegramDataString, telegramAuthType, telegramCloudStorage, setTelegramData, setTelegramDataString, setTelegramAuthType } =
     useModel("useTelegram");
   const [accessToken, setAccessToken] = useState<string>();
   const [accessTokenExpire, setAccessTokenExpire] = useState<number>(0);
@@ -53,6 +53,9 @@ export default () => {
         telegramCloudStorage?.delete("aime:telegramDataString");
         localStorage.removeItem("aime:telegramData");
         telegramCloudStorage?.delete("aime:telegramData");
+        setTelegramAuthType(undefined);
+        setTelegramDataString(undefined);
+        setTelegramData({});
       }
       message.error({
         key: "loginFailed",
@@ -85,6 +88,22 @@ export default () => {
         telegramCloudStorage?.delete("aime:accessToken:expire");
         setAccessToken(undefined);
         setAccessTokenExpire(0);
+        localStorage.removeItem("aime:telegramAuthType");
+        telegramCloudStorage?.delete("aime:telegramAuthType");
+        localStorage.removeItem("aime:telegramDataString");
+        telegramCloudStorage?.delete("aime:telegramDataString");
+        localStorage.removeItem("aime:telegramData");
+        telegramCloudStorage?.delete("aime:telegramData");
+
+        localStorage.removeItem("aime:telegramAuthType");
+        telegramCloudStorage?.delete("aime:telegramAuthType");
+        localStorage.removeItem("aime:telegramDataString");
+        telegramCloudStorage?.delete("aime:telegramDataString");
+        localStorage.removeItem("aime:telegramData");
+        telegramCloudStorage?.delete("aime:telegramData");
+        setTelegramAuthType(undefined);
+        setTelegramDataString(undefined);
+        setTelegramData({});
       }
       if (!!accessToken) {
         setAccessToken(accessToken);

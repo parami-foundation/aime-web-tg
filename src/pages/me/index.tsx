@@ -50,6 +50,7 @@ const Me: React.FC = () => {
                   className={styles.meInfoAvatarImageSrc}
                   src={(telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
                   fallback={require('@/assets/me/avatar.png')}
+                  preview={false}
                 />
               </div>
               <div className={styles.meInfoAvatarBadge}>
@@ -82,11 +83,11 @@ const Me: React.FC = () => {
                   {balanceLoading ?? balanceError ? (
                     <span>0.00 ETH</span>
                   ) : (
-                    <span>{Number(balance?.formatted).toFixed(6)} {balance?.symbol}</span>
+                    <span>{!!address ? Number(balance?.formatted).toFixed(6) : "0 ETH"} {balance?.symbol}</span>
                   )}
                 </div>
                 <div className={styles.meBalanceContentFlat}>
-                  ${!!balance?.value && (Number(formatEther(balance?.value)) * tokenPrice).toFixed(6)}
+                  ${(!!balance?.value && !!address) ? (Number(formatEther(balance?.value)) * tokenPrice).toFixed(6) : "0.00"}
                 </div>
               </div>
             </div>
@@ -98,7 +99,7 @@ const Me: React.FC = () => {
                 className={styles.meBalanceAddressContent}
                 onClick={() => {
                   !!address && navigator.clipboard.writeText(address);
-                  message.success("Copied");
+                  !!address && message.success("Copied");
                 }}
               >
                 <span>{address?.slice(0, 6)}...{address?.slice(-4)}</span>

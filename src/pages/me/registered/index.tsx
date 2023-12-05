@@ -24,6 +24,7 @@ const AvatarRegistered: React.FC = () => {
             className={styles.meAvatarImageSrc}
             src={(telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
             fallback={require('@/assets/me/avatar.png')}
+            preview={false}
           />
         </div>
         <div className={styles.meAvatarToken}>

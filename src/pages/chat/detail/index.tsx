@@ -261,6 +261,7 @@ const Chat: React.FC = () => {
                 className={styles.chatHeaderAvatarImg}
                 src={character?.avatar_url}
                 fallback={require('@/assets/me/avatar.png')}
+                preview={false}
               />
             </div>
             <div className={styles.chatHeaderName}>
