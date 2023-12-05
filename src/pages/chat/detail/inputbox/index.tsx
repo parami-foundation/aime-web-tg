@@ -43,6 +43,9 @@ const InputBox: React.FC<{
   }, [isTextMode]);
 
   const getPowerBalance = () => {
+    if (!address || !character?.wallet?.arbitrum) {
+      return 0n;
+    }
     const { data: balance }: {
       data?: bigint;
       isError: boolean;
@@ -75,7 +78,7 @@ const InputBox: React.FC<{
             <div
               className={styles.inputBox}
               style={{
-                width: getPowerBalance() === 0n ? "calc(100% - 55px)" : "100%",
+                width: (getPowerBalance() === 0n && !!address) ? "calc(100% - 55px)" : "100%",
               }}
             >
               <div

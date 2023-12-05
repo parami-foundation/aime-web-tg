@@ -158,19 +158,21 @@ const InfoCard: React.FC = () => {
 
   const [balance, setBalance] = React.useState<bigint>(0n);
 
-  const { data }: {
-    data?: bigint;
-    isError: boolean;
-    isLoading: boolean;
-  } = useContractRead({
-    address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
-    abi: require("@/abis/AIMePowers.json"),
-    functionName: "powerBalance",
-    args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, address],
-    onSuccess: (data) => {
-      setBalance(data ?? 0n);
-    }
-  });
+  if (!!address) {
+    const { data }: {
+      data?: bigint;
+      isError: boolean;
+      isLoading: boolean;
+    } = useContractRead({
+      address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+      abi: require("@/abis/AIMePowers.json"),
+      functionName: "powerBalance",
+      args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, address],
+      onSuccess: (data) => {
+        setBalance(data ?? 0n);
+      }
+    });
+  }
 
   if (!address && balance === 0n) {
     return (

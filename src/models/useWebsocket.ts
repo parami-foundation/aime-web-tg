@@ -1,10 +1,11 @@
 import { v4 as uuidv4 } from "uuid";
 import React, { useEffect } from "react";
 import { useModel } from "@umijs/max";
-import { DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
+import { API_CONFIG, DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
 import { Character } from "@/services/typing";
 import { buf2hex } from "@/libs/hex";
 import { charactersData } from "@/mocks/character";
+import { Socket, io } from "socket.io-client";
 
 export enum SendMessageType {
   TEXT = "text",
@@ -69,7 +70,7 @@ export default () => {
   const { accessToken } = useModel("useAccess");
   const { telegramCloudStorage } = useModel("useTelegram");
 
-  const [socket, setSocket] = React.useState<WebSocket | null>(null);
+  const [socket, setSocket] = React.useState<Socket | null>(null);
   const [socketIsOpen, setSocketIsOpen] = React.useState<boolean>(false);
   const [currentSessionId, setCurrentSessionId] = React.useState<string>();
   const [storedMessageSession, setStoredMessageSession] = React.useState<
@@ -92,7 +93,7 @@ export default () => {
     type: SendMessageType,
     data: string | SendMessage | ArrayBuffer | Blob
   ) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
+    if (socket && socket.active) {
       switch (type) {
         case SendMessageType.TEXT:
           socket?.send(data as string);
@@ -319,7 +320,6 @@ export default () => {
 
   const connectSocket = async (props: ChatbotProps, sessionId?: string) => {
     if (!socket || !!accessToken) {
-      const ws_url = `${WEBSOCKET_CONFIG.scheme}://${WEBSOCKET_CONFIG.host}`;
       // const language = languageCode[preferredLanguage.values().next().value];
       const language = window.navigator.languages;
       const { character } = props;
@@ -344,17 +344,28 @@ export default () => {
         });
       }
 
-      const ws_path =
-        ws_url +
-        `/ws/${session_Id}?llm_model=${
-          selectedModel.values().next().value
-        }&platform=web&use_search=${enableGoogle}&use_quivr=${enableQuivr}&use_multion=${enableMultiOn}&character_id=${
-          character.id ?? ""
-        }&language=${language}&token=${accessToken}`;
+      let socket = io(`${WEBSOCKET_CONFIG.scheme}://${API_CONFIG.host}`, {
+        path: `/ws/${session_Id}`,
+        query: {
+          token: accessToken,
+          llm_model: selectedModel.values().next().value,
+          platform: "web",
+          use_search: enableGoogle,
+          use_quivr: enableQuivr,
+          use_multion: enableMultiOn,
+          character_id: character.id ?? "",
+          language: language,
+        },
+        auth: {
+          "Authorization": `Bearer ${accessToken}`,
+        },
+        transports: ["websocket"],
+        upgrade: true,
+        reconnection: true,
+        autoConnect: true,
+      });
 
-      let socket = new WebSocket(ws_path);
-
-      socket.binaryType = "arraybuffer";
+      socket.connect();
       setSocket(socket);
     }
   };
@@ -367,42 +378,26 @@ export default () => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.onopen = () => {
+    socket.on("connect", () => {
       if (DEBUG) console.log("Socket connected");
 
       setSocketIsOpen(true);
-    };
+    });
 
-    socket.onclose = async (event) => {
-      if (
-        !!currentSessionId &&
-        storedMessageSession.has(currentSessionId) &&
-        socketIsOpen
-      ) {
-        const aiSession = storedMessageSession.get(currentSessionId);
-
-        if (!!aiSession) {
-          await connectSocket(
-            {
-              character: charactersData.get(aiSession) ?? {},
-              onReturn: () => {
-                setCharacter({});
-              },
-            },
-            currentSessionId
-          );
-        }
-      }
-
+    socket.on("disconnect", async (event) => {
       console.log("Socket closed", event);
       setSocketIsOpen(false);
-    };
+    });
 
-    socket.onmessage = socketOnMessageHandler;
+    socket.on("message", socketOnMessageHandler);
 
-    socket.onerror = (error) => {
-      if (DEBUG) console.log(`WebSocket Error: `, error);
-    };
+    socket.on("connection", (socket) => {
+      console.log(socket);
+    });
+
+    socket.on("connect_error", (error) => {
+      console.log(`WebSocket Error: `, error);
+    });
   }, [socket]);
 
   return {
