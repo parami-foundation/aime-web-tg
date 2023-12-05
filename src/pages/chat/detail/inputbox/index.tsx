@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import styles from "./style.less";
 import { BiMicrophone } from "react-icons/bi";
 import { HiArrowNarrowRight } from "react-icons/hi";
@@ -30,6 +30,7 @@ const InputBox: React.FC<{
   const [inputValue, setInputValue] = React.useState<string>();
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
+  const [balance, setBalance] = React.useState<bigint>(0n);
 
   useEffect(() => {
     if (!isTextMode) {
@@ -42,23 +43,19 @@ const InputBox: React.FC<{
     }
   }, [isTextMode]);
 
-  const getPowerBalance = () => {
-    if (!address || !character?.wallet?.arbitrum) {
-      return 0n;
+  const { data }: {
+    data?: bigint;
+    isError: boolean;
+    isLoading: boolean;
+  } = useContractRead({
+    address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+    abi: require("@/abis/AIMePowers.json"),
+    functionName: "powerBalance",
+    args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, address],
+    onSuccess: (data) => {
+      setBalance(data ?? 0n);
     }
-    const { data: balance }: {
-      data?: bigint;
-      isError: boolean;
-      isLoading: boolean;
-    } = useContractRead({
-      address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
-      abi: require("@/abis/AIMePowers.json"),
-      functionName: "powerBalance",
-      args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, address],
-    });
-
-    return balance ?? 0n;
-  };
+  });
 
   return (
     <>
@@ -70,7 +67,7 @@ const InputBox: React.FC<{
           {!!address && (
             <div className={styles.inputBoxWrapperRow}>
               <div className={styles.inputBoxWrapperTip}>
-                You own {getPowerBalance()?.toString() ?? "0"} Power of {character?.name}
+                You own {!!address && (balance?.toString() ?? "0")} Power of {character?.name}
               </div>
             </div>
           )}
@@ -78,7 +75,7 @@ const InputBox: React.FC<{
             <div
               className={styles.inputBox}
               style={{
-                width: (getPowerBalance() === 0n && !!address) ? "calc(100% - 55px)" : "100%",
+                width: (!!address && balance === 0n) ? "calc(100% - 55px)" : "100%",
               }}
             >
               <div
@@ -159,7 +156,7 @@ const InputBox: React.FC<{
                 </div>
               )}
             </div>
-            {!!address && formatEther(getPowerBalance() ?? 0n) === "0" && (
+            {!!address && formatEther(balance ?? 0n) === "0" && (
               <div
                 className={styles.buyButton}
                 onClick={() => {

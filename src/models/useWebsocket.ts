@@ -363,7 +363,6 @@ export default () => {
         upgrade: true,
         reconnection: true,
         autoConnect: false,
-        addTrailingSlash: false,
       });
 
       socket.connect();

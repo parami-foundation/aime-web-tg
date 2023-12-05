@@ -34,7 +34,10 @@ const Home: React.FC = () => {
               {Array.from(charactersData).map((character, index) => {
                 const [id, data] = character;
                 return (
-                  <Col xs={12} sm={12} md={8} lg={6} xl={4}>
+                  <Col
+                    xs={12} sm={12} md={8} lg={6} xl={4}
+                    id={id}
+                  >
                     <CardItem
                       key={id}
                       character={data}
