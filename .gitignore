@@ -9,3 +9,4 @@
 .swc
 /build
 .env
+yarn-error.log
