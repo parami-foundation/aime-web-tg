@@ -13,9 +13,10 @@ import LoginModal from "@/components/loginModal";
 import TelegramOauth from "@/components/telegram/oauth";
 
 const Bridge: React.FC = () => {
-  const { telegramDataString, setTelegramOauthModalVisible } = useModel('useTelegram');
-  const { address, signature, walletBinded, walletModalVisible, setWalletModalVisible } = useModel('useWallet');
+  const { telegramDataString, telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
+  const { address, signature, walletBinded, setWalletModalVisible } = useModel('useWallet');
   const { setCharacter } = useModel('useSetting');
+  const { setAccessToken, setAccessTokenExpire } = useModel('useAccess');
 
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
@@ -27,6 +28,31 @@ const Bridge: React.FC = () => {
   const search = queryString.parse(window.location.search);
 
   useEffect(() => {
+    if (search?.access_token_expire) {
+      setAccessTokenExpire(parseInt(search?.access_token_expire as string));
+      localStorage.setItem('aime:accessTokenExpire', search?.access_token_expire as string);
+      telegramCloudStorage?.set('aime:accessTokenExpire', search?.access_token_expire as string);
+    }
+
+    if (search?.access_token) {
+      setAccessToken(search?.access_token as string);
+      localStorage.setItem('aime:accessToken', search?.access_token as string);
+      telegramCloudStorage?.set('aime:accessToken', search?.access_token as string);
+    }
+
+    if (search?.telegramDataString) {
+      setTelegramOauthModalVisible(false);
+      setTelegramDataString(decodeURIComponent(search?.telegramDataString as string));
+      localStorage.setItem('aime:telegramDataString', decodeURIComponent(search?.telegramDataString as string));
+      telegramCloudStorage?.set('aime:telegramDataString', decodeURIComponent(search?.telegramDataString as string));
+    }
+
+    if (search?.telegramAuthType) {
+      setTelegramAuthType(search?.telegramAuthType as string);
+      localStorage.setItem('aime:telegramAuthType', search?.telegramAuthType as string);
+      telegramCloudStorage?.set('aime:telegramAuthType', search?.telegramAuthType as string);
+    }
+
     if (search?.characterId) {
       setCharacter(charactersData.get(search?.characterId as string) ?? {});
     }
@@ -64,7 +90,7 @@ const Bridge: React.FC = () => {
         }
       }
     }
-  }, [address, signature, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id, transactionHash]);
+  }, [address, signature, walletBinded, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id, transactionHash]);
 
   return (
     <div className={styles.bridgeContainer}>

@@ -19,7 +19,7 @@ const InputBox: React.FC<{
   setDisableMic: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode, setDisableMic }) => {
   const { SendMessageType, sendOverSocket } = useModel("useWebsocket");
-  const { accessToken } = useModel("useAccess");
+  const { accessToken, accessTokenExpire } = useModel("useAccess");
   const { address } = useModel("useWallet");
   const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
   const { transactionHashs } = useModel("useContract");
@@ -160,7 +160,7 @@ const InputBox: React.FC<{
               <div
                 className={styles.buyButton}
                 onClick={() => {
-                  (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&characterId=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                  (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
                   (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
                 }}
               >

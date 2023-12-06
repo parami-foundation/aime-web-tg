@@ -9,4 +9,5 @@
 .swc
 /build
 /.env
+/src/env.ts
 /yarn-error.log

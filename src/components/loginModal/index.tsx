@@ -14,7 +14,6 @@ const LoginModal: React.FC<{
   closeable?: boolean;
 }> = ({ visible, setVisible, closeable }) => {
   const { signature, walletBinded } = useModel('useWallet');
-  const { accessToken } = useModel('useAccess');
 
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();

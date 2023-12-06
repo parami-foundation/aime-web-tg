@@ -74,7 +74,7 @@ export default () => {
   }, [accessToken, accessTokenExpire]);
 
   useEffect(() => {
-    if (!!telegramDataString && !accessToken) {
+    if (!!telegramDataString && !!telegramAuthType && !accessToken && !accessTokenExpire) {
       oauthTelegram();
     }
   }, [telegramDataString, accessToken]);
@@ -91,8 +91,8 @@ export default () => {
       const now = new Date().getTime();
 
       if (!accessTokenExpire || parseInt(accessTokenExpire) < now) {
-        await cleanAccessToken();
-        await cleanTelegramData();
+        // await cleanAccessToken();
+        // await cleanTelegramData();
       }
       if (!!accessToken) {
         setAccessToken(accessToken);

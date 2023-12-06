@@ -11,7 +11,7 @@ import { useContractRead } from "wagmi";
 
 export const ConnectWallet: React.FC = () => {
   const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
-  const { accessToken } = useModel("useAccess");
+  const { accessToken, accessTokenExpire } = useModel("useAccess");
   const { setWalletModalVisible } = useModel("useWallet");
 
   return (
@@ -26,7 +26,7 @@ export const ConnectWallet: React.FC = () => {
           size="large"
           className={styles.chatHeaderInfoButton}
           onClick={() => {
-            (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=bind#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setWalletModalVisible(true);
+            (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=bind#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setWalletModalVisible(true);
             (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
           }}
         >
@@ -66,8 +66,8 @@ export const ConnectTwitter: React.FC = () => {
 };
 
 export const BuyPower: React.FC = () => {
-  const { accessToken } = useModel("useAccess");
-  const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
+  const { accessToken, accessTokenExpire } = useModel("useAccess");
+  const { telegramDataString, miniAppUtils, telegramWebApp, telegramAuthType } = useModel("useTelegram");
   const { character } = useModel("useSetting");
 
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
@@ -98,7 +98,7 @@ export const BuyPower: React.FC = () => {
               size="large"
               className={styles.chatHeaderInfoButtonDark}
               onClick={() => {
-                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?token=${accessToken}&action=buypower&characterId=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramAuthType=${telegramAuthType}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
                 (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
               }}
             >
@@ -186,7 +186,8 @@ const InfoCard: React.FC = () => {
     )
   } else if (!!address && twitterBinded && balance > 0n) {
     return (
-      <Share />
+      // <Share />
+      <BuyPower />
     )
   }
 };

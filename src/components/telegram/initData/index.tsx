@@ -3,7 +3,6 @@ import { InitData, MiniApp, LaunchParams, Utils, CloudStorage } from "@tma.js/sd
 import { useModel } from "@umijs/max";
 import { PropsWithChildren, useEffect } from "react";
 import { TelegramAuth } from "@/types/enum";
-import { notification } from "antd";
 
 export const TMAInitData = ({ children }: PropsWithChildren) => {
   const { setTelegramData, setTelegramDataString, setTelegramAuthType, setTelegramMiniAppHeight, setTelegramWebApp, setMiniAppParams, setMiniAppUtils, setTelegramCloudStorage } = useModel('useTelegram');

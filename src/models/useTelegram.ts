@@ -24,18 +24,6 @@ export default () => {
     useState<CloudStorage>();
 
   useEffect(() => {
-    if (!telegramDataString) {
-      const params = new URLSearchParams(window.location.hash.slice(1));
-      const initDataString = params.get("tgWebAppData");
-      if (!!initDataString) {
-        setTelegramDataString(decodeURIComponent(initDataString));
-        localStorage.setItem("aime:telegramDataString", initDataString);
-        telegramCloudStorage?.set("aime:telegramDataString", initDataString);
-      }
-    }
-  }, [telegramDataString, telegramCloudStorage]);
-
-  useEffect(() => {
     (async () => {
       const telegramDataString =
         localStorage.getItem("aime:telegramDataString") ||

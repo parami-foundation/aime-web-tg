@@ -1,4 +1,3 @@
-import OpenAI from 'openai';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Harker } from 'hark';
 import type { Encoder } from 'lamejs';
@@ -13,6 +12,7 @@ import {
   UseWhisperTranscript,
 } from '@/types';
 import { OpenAIWhisper } from '@/services/third';
+import { OPENAI_API_KEY } from '@/env';
 
 export const defaultStopTimeout = 5_000;
 export const ffmpegCoreUrl =
@@ -23,7 +23,7 @@ export const whisperApiEndpoint = 'https://api.openai.com/v1/audio/';
 
 export default () => {
   const defaultConfig: UseWhisperConfig = {
-    apiKey: process.env.OPENAI_API_KEY,
+    apiKey: OPENAI_API_KEY,
     autoStart: false,
     autoTranscribe: true,
     mode: 'transcriptions',
