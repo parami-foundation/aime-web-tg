@@ -26,6 +26,8 @@ export interface MessageDisplay {
 }
 
 export default () => {
+
+
   const [interimChat, setInterimChat] = React.useState<Chat | null>(null);
   const [messageGroupId, setMessageGroupId] = React.useState<string>("");
   const [chatContent, setChatContent] = React.useState<Chat[]>([]);
@@ -104,6 +106,8 @@ export default () => {
   const clearChatContent = () => {
     setChatContent([]);
     setInterimChat(null);
+    setMessageList(new Map());
+    setMessages([]);
   };
 
   const appendSpeechInterim = (str: string) => {

@@ -6,7 +6,7 @@ import {
   Utils,
   CloudStorage,
 } from "@tma.js/sdk";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default () => {
   const [telegramOauthModalVisible, setTelegramOauthModalVisible] =
@@ -28,7 +28,7 @@ export default () => {
       const params = new URLSearchParams(window.location.hash.slice(1));
       const initDataString = params.get("tgWebAppData");
       if (!!initDataString) {
-        setTelegramDataString(initDataString || "");
+        setTelegramDataString(decodeURIComponent(initDataString));
         localStorage.setItem("aime:telegramDataString", initDataString);
         telegramCloudStorage?.set("aime:telegramDataString", initDataString);
       }
@@ -60,6 +60,18 @@ export default () => {
     })();
   }, []);
 
+  const cleanTelegramData = useCallback(async () => {
+    localStorage.removeItem("aime:telegramAuthType");
+    telegramCloudStorage?.delete("aime:telegramAuthType");
+    localStorage.removeItem("aime:telegramDataString");
+    telegramCloudStorage?.delete("aime:telegramDataString");
+    localStorage.removeItem("aime:telegramData");
+    telegramCloudStorage?.delete("aime:telegramData");
+    setTelegramAuthType(undefined);
+    setTelegramDataString(undefined);
+    setTelegramData({});
+  }, [telegramAuthType, telegramDataString, telegramData]);
+
   return {
     telegramData,
     setTelegramData,
@@ -79,5 +91,6 @@ export default () => {
     setTelegramCloudStorage,
     telegramOauthModalVisible,
     setTelegramOauthModalVisible,
+    cleanTelegramData,
   };
 };

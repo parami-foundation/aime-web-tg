@@ -2,10 +2,9 @@ import { v4 as uuidv4 } from "uuid";
 import React, { useEffect } from "react";
 import { useModel } from "@umijs/max";
 import { API_CONFIG, DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
-import { Character } from "@/services/typing";
+import { Character } from "@/types";
 import { buf2hex } from "@/libs/hex";
 import { charactersData } from "@/mocks/character";
-import { Socket, io } from "socket.io-client";
 
 export enum SendMessageType {
   TEXT = "text",

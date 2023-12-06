@@ -2,10 +2,10 @@ import { API_CONFIG } from "@/constants/global";
 import { OauthTelegram } from "@/services/api";
 import { useModel } from "@umijs/max";
 import { message } from "antd";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default () => {
-  const { telegramDataString, telegramAuthType, telegramCloudStorage, setTelegramData, setTelegramDataString, setTelegramAuthType } =
+  const { telegramDataString, telegramAuthType, telegramCloudStorage, setTelegramData, setTelegramDataString, setTelegramAuthType, cleanTelegramData } =
     useModel("useTelegram");
   const [accessToken, setAccessToken] = useState<string>();
   const [accessTokenExpire, setAccessTokenExpire] = useState<number>(0);
@@ -64,6 +64,15 @@ export default () => {
     }
   };
 
+  const cleanAccessToken = useCallback(async () => {
+    localStorage.removeItem("aime:accessToken");
+    localStorage.removeItem("aime:accessToken:expire");
+    telegramCloudStorage?.delete("aime:accessToken");
+    telegramCloudStorage?.delete("aime:accessToken:expire");
+    setAccessToken(undefined);
+    setAccessTokenExpire(0);
+  }, [accessToken, accessTokenExpire]);
+
   useEffect(() => {
     if (!!telegramDataString && !accessToken) {
       oauthTelegram();
@@ -82,28 +91,8 @@ export default () => {
       const now = new Date().getTime();
 
       if (!accessTokenExpire || parseInt(accessTokenExpire) < now) {
-        localStorage.removeItem("aime:accessToken");
-        localStorage.removeItem("aime:accessToken:expire");
-        telegramCloudStorage?.delete("aime:accessToken");
-        telegramCloudStorage?.delete("aime:accessToken:expire");
-        setAccessToken(undefined);
-        setAccessTokenExpire(0);
-        localStorage.removeItem("aime:telegramAuthType");
-        telegramCloudStorage?.delete("aime:telegramAuthType");
-        localStorage.removeItem("aime:telegramDataString");
-        telegramCloudStorage?.delete("aime:telegramDataString");
-        localStorage.removeItem("aime:telegramData");
-        telegramCloudStorage?.delete("aime:telegramData");
-
-        localStorage.removeItem("aime:telegramAuthType");
-        telegramCloudStorage?.delete("aime:telegramAuthType");
-        localStorage.removeItem("aime:telegramDataString");
-        telegramCloudStorage?.delete("aime:telegramDataString");
-        localStorage.removeItem("aime:telegramData");
-        telegramCloudStorage?.delete("aime:telegramData");
-        setTelegramAuthType(undefined);
-        setTelegramDataString(undefined);
-        setTelegramData({});
+        await cleanAccessToken();
+        await cleanTelegramData();
       }
       if (!!accessToken) {
         setAccessToken(accessToken);

@@ -8,7 +8,7 @@ import { Button, Result } from "antd";
 import queryString from 'query-string';
 import BuyModal from "../chat/detail/buyModal";
 import { charactersData } from "@/mocks/character";
-import { StartParam } from "@/services/typing";
+import { StartParam } from "@/types";
 import LoginModal from "@/components/loginModal";
 import TelegramOauth from "@/components/telegram/oauth";
 

@@ -223,7 +223,8 @@ const Chat: React.FC = () => {
               <div className={styles.chatHeaderLeft}>
                 <div
                   className={styles.chatHeaderHome}
-                  onClick={() => {
+                  onClick={async () => {
+                    await cleanUpStates();
                     history.push("/home");
                   }}
                 >

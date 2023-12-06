@@ -8,5 +8,5 @@
 /dist
 .swc
 /build
-.env
-yarn-error.log
+/.env
+/yarn-error.log
