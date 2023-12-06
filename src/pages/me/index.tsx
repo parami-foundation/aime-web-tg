@@ -14,7 +14,7 @@ import { GetTokenPrice } from "@/services/third";
 import { formatEther } from "viem";
 import { message, Image } from "antd";
 import { InitData } from "@tma.js/sdk";
-import { TelegramOauthDataOnauthProps } from "@/services/typing.d";
+import { TelegramOauthDataOnauthProps } from "@/types";
 
 const Me: React.FC = () => {
   const { address } = useModel("useWallet");

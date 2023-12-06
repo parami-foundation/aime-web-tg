@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./style.less";
-import { Character } from "@/services/typing.d";
+import { Character } from "@/types";
 import { history } from "@umijs/max";
 import { Image } from "antd";
 

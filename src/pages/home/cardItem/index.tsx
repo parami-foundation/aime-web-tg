@@ -5,7 +5,7 @@ import { ReactComponent as FirstIcon } from '@/assets/icon/1st.svg';
 import { FaEthereum } from "react-icons/fa";
 import { Tag, Image } from "antd";
 import { THEME_CONFIG } from "@/constants/theme";
-import { Character } from "@/services/typing.d";
+import { Character } from "@/types";
 
 const CardItem: React.FC<{
   character: Character;

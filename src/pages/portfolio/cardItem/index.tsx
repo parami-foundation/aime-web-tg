@@ -3,7 +3,7 @@ import styles from "./style.less";
 import { VscVerifiedFilled } from "react-icons/vsc";
 import { FaXTwitter } from "react-icons/fa6";
 import { Image } from "antd";
-import { Character } from "@/services/typing.d";
+import { Character } from "@/types";
 
 const CardItem: React.FC<{
   character: Character;

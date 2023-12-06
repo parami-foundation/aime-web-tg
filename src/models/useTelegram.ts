@@ -1,4 +1,4 @@
-import { TelegramOauthDataOnauthProps } from "@/services/typing.d";
+import { TelegramOauthDataOnauthProps } from "@/types";
 import {
   InitData,
   MiniApp,

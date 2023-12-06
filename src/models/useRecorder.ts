@@ -157,6 +157,8 @@ export default () => {
     vadEvents,
     isRecording,
     mediaRecorder,
+    setIsRecording,
+    setIsSpeaking,
     startRecording,
     stopRecording,
     closeMediaRecorder,

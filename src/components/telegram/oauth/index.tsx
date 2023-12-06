@@ -7,7 +7,7 @@ import { THEME_CONFIG } from "@/constants/theme";
 import { TELEGRAM_BOT } from "@/constants/global";
 import { ReactComponent as TelegramIcon } from "@/assets/brand/telegram.svg";
 import { FaAngleRight } from "react-icons/fa";
-import { TelegramAuth } from "@/services/enum.d";
+import { TelegramAuth } from "@/types/enum";
 
 export interface TelegramOauthDataOnauthProps {
   id?: number;

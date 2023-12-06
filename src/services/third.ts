@@ -1,5 +1,5 @@
 import { request } from "./api";
-import { Resp, Req } from "@/services/typing";
+import { Resp, Req, WhisperApiConfig } from "@/types";
 
 export async function GetTokenPrice(
   data: Req.GetTokenPrice,
@@ -14,6 +14,48 @@ export async function GetTokenPrice(
       },
       data: data,
       ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
+
+export async function OpenAIWhisper(
+  file: File,
+  whisperConfig?: WhisperApiConfig,
+  mode?: string,
+  options?: { [key: string]: any }
+) {
+  const body = new FormData();
+  body.append("file", file);
+  body.append("model", mode ?? 'whisper-1');
+
+  if (mode === "transcriptions") {
+    body.append("language", whisperConfig?.language ?? 'en');
+  }
+
+  if (whisperConfig?.prompt) {
+    body.append("prompt", whisperConfig.prompt);
+  }
+
+  if (whisperConfig?.response_format) {
+    body.append("response_format", whisperConfig.response_format);
+  }
+
+  if (whisperConfig?.temperature) {
+    body.append("temperature", whisperConfig.temperature.toString());
+  }
+
+  return request<Resp.OpenAIWhisper>(
+    `https://api.openai.com/v1/audio/${mode ?? 'whisper-1'}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      data: body,
+      ...(options || {}),
+      requestType: 'form',
       getResponse: true,
     }
   );

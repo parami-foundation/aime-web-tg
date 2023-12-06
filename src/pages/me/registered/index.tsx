@@ -5,7 +5,7 @@ import { FaEthereum } from 'react-icons/fa';
 import { Image } from 'antd';
 import { useModel } from '@umijs/max';
 import { InitData } from '@tma.js/sdk';
-import { TelegramOauthDataOnauthProps } from '@/services/typing.d';
+import { TelegramOauthDataOnauthProps } from '@/types';
 
 const AvatarRegistered: React.FC = () => {
   const { telegramData } = useModel("useTelegram");

@@ -12,6 +12,8 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "0.9.3",
+    "@types/recordrtc": "^5.6.14",
     "@web3modal/wagmi": "^3.4.0",
     "antd": "^5.11.5",
     "classnames": "^2.3.2",
@@ -20,11 +22,13 @@
     "events": "^3.3.0",
     "hark": "^1.2.3",
     "html2canvas": "^1.4.1",
+    "lamejs": "^1.2.1",
     "openai": "^4.20.1",
     "qrcode.react": "^3.1.0",
     "query-string": "^8.1.0",
     "react-icons": "^4.12.0",
     "react-telegram-login": "^1.1.2",
+    "recordrtc": "^5.6.2",
     "socket.io-client": "^4.7.2",
     "umi-request": "^1.4.0",
     "uuid": "^9.0.1",

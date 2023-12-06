@@ -2,7 +2,7 @@ import { useInitData, useInitDataRaw, useSDKContext, useViewport, useMiniApp, us
 import { InitData, MiniApp, LaunchParams, Utils, CloudStorage } from "@tma.js/sdk";
 import { useModel } from "@umijs/max";
 import { PropsWithChildren, useEffect } from "react";
-import { TelegramAuth } from "@/services/enum.d";
+import { TelegramAuth } from "@/types/enum";
 import { notification } from "antd";
 
 export const TMAInitData = ({ children }: PropsWithChildren) => {
