@@ -160,7 +160,7 @@ const InputBox: React.FC<{
               <div
                 className={styles.buyButton}
                 onClick={() => {
-                  (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                  (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
                   (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
                 }}
               >

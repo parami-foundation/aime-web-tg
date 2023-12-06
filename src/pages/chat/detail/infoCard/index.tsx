@@ -26,7 +26,7 @@ export const ConnectWallet: React.FC = () => {
           size="large"
           className={styles.chatHeaderInfoButton}
           onClick={() => {
-            (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=bind#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setWalletModalVisible(true);
+            (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=bind&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setWalletModalVisible(true);
             (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
           }}
         >
@@ -98,7 +98,7 @@ export const BuyPower: React.FC = () => {
               size="large"
               className={styles.chatHeaderInfoButtonDark}
               onClick={() => {
-                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramAuthType=${telegramAuthType}#tgWebAppData=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramAuthType=${telegramAuthType}&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
                 (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
               }}
             >
@@ -186,8 +186,7 @@ const InfoCard: React.FC = () => {
     )
   } else if (!!address && twitterBinded && balance > 0n) {
     return (
-      // <Share />
-      <BuyPower />
+      <Share />
     )
   }
 };
