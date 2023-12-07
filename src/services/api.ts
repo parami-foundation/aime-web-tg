@@ -42,8 +42,8 @@ export async function BindWalletNonce(
 ) {
   return request<Resp.BindWalletNonce>(
     DEBUG
-      ? "/proxy/api/wallet/"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/wallet/`,
+      ? "/proxy/api/v1/wallet/"
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/wallet/`,
     {
       method: "POST",
       headers: {
@@ -65,8 +65,8 @@ export async function BindWallet(
 ) {
   return request<Resp.Error>(
     DEBUG
-      ? `/proxy/api/wallet/${nonce}`
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/wallet/${nonce}`,
+      ? `/proxy/api/v1/wallet/${nonce}`
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/wallet/${nonce}`,
     {
       method: "PUT",
       headers: {
@@ -80,6 +80,128 @@ export async function BindWallet(
   );
 }
 
+export async function GetProfile(
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  return request<Resp.Profile>(
+    DEBUG
+      ? "/proxy/api/v1/profile"
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/profile`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
+
+export async function GetWallet(
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  return request<Resp.Wallet>(
+    DEBUG
+      ? "/proxy/api/v1/wallet"
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/wallet`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
+
+export async function GetAsset(
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  return request<Resp.Asset[]>(
+    DEBUG
+      ? "/proxy/api/v1/asset"
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/asset`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
+
+export async function GetExtrinsic(
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  return request<Resp.Extrinsic[]>(
+    DEBUG
+      ? "/proxy/api/v1/extrinsic"
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/extrinsic`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
+
+export async function CreateSession(
+  data: Req.CreateSession,
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  return request<Resp.Session>(
+    DEBUG
+      ? "/proxy/api/v1/session"
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: data,
+      ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
+
+export async function GetSession(
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  return request<Resp.Session[]>(
+    DEBUG
+      ? "/proxy/api/v1/session"
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
+
 export async function CreateTransaction(
   data: Req.CreateTransaction,
   accessToken: string,
@@ -87,8 +209,8 @@ export async function CreateTransaction(
 ) {
   return request(
     DEBUG
-      ? "/proxy/api/transaction"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/transaction/`,
+      ? "/proxy/api/v1/transaction"
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/transaction/`,
     {
       method: "POST",
       headers: {

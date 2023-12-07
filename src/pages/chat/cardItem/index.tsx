@@ -1,24 +1,24 @@
 import React from "react";
 import styles from "./style.less";
-import { Character } from "@/types";
+import { Character, Resp } from "@/types";
 import { history } from "@umijs/max";
 import { Image } from "antd";
 
 const CardItem: React.FC<{
   character: Character;
-  messageSession: string;
-}> = ({ character, messageSession }) => {
+  chatSession: Resp.Session;
+}> = ({ character, chatSession }) => {
   return (
     <div
       className={styles.cardItemContainer}
       onClick={() => {
-        history.push(`/chat/${character?.id}?session=${messageSession}`);
+        history.push(`/chat/${character?.id}?session=${chatSession?.id}`);
       }}
     >
       <div className={styles.cardItemWrapper}>
         <div className={styles.cardItemHeader}>
           <div className={styles.cardItemHeaderDate}>
-            <span>19:35 Oct 24</span>
+            <span>{!!chatSession?.created_at && Date.parse(chatSession?.created_at).toLocaleString()}</span>
           </div>
         </div>
         <div className={styles.cardItemContent}>

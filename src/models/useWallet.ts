@@ -1,9 +1,10 @@
 import { NETWORK_CONFIG } from "@/constants/global";
-import { BindWallet, BindWalletNonce } from "@/services/api";
+import { BindWallet, BindWalletNonce, GetWallet } from "@/services/api";
 import { useEffect, useState } from "react";
 import { useModel } from "@umijs/max";
 
 export default () => {
+  const { accessToken } = useModel("useAccess");
   const { telegramCloudStorage } = useModel("useTelegram");
 
   const [address, setAddress] = useState<`0x${string}` | undefined>();
@@ -104,6 +105,16 @@ export default () => {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    ; (async () => {
+      if (!accessToken) return;
+      const { response, data } = await GetWallet(accessToken);
+      if (response?.status === 200 && !!data?.address) {
+        setAddress(`0x${data?.address}` as `0x${string}`);
+      }
+    })();
+  }, [accessToken]);
 
   return {
     message,

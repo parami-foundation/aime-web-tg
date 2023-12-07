@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useModel } from "@umijs/max";
+import { GetSession } from "@/services/api";
+import { Resp } from "@/types";
 
 export enum MessageType {
   MESSAGE = "message",
@@ -26,7 +29,8 @@ export interface MessageDisplay {
 }
 
 export default () => {
-
+  const { accessToken } = useModel('useAccess');
+  const { telegramCloudStorage } = useModel('useTelegram');
 
   const [interimChat, setInterimChat] = React.useState<Chat | null>(null);
   const [messageGroupId, setMessageGroupId] = React.useState<string>("");
@@ -39,6 +43,42 @@ export default () => {
     Map<string, MessageDisplay[]>
   >(new Map());
   const [rewardModal, setRewardModal] = React.useState<boolean>(false);
+  const [chatSession, setChatSession] = React.useState<
+    Map<string, Resp.Session>
+  >(new Map());
+
+  useEffect(() => {
+    ; (async () => {
+      if (!accessToken) return;
+      const { response, data } = await GetSession(accessToken);
+      if (response?.status === 200) {
+        const sessionMap = new Map<string, Resp.Session>();
+        data?.forEach((session) => {
+          if (!session.character_id) return;
+          sessionMap.set(session.character_id, session);
+        });
+        setChatSession(sessionMap);
+        localStorage.setItem(
+          "aime:chatSession",
+          JSON.stringify([...sessionMap])
+        );
+        telegramCloudStorage?.set(
+          "aime:chatSession",
+          JSON.stringify([...sessionMap])
+        );
+      } else {
+        const sessionMap = new Map<string, Resp.Session>();
+        const session = JSON.parse(
+          localStorage.getItem("aime:chatSession") || await telegramCloudStorage?.get("aime:chatSession") || "[]"
+        );
+        session?.forEach((session: [string, Resp.Session]) => {
+          if (!session[1].character_id) return;
+          sessionMap.set(session[1].character_id, session[1]);
+        });
+        setChatSession(sessionMap);
+      }
+    })()
+  }, [accessToken]);
 
   useEffect(() => {
     const id = uuidv4().replace(/-/g, "");
@@ -120,6 +160,7 @@ export default () => {
 
   return {
     MessageType,
+    chatSession,
     messages,
     messageList,
     messageGroupId,
@@ -129,6 +170,7 @@ export default () => {
     isThinking,
     messageEnd,
     rewardModal,
+    setChatSession,
     setMessages,
     setMessageList,
     setMessageGroupId,

@@ -2,9 +2,11 @@ import { v4 as uuidv4 } from "uuid";
 import React, { useEffect } from "react";
 import { useModel } from "@umijs/max";
 import { API_CONFIG, DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
-import { Character } from "@/types";
+import { Character, Resp } from "@/types";
 import { buf2hex } from "@/libs/hex";
 import { charactersData } from "@/mocks/character";
+import { CreateSession } from "@/services/api";
+import { message } from "antd";
 
 export enum SendMessageType {
   TEXT = "text",
@@ -38,6 +40,7 @@ export interface SendMessage {
 
 export default () => {
   const {
+    chatSession,
     appendChatContent,
     appendInterimChatContent,
     appendSpeechInterim,
@@ -49,6 +52,7 @@ export default () => {
     setMessages,
     setMessageList,
     setRewardModal,
+    setChatSession,
     MessageType,
   } = useModel("useChat");
   const {
@@ -72,21 +76,6 @@ export default () => {
   const [socket, setSocket] = React.useState<WebSocket | null>(null);
   const [socketIsOpen, setSocketIsOpen] = React.useState<boolean>(false);
   const [currentSessionId, setCurrentSessionId] = React.useState<string>();
-  const [storedMessageSession, setStoredMessageSession] = React.useState<
-    Map<string, string>
-  >(new Map());
-
-  useEffect(() => {
-    (async () => {
-      const storedSession =
-        localStorage.getItem("aime:messageSession") ||
-        (await telegramCloudStorage?.get("aime:messageSession"));
-      if (!!storedSession && JSON.parse(storedSession).length > 0) {
-        const session = new Map(JSON.parse(storedSession));
-        setStoredMessageSession(session as Map<string, string>);
-      }
-    })();
-  }, []);
 
   const sendOverSocket = (
     type: SendMessageType,
@@ -318,37 +307,53 @@ export default () => {
   };
 
   const connectSocket = async (props: ChatbotProps, sessionId?: string) => {
-    if (!socket || !!accessToken) {
+    if (!socket && !!accessToken) {
       const ws_url = `${WEBSOCKET_CONFIG.scheme}://${API_CONFIG.host}`;
       // const language = languageCode[preferredLanguage.values().next().value];
       const language = window.navigator.languages;
       const { character } = props;
       setCharacter(character);
 
-      const session_Id = sessionId ?? uuidv4();
-      setCurrentSessionId(session_Id);
+      if (!sessionId) {
+        const { response, data } = await CreateSession({
+          character_id: character.id,
+        }, accessToken);
 
-      if (!!character && !!character.id) {
-        setStoredMessageSession((prev) => {
-          const session = prev;
-          session.set(character.id!, session_Id);
-          localStorage.setItem(
-            "aime:messageSession",
-            JSON.stringify([...session])
-          );
-          telegramCloudStorage?.set(
-            "aime:messageSession",
-            JSON.stringify([...session])
-          );
-          return session;
-        });
+        if (response?.status === 200) {
+          sessionId = data?.id;
+          setCurrentSessionId(sessionId);
+          if (!!data) {
+            setChatSession((prev) => {
+              const session = prev;
+              session.set(data?.character_id!, {
+                id: data?.id,
+                character_id: data?.character_id!,
+                state: data?.state,
+                created_at: data?.created_at,
+              });
+              localStorage.setItem(
+                "aime:messageSession",
+                JSON.stringify([...session])
+              );
+              telegramCloudStorage?.set(
+                "aime:messageSession",
+                JSON.stringify([...session])
+              );
+              return session;
+            });
+          }
+        } else {
+          return message.error("Failed to create session");
+        }
+      } else {
+        setCurrentSessionId(sessionId);
       }
 
       const ws_path =
         ws_url +
-        `/ws/${session_Id}/?llm_model=${selectedModel.values().next().value
+        `/ws/${sessionId}/?llm_model=${selectedModel.values().next().value
         }&platform=web&use_search=${enableGoogle}&use_quivr=${enableQuivr}&use_multion=${enableMultiOn}&character_id=${character.id ?? ""
-        }&language=${language}&token=${accessToken}`;
+        }&language=${language[0]}&token=${accessToken}`;
 
       let socket = new WebSocket(ws_path);
 
@@ -374,15 +379,15 @@ export default () => {
     socket.onclose = async (event) => {
       if (
         !!currentSessionId &&
-        storedMessageSession.has(currentSessionId) &&
+        chatSession.has(currentSessionId) &&
         socketIsOpen
       ) {
-        const aiSession = storedMessageSession.get(currentSessionId);
+        const aiSession = chatSession.get(currentSessionId);
 
-        if (!!aiSession) {
+        if (!!aiSession?.character_id) {
           await connectSocket(
             {
-              character: charactersData.get(aiSession) ?? {},
+              character: charactersData.get(aiSession?.character_id) ?? {},
               onReturn: () => {
                 setCharacter({});
               },
@@ -408,7 +413,6 @@ export default () => {
     socket,
     socketIsOpen,
     currentSessionId,
-    storedMessageSession,
     setCurrentSessionId,
     connectSocket,
     closeSocket,

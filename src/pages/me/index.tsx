@@ -17,6 +17,7 @@ import { InitData } from "@tma.js/sdk";
 import { TelegramOauthDataOnauthProps } from "@/types";
 
 const Me: React.FC = () => {
+  const { profile } = useModel("useAccess");
   const { address } = useModel("useWallet");
   const { telegramData } = useModel("useTelegram");
 
@@ -48,7 +49,7 @@ const Me: React.FC = () => {
               <div className={styles.meInfoAvatarImage}>
                 <Image
                   className={styles.meInfoAvatarImageSrc}
-                  src={(telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
+                  src={profile?.avatar_uri || (telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
                   fallback={require('@/assets/me/avatar.png')}
                   preview={false}
                 />
@@ -61,7 +62,7 @@ const Me: React.FC = () => {
             </div>
             <div className={styles.meInfoText}>
               <div className={styles.meInfoTextName}>
-                {(telegramData as InitData)?.user?.firstName || (telegramData as TelegramOauthDataOnauthProps)?.first_name}
+                {profile?.name || (telegramData as InitData)?.user?.firstName || (telegramData as TelegramOauthDataOnauthProps)?.first_name}
               </div>
               <div className={styles.meInfoTextDesc}>
                 Find something difference.

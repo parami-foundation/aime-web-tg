@@ -48,7 +48,7 @@ export default () => {
     })();
   }, []);
 
-  const cleanTelegramData = useCallback(async () => {
+  const cleanTelegramData = async () => {
     localStorage.removeItem("aime:telegramAuthType");
     telegramCloudStorage?.delete("aime:telegramAuthType");
     localStorage.removeItem("aime:telegramDataString");
@@ -58,7 +58,7 @@ export default () => {
     setTelegramAuthType(undefined);
     setTelegramDataString(undefined);
     setTelegramData({});
-  }, [telegramAuthType, telegramDataString, telegramData]);
+  };
 
   return {
     telegramData,

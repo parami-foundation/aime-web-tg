@@ -1,14 +1,16 @@
 import { API_CONFIG } from "@/constants/global";
-import { OauthTelegram } from "@/services/api";
+import { GetProfile, OauthTelegram } from "@/services/api";
 import { useModel } from "@umijs/max";
 import { message } from "antd";
 import { useCallback, useEffect, useState } from "react";
+import type { Resp } from "@/types";
 
 export default () => {
   const { telegramDataString, telegramAuthType, telegramCloudStorage, setTelegramData, setTelegramDataString, setTelegramAuthType, cleanTelegramData } =
     useModel("useTelegram");
   const [accessToken, setAccessToken] = useState<string>();
   const [accessTokenExpire, setAccessTokenExpire] = useState<number>(0);
+  const [profile, setProfile] = useState<Resp.Profile>({});
 
   const [twitterBinded, setTwitterBinded] = useState<boolean>(true);
 
@@ -64,14 +66,14 @@ export default () => {
     }
   };
 
-  const cleanAccessToken = useCallback(async () => {
+  const cleanAccessToken = async () => {
     localStorage.removeItem("aime:accessToken");
     localStorage.removeItem("aime:accessToken:expire");
     telegramCloudStorage?.delete("aime:accessToken");
     telegramCloudStorage?.delete("aime:accessToken:expire");
     setAccessToken(undefined);
     setAccessTokenExpire(0);
-  }, [accessToken, accessTokenExpire]);
+  };
 
   useEffect(() => {
     if (!!telegramDataString && !!telegramAuthType && !accessToken && !accessTokenExpire) {
@@ -91,8 +93,8 @@ export default () => {
       const now = new Date().getTime();
 
       if (!accessTokenExpire || parseInt(accessTokenExpire) < now) {
-        // await cleanAccessToken();
-        // await cleanTelegramData();
+        await cleanAccessToken();
+        await cleanTelegramData();
       }
       if (!!accessToken) {
         setAccessToken(accessToken);
@@ -103,10 +105,23 @@ export default () => {
     })();
   }, []);
 
+  useEffect(() => {
+    ; (async () => {
+      if (!accessToken) {
+        return;
+      }
+      const { response, data } = await GetProfile(accessToken);
+      if (response?.status === 200) {
+        setProfile(data);
+      }
+    })()
+  }, [accessToken]);
+
   return {
     accessToken,
     accessTokenExpire,
     twitterBinded,
+    profile,
     setAccessToken,
     setAccessTokenExpire,
     setTwitterBinded,

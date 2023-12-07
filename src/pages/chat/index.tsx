@@ -7,17 +7,17 @@ import CardItem from "./cardItem";
 import { charactersData } from "@/mocks/character";
 
 const Chat: React.FC = () => {
-  const { storedMessageSession } = useModel('useWebsocket');
+  const { chatSession } = useModel('useChat');
 
   return (
     <AccessLayout>
       <div className={styles.chatContainer}>
         <div className={styles.chatWrapper}>
           <div className={styles.chatContent}>
-            {Array.from(storedMessageSession.keys()).map((key) => {
+            {Array.from(chatSession?.keys()).map((key) => {
               const character = charactersData.get(key);
-              const messageSession = storedMessageSession.get(key);
-              if (!character || !messageSession) {
+              const content = chatSession?.get(key);
+              if (!character || !content) {
                 return null;
               }
 
@@ -25,7 +25,7 @@ const Chat: React.FC = () => {
                 <CardItem
                   key={key}
                   character={character}
-                  messageSession={messageSession}
+                  chatSession={content}
                 />
               )
             })}

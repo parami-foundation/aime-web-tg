@@ -23,7 +23,8 @@ export interface LBAudioElement extends HTMLAudioElement {
 const Chat: React.FC = () => {
   const { accessToken } = useModel("useAccess");
   const { messages, messageList, clearChatContent } = useModel("useChat");
-  const { SendMessageType, socketIsOpen, storedMessageSession, closeSocket, connectSocket, sendOverSocket } = useModel("useWebsocket");
+  const { SendMessageType, socketIsOpen, closeSocket, connectSocket, sendOverSocket } = useModel("useWebsocket");
+  const { chatSession } = useModel("useChat");
   const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer, stopAudioPlayback } = useModel("useWebRTC");
   const { selectedSpeaker, selectedMicrophone, character, isMute, setIsMute, setCharacter, getAudioList } = useModel("useSetting");
   const { mediaRecorder, vadEvents, enableVAD, closeVAD, startRecording, stopRecording, vadEventsCallback, closeMediaRecorder, connectMicrophone, disableVAD, disconnectMicrophone } = useModel("useRecorder");
@@ -73,7 +74,7 @@ const Chat: React.FC = () => {
       onReturn: () => {
         setCharacter({});
       }
-    }, storedMessageSession.get((search?.session as string || Array.from(charactersData.values())[0].id!)) ?? undefined);
+    }, chatSession?.get((search?.session as string || Array.from(charactersData.values())[0].id!))?.character_id ?? undefined);
   }, [id, accessToken, charactersData]);
 
   useEffect(() => {
