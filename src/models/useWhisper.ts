@@ -7,7 +7,6 @@ import { Mp3Encoder } from 'lamejs';
 import { createFFmpeg } from '@ffmpeg/ffmpeg';
 import {
   UseWhisperConfig,
-  UseWhisperHook,
   UseWhisperTimeout,
   UseWhisperTranscript,
 } from '@/types';
@@ -471,4 +470,12 @@ export default () => {
       }
     })();
   }, [autoStart]);
+
+  return {
+    transcribing,
+    transcript,
+    pauseRecording,
+    startRecording,
+    stopRecording,
+  }
 };
