@@ -108,15 +108,7 @@ const InputBox: React.FC<{
                       }}
                       onKeyDown={async (e) => {
                         if (e.key === "Enter" && !!inputValue) {
-                          await sendOverSocket(SendMessageType.OBJECT, {
-                            text: inputValue,
-                            context: {
-                              buypower: Array.from(transactionHashs.keys())[0],
-                              login: {
-                                wallet_address: address,
-                              },
-                            }
-                          });
+                          await sendOverSocket(SendMessageType.TEXT, inputValue);
                           setInputValue("");
                         }
                       }}
@@ -126,15 +118,7 @@ const InputBox: React.FC<{
                     className={styles.inputBoxSend}
                     onClick={async () => {
                       if (!!inputValue) {
-                        await sendOverSocket(SendMessageType.OBJECT, {
-                          text: inputValue,
-                          context: {
-                            buypower: Array.from(transactionHashs.keys())[0],
-                            login: {
-                              wallet_address: address,
-                            },
-                          }
-                        });
+                        await sendOverSocket(SendMessageType.TEXT, inputValue);
                         setInputValue("");
                       }
                     }}

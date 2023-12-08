@@ -28,16 +28,6 @@ export interface AIResponse {
   end?: boolean;
 }
 
-export interface SendMessage {
-  text?: string | Uint8Array;
-  context?: {
-    buypower?: string;
-    login?: {
-      wallet_address?: string;
-    };
-  };
-}
-
 export default () => {
   const {
     chatSession,
@@ -79,15 +69,11 @@ export default () => {
 
   const sendOverSocket = (
     type: SendMessageType,
-    data: string | SendMessage | ArrayBuffer | Blob
+    data: string | ArrayBuffer | Blob
   ) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       switch (type) {
         case SendMessageType.TEXT:
-          socket?.send(data as string);
-          break;
-
-        case SendMessageType.OBJECT:
           const id = uuidv4().replace(/-/g, "");
           setMessages((prev) => {
             return [
@@ -96,26 +82,25 @@ export default () => {
                 id: id,
                 type: MessageType.MESSAGE,
                 sender: "user",
-                data: (data as SendMessage)?.text,
+                data: data as string,
                 timestamp: Date.now(),
               },
             ];
           });
-
           setMessageList((prev) => {
             const list = prev.get(`${id}/user`) || [];
             list.push({
               id: id,
               sender: "user",
               type: MessageType.MESSAGE,
-              data: (data as SendMessage)?.text,
+              data: data as string,
               timestamp: Date.now(),
             });
             prev.set(`${id}/user`, list);
             return prev;
           });
 
-          socket?.send(JSON.stringify(data));
+          socket?.send(data as string);
           break;
       }
       console.log("message sent to server");

@@ -8,8 +8,8 @@ import type { Resp } from "@/types";
 export default () => {
   const { telegramDataString, telegramAuthType, telegramCloudStorage, setTelegramData, setTelegramDataString, setTelegramAuthType, cleanTelegramData } =
     useModel("useTelegram");
-  const [accessToken, setAccessToken] = useState<string>();
-  const [accessTokenExpire, setAccessTokenExpire] = useState<number>(0);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [accessTokenExpire, setAccessTokenExpire] = useState<number | null>(null);
   const [profile, setProfile] = useState<Resp.Profile>({});
 
   const [twitterBinded, setTwitterBinded] = useState<boolean>(true);
@@ -71,8 +71,8 @@ export default () => {
     localStorage.removeItem("aime:accessToken:expire");
     telegramCloudStorage?.delete("aime:accessToken");
     telegramCloudStorage?.delete("aime:accessToken:expire");
-    setAccessToken(undefined);
-    setAccessTokenExpire(0);
+    setAccessToken(null);
+    setAccessTokenExpire(null);
   };
 
   useEffect(() => {
@@ -103,7 +103,7 @@ export default () => {
         setAccessTokenExpire(parseInt(accessTokenExpire));
       }
     })();
-  }, []);
+  }, [accessToken, accessTokenExpire]);
 
   useEffect(() => {
     ; (async () => {
