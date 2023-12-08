@@ -36,7 +36,16 @@ const ConnectWallet: React.FC = () => {
   return (
     <>
       <div className={styles.loginModalHeader}>
-        Log in with wallet
+        <div className={styles.loginModalHeaderIcon}>
+          <img
+            className={styles.loginModalHeaderIconImg}
+            src={require("@/assets/icon/wallet.png")}
+            alt="icon"
+          />
+        </div>
+        <div className={styles.loginModalHeaderTitle}>
+          Log in with wallet
+        </div>
       </div>
       <div className={styles.loginModalContent}>
         {connectors.map((x) => {
@@ -46,7 +55,7 @@ const ConnectWallet: React.FC = () => {
                 algorithm: theme.defaultAlgorithm,
                 token: {
                   wireframe: false,
-                  colorPrimary: THEME_CONFIG.colorWhite,
+                  colorPrimary: THEME_CONFIG.colorGray,
                   borderRadius: THEME_CONFIG.borderRadius,
                   boxShadow: THEME_CONFIG.boxShadow,
                 },

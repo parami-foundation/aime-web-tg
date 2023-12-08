@@ -11,8 +11,8 @@ import eruda from 'eruda';
 import { useEffect } from 'react';
 
 const Layout: React.FC = () => {
+  const { viewport } = useModel('useView');
   const { wagmiConfig } = useModel('useWagmi');
-  const { telegramMiniAppHeight } = useModel('useTelegram');
 
   if (DEBUG) {
     let el = document.createElement('div');
@@ -51,7 +51,7 @@ const Layout: React.FC = () => {
                   <div
                     className={styles.layoutContainer}
                     style={{
-                      height: telegramMiniAppHeight ?? '100%',
+                      height: viewport.height || '100vh',
                     }}
                   >
                     <div className={styles.wrapperContainer}>

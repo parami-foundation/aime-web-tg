@@ -26,6 +26,8 @@ export interface AIResponse {
   sentence_id?: string;
   give_token?: boolean;
   end?: boolean;
+  action?: string;
+  address?: string;
 }
 
 export default () => {
@@ -179,7 +181,7 @@ export default () => {
                 });
                 setMessageList((prev) => {
                   const list =
-                    prev.get(`${aiMessage?.sentence_id}/character`) || [];
+                    prev.get(`${aiMessage?.sentence_id}/character/${aiMessage?.action || "default"}`) || [];
                   list.push({
                     id: aiMessage?.sentence_id,
                     type: MessageType.MESSAGE,
@@ -187,7 +189,7 @@ export default () => {
                     data: aiMessage?.data,
                     timestamp: Date.now(),
                   });
-                  prev.set(`${aiMessage?.sentence_id}/character`, list);
+                  prev.set(`${aiMessage?.sentence_id}/character/${aiMessage?.action || "default"}`, list);
                   return prev;
                 });
                 appendSpeechInterim(aiMessage.data);
@@ -266,7 +268,7 @@ export default () => {
           });
 
           setMessageList((prev) => {
-            const list = prev.get(`${id}/character`) || [];
+            const list = prev.get(`${id}/character/${aiMessage?.action || "default"}`) || [];
             list.push({
               id: id,
               type: MessageType.DATA,
@@ -274,7 +276,7 @@ export default () => {
               data: data,
               timestamp: Date.now(),
             });
-            prev.set(`${id}/character`, list);
+            prev.set(`${id}/character/${aiMessage?.action || "default"}`, list);
             return prev;
           });
 
@@ -327,13 +329,12 @@ export default () => {
               return session;
             });
           }
-        } else {
-          return message.error("Failed to create session");
         }
       } else {
         setCurrentSessionId(sessionId);
       }
 
+      if (!sessionId) return;
       const ws_path =
         ws_url +
         `/ws/${sessionId}/?llm_model=${selectedModel.values().next().value
@@ -388,8 +389,9 @@ export default () => {
 
     socket.onmessage = socketOnMessageHandler;
 
-    socket.onerror = (error) => {
-      if (DEBUG) console.log(`WebSocket Error: `, error);
+    socket.onerror = (event) => {
+      message.error("Connect AI Engine Failed");
+      if (DEBUG) console.log(`WebSocket Error: `, event);
     };
   }, [socket]);
 

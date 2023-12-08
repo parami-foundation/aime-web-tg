@@ -5,7 +5,6 @@ import InputBox from "./inputbox";
 import AiPop from "./pop/ai";
 import MePop from "./pop/me";
 import { history, useModel, useParams } from "@umijs/max";
-import InfoCard from "./infoCard";
 import { charactersData } from "@/mocks/character";
 import { AccessLayout } from "@/layouts/access";
 import { BiHomeAlt } from "react-icons/bi";
@@ -22,7 +21,7 @@ export interface LBAudioElement extends HTMLAudioElement {
 
 const Chat: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { messages, messageList, clearChatContent } = useModel("useChat");
+  const { messages, messageList, clearChatContent, getSessionByCharacterId } = useModel("useChat");
   const { SendMessageType, socketIsOpen, closeSocket, connectSocket, sendOverSocket } = useModel("useWebsocket");
   const { chatSession } = useModel("useChat");
   const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer, stopAudioPlayback } = useModel("useWebRTC");
@@ -54,28 +53,35 @@ const Chat: React.FC = () => {
 
   const { id } = useParams<{ id: string }>();
 
+  useEffect(() => {
+    if (!accessToken || !charactersData.size || !id) return;
+    setCharacter(charactersData.get(id) || {});
+  }, [id]);
+
   // Demo
   useEffect(() => {
-    if (!accessToken || !charactersData.size || !id) {
-      history.push("/home");
-      return;
-    }
-    if (!charactersData.get(id)) {
-      history.push("/home");
-      message.error("Character not found");
-      return;
-    }
-
-    setCharacter(charactersData.get(id) || {});
-    closeSocket();
-    clearChatContent();
-    connectSocket({
-      character: charactersData.get(id) ?? {},
-      onReturn: () => {
-        setCharacter({});
+    ; (async () => {
+      if (!Object.keys(character).length || !charactersData.size) return;
+      if (!accessToken || !charactersData.size || !id) {
+        history.push("/home");
+        return;
       }
-    }, chatSession?.get((search?.session as string || Array.from(charactersData.values())[0].id!))?.character_id ?? undefined);
-  }, [id, accessToken, charactersData]);
+      if (!charactersData.get(id)) {
+        history.push("/home");
+        message.error("Character not found");
+        return;
+      }
+
+      closeSocket();
+      clearChatContent();
+      connectSocket({
+        character: charactersData.get(id) ?? {},
+        onReturn: () => {
+          setCharacter({});
+        }
+      }, search?.session as string || chatSession.get(character?.id)?.id);
+    })()
+  }, [id, accessToken, charactersData, character, chatSession]);
 
   useEffect(() => {
     if (!!mediaRecorder) {
@@ -274,9 +280,6 @@ const Chat: React.FC = () => {
             className={styles.chatContent}
             ref={msgList}
           >
-            <div className={styles.chatInfo}>
-              <InfoCard />
-            </div>
             {!!messageList.size && Array.from(messageList?.keys())?.map((key) => {
               return (
                 <React.Fragment
@@ -284,10 +287,12 @@ const Chat: React.FC = () => {
                 >
                   {key.split("/")[1] === "character" && (
                     <AiPop
+                      action={key.split("/")[2]}
                       data={messageList?.get(key)}
                       data-id={key}
                     />
                   )}
+
                   {key.split("/")[1] === "user" && (
                     <MePop
                       data={messageList?.get(key)}

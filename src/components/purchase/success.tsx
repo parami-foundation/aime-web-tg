@@ -23,6 +23,7 @@ const PurchaseSuccess: React.FC<{
             <img
               className={styles.purchaseHeaderIconImg}
               src={require("@/assets/icon/success.png")}
+              alt="icon"
             />
           </div>
           <div className={styles.purchaseHeaderTitle}>

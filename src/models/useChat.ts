@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useModel } from "@umijs/max";
-import { GetSession } from "@/services/api";
+import { GetSession, GetSessionByCharacterId } from "@/services/api";
 import { Resp } from "@/types";
 
 export enum MessageType {
@@ -47,17 +47,39 @@ export default () => {
     Map<string, Resp.Session>
   >(new Map());
 
+  const getSessionByCharacterId = useMemo(() => async (characterId: string) => {
+    if (!accessToken) return;
+    const { response, data } = await GetSessionByCharacterId(characterId, accessToken);
+    if (response?.status === 200 && data.length > 0) {
+      return data;
+    } else {
+      return [];
+    }
+  }, []);
+
   useEffect(() => {
     ; (async () => {
+      const sessionMap = new Map<string, Resp.Session>();
+      const session = JSON.parse(
+        localStorage.getItem("aime:chatSession") || await telegramCloudStorage?.get("aime:chatSession") || "[]"
+      );
+      session?.forEach((session: [string, Resp.Session]) => {
+        if (!session[1].character_id) return;
+        sessionMap.set(session[1].character_id, session[1]);
+      });
+      setChatSession(sessionMap);
+
       if (!accessToken) return;
       const { response, data } = await GetSession(accessToken);
-      if (response?.status === 200) {
-        const sessionMap = new Map<string, Resp.Session>();
-        data?.forEach((session) => {
-          if (!session.character_id) return;
-          sessionMap.set(session.character_id, session);
+      if (response?.status === 200 && data.length > 0) {
+        setChatSession((prev) => {
+          data?.forEach((session) => {
+            // Only save the latest session
+            if (!session.character_id || !!prev.has(session?.character_id)) return;
+            prev.set(session.character_id, session);
+          });
+          return sessionMap;
         });
-        setChatSession(sessionMap);
         localStorage.setItem(
           "aime:chatSession",
           JSON.stringify([...sessionMap])
@@ -66,16 +88,6 @@ export default () => {
           "aime:chatSession",
           JSON.stringify([...sessionMap])
         );
-      } else {
-        const sessionMap = new Map<string, Resp.Session>();
-        const session = JSON.parse(
-          localStorage.getItem("aime:chatSession") || await telegramCloudStorage?.get("aime:chatSession") || "[]"
-        );
-        session?.forEach((session: [string, Resp.Session]) => {
-          if (!session[1].character_id) return;
-          sessionMap.set(session[1].character_id, session[1]);
-        });
-        setChatSession(sessionMap);
       }
     })()
   }, [accessToken]);
@@ -184,5 +196,6 @@ export default () => {
     clearChatContent,
     appendSpeechInterim,
     clearSpeechInterim,
+    getSessionByCharacterId,
   };
 };

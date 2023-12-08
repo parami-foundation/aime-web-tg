@@ -217,4 +217,12 @@ export declare namespace Resp {
     state?: string;
     created_at?: string;
   }
+
+  interface ChatHistory extends Body {
+    from?: string;
+    to?: string;
+    type?: string;
+    data?: string;
+    created_at?: string;
+  }
 }

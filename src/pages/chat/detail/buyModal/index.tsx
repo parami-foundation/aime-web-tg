@@ -253,6 +253,19 @@ const Detail: React.FC<{
   return (
     <div className={styles.detailModalContainer}>
       <div className={styles.detailModalHeader}>
+        <div className={styles.detailModalHeaderIcon}>
+          <img
+            className={styles.detailModalHeaderIconImg}
+            src={require("@/assets/icon/transaction.png")}
+            alt="transaction"
+          />
+          <div className={styles.detailModalHeaderIconAvatar}>
+            <img
+              src={character?.avatar_url}
+              alt="avatar"
+            />
+          </div>
+        </div>
         <div className={styles.detailModalHeaderTitle}>
           Transaction Details
         </div>

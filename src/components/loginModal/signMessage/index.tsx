@@ -81,7 +81,16 @@ const SignMessage: React.FC = () => {
   return (
     <>
       <div className={styles.loginModalHeader}>
-        Need to verify your wallet
+        <div className={styles.loginModalHeaderIcon}>
+          <img
+            className={styles.loginModalHeaderIconImg}
+            src={require("@/assets/icon/wallet.png")}
+            alt="icon"
+          />
+        </div>
+        <div className={styles.loginModalHeaderTitle}>
+          Need to verify your wallet
+        </div>
         <div className={styles.loginModalHeaderDescription}>
           Please sign the message with your wallet
         </div>

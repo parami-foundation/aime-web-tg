@@ -12,7 +12,16 @@ const SwitchNetwork: React.FC = () => {
   return (
     <>
       <div className={styles.loginModalHeader}>
-        Change Network
+        <div className={styles.loginModalHeaderIcon}>
+          <img
+            className={styles.loginModalHeaderIconImg}
+            src={require("@/assets/icon/wallet.png")}
+            alt="icon"
+          />
+        </div>
+        <div className={styles.loginModalHeaderTitle}>
+          Change Network
+        </div>
         <div className={styles.loginModalHeaderDescription}>
           Please change your network to {chains[0]?.name}
         </div>

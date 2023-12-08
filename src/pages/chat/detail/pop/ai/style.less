@@ -20,6 +20,8 @@
     font-size: 15px;
     line-height: 1.5;
     white-space: pre-wrap;
+    width: 100%;
+    overflow: hidden;
 
     .aiPopText {
       display: flex;
@@ -29,7 +31,9 @@
       white-space: pre-wrap;
       word-wrap: break-word;
       word-break: break-all;
+      background-color: "transparent";
       width: 100%;
+      color: #000;
 
       &:not(:last-child) {
         margin-bottom: 10px;
@@ -49,15 +53,56 @@
       justify-content: center;
       white-space: pre-wrap;
 
-      .aiPopAudioIcon {
-        width: 20px;
-        height: 20px;
-        margin-left: 10px;
-      }
-
       .aiPopAudioPlayer {
         display: none;
       }
     }
+
+    .aiPopAction {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+
+      .aiPopButtons {
+        width: 100%;
+        margin-bottom: 10px;
+
+        .aiPopButton {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          border-radius: var(--border-radius);
+          height: auto;
+
+          .aiPopButtonIcon {
+            margin-right: 10px;
+          }
+        }
+
+        .aiPopButtonDark {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          border-radius: var(--border-radius);
+          height: auto;
+          color: #000;
+
+          &:hover {
+            color: #000;
+          }
+        }
+      }
+    }
+  }
+
+  .aiPopWrapperFull {
+    max-width: 100%;
+    width: 100%;
   }
 }

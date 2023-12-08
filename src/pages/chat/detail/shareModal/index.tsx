@@ -29,7 +29,16 @@ const ShareModal: React.FC<{
       >
         <div className={styles.shareModalContainer}>
           <div className={styles.shareModalHeader}>
-            Share To
+            <div className={styles.shareModalHeaderIcon}>
+              <img
+                className={styles.shareModalHeaderIconImg}
+                src={require("@/assets/icon/share.png")}
+                alt="icon"
+              />
+            </div>
+            <div className={styles.shareModalHeaderTitle}>
+              Share To
+            </div>
           </div>
           <div className={styles.shareModalContent}>
             <ConfigProvider

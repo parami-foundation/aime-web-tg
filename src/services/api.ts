@@ -202,6 +202,47 @@ export async function GetSession(
   );
 }
 
+export async function GetSessionByCharacterId(
+  characterId: string,
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  return request<Resp.Session[]>(
+    DEBUG
+      ? `/proxy/api/v1/session/${characterId}`
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session?character_id=${characterId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
+
+export async function GetChatHistory(
+  accessToken: string,
+  session_id: string,
+  options?: { [key: string]: any }
+) {
+  return request<Resp.ChatHistory[]>(
+    DEBUG
+      ? `/proxy/api/v1/session/${session_id}/message`
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session/${session_id}/message`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      ...(options || {}),
+    }
+  );
+}
+
 export async function CreateTransaction(
   data: Req.CreateTransaction,
   accessToken: string,
