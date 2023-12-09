@@ -390,7 +390,6 @@ export default () => {
     socket.onmessage = socketOnMessageHandler;
 
     socket.onerror = (event) => {
-      message.error("Connect AI Engine Failed");
       if (DEBUG) console.log(`WebSocket Error: `, event);
     };
   }, [socket]);

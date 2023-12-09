@@ -14,6 +14,9 @@ import { playAudios } from "@/utils/audioUtils";
 import ShareModal from "./shareModal";
 import queryString from "query-string";
 import { message, Image } from "antd";
+import { GetChatHistory } from "@/services/api";
+import { v4 as uuidv4 } from "uuid";
+import { MessageType } from "@/models/useChat";
 
 export interface LBAudioElement extends HTMLAudioElement {
   setSinkId(id: string): Promise<void>;
@@ -21,9 +24,8 @@ export interface LBAudioElement extends HTMLAudioElement {
 
 const Chat: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { messages, messageList, clearChatContent, getSessionByCharacterId } = useModel("useChat");
+  const { messages, messageList, chatSession, clearChatContent, setMessageList, setMessages } = useModel("useChat");
   const { SendMessageType, socketIsOpen, closeSocket, connectSocket, sendOverSocket } = useModel("useWebsocket");
-  const { chatSession } = useModel("useChat");
   const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer, stopAudioPlayback } = useModel("useWebRTC");
   const { selectedSpeaker, selectedMicrophone, character, isMute, setIsMute, setCharacter, getAudioList } = useModel("useSetting");
   const { mediaRecorder, vadEvents, enableVAD, closeVAD, startRecording, stopRecording, vadEventsCallback, closeMediaRecorder, connectMicrophone, disableVAD, disconnectMicrophone } = useModel("useRecorder");
@@ -54,11 +56,48 @@ const Chat: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
+    ; (async () => {
+      if (!accessToken || !search?.session || !character) return;
+      const { response, data } = await GetChatHistory(accessToken, search?.session as string);
+      if (response?.status === 200 && !!data?.length) {
+        closeSocket();
+        clearChatContent();
+        data.map((item) => {
+          const id = uuidv4().replace(/-/g, "");
+          setMessages((prev) => {
+            return [
+              ...prev,
+              {
+                id: id,
+                type: MessageType.MESSAGE,
+                sender: item?.from === character?.id ? "character" : "user",
+                data: item?.data,
+                timestamp: Date.now(),
+              },
+            ];
+          });
+          setMessageList((prev) => {
+            const list = prev.get(`${id}/${item?.from === character?.id ? "character" : "user"}/default`) || [];
+            list.push({
+              id: id,
+              sender: item?.from === character?.id ? "character" : "user",
+              type: MessageType.MESSAGE,
+              data: item?.data,
+              timestamp: Date.now(),
+            });
+            prev.set(`${id}/${item?.from === character?.id ? "character" : "user"}/default`, list);
+            return prev;
+          });
+        });
+      }
+    })()
+  }, [search?.session, accessToken, character]);
+
+  useEffect(() => {
     if (!accessToken || !charactersData.size || !id) return;
     setCharacter(charactersData.get(id) || {});
   }, [id]);
 
-  // Demo
   useEffect(() => {
     ; (async () => {
       if (!Object.keys(character).length || !charactersData.size) return;
@@ -73,15 +112,27 @@ const Chat: React.FC = () => {
       }
 
       closeSocket();
-      clearChatContent();
-      connectSocket({
-        character: charactersData.get(id) ?? {},
-        onReturn: () => {
-          setCharacter({});
-        }
-      }, search?.session as string || chatSession.get(character?.id)?.id);
+      if (!search?.session) {
+        clearChatContent();
+      }
+
+      if (!!search?.session && !!messageList?.size) {
+        connectSocket({
+          character: charactersData.get(id) ?? {},
+          onReturn: () => {
+            setCharacter({});
+          }
+        }, search?.session as string);
+      } else if (!search?.session) {
+        connectSocket({
+          character: charactersData.get(id) ?? {},
+          onReturn: () => {
+            setCharacter({});
+          }
+        }, chatSession.get(character?.id)?.id);
+      }
     })()
-  }, [id, accessToken, charactersData, character, chatSession]);
+  }, [search?.session, id, accessToken, charactersData, character, chatSession, messageList]);
 
   useEffect(() => {
     if (!!mediaRecorder) {

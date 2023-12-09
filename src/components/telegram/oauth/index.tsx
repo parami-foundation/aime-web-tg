@@ -65,7 +65,7 @@ const TelegramOauth: React.FC<{
         </div>
       )}
 
-      {!telegramWebApp && (
+      {!telegramWebApp && !telegramDataString && (
         <div className={styles.loginModalContainer}>
           <div className={styles.loginModalHeader}>
             <div className={styles.loginModalHeaderIcon}>

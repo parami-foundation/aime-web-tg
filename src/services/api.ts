@@ -239,6 +239,7 @@ export async function GetChatHistory(
         Authorization: `Bearer ${accessToken}`,
       },
       ...(options || {}),
+      getResponse: true,
     }
   );
 }

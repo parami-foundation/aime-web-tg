@@ -5,6 +5,7 @@ import { useModel } from "@umijs/max";
 import NavBar from "@/components/navBar";
 import CardItem from "./cardItem";
 import { charactersData } from "@/mocks/character";
+import { GetChatHistory } from "@/services/api";
 
 const Chat: React.FC = () => {
   const { chatSession } = useModel('useChat');

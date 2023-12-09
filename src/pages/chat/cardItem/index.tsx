@@ -3,6 +3,7 @@ import styles from "./style.less";
 import { Character, Resp } from "@/types";
 import { history } from "@umijs/max";
 import { Image } from "antd";
+import moment from "moment";
 
 const CardItem: React.FC<{
   character: Character;
@@ -18,7 +19,7 @@ const CardItem: React.FC<{
       <div className={styles.cardItemWrapper}>
         <div className={styles.cardItemHeader}>
           <div className={styles.cardItemHeaderDate}>
-            <span>{!!chatSession?.created_at && Date.parse(chatSession?.created_at).toLocaleString()}</span>
+            <span>{!!chatSession?.created_at && moment(chatSession?.created_at).format('YYYY-MM-DD HH:mm:ss')}</span>
           </div>
         </div>
         <div className={styles.cardItemContent}>

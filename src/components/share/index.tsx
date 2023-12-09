@@ -25,7 +25,6 @@ const Share: React.FC<{
   const shareRef = React.createRef<HTMLDivElement>();
 
   const loadImage = () => {
-    console.log(character)
     const imageUrl = character?.avatar_url;
     const image = new Image();
     image.crossOrigin = 'Anonymous';

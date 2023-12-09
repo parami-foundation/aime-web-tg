@@ -72,11 +72,12 @@ export default () => {
       if (!accessToken) return;
       const { response, data } = await GetSession(accessToken);
       if (response?.status === 200 && data.length > 0) {
-        setChatSession((prev) => {
+        const sessionMap = new Map<string, Resp.Session>();
+        setChatSession(() => {
           data?.forEach((session) => {
             // Only save the latest session
-            if (!session.character_id || !!prev.has(session?.character_id)) return;
-            prev.set(session.character_id, session);
+            if (!session.character_id || !!sessionMap.has(session?.character_id)) return;
+            sessionMap.set(session.character_id, session);
           });
           return sessionMap;
         });
@@ -107,7 +108,7 @@ export default () => {
       ];
     });
     setMessageList((prev) => {
-      const list = prev.get(`${id}/character`) || [];
+      const list = prev.get(`${id}/character/default`) || [];
       list.push({
         id: id,
         sender: "character",
@@ -115,7 +116,7 @@ export default () => {
         data: "Thinking...",
         timestamp: Date.now(),
       });
-      prev.set(`${id}/character`, list);
+      prev.set(`${id}/character/default`, list);
       return prev;
     });
   }, []);
