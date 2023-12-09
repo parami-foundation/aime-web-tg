@@ -181,15 +181,16 @@ export default () => {
                 });
                 setMessageList((prev) => {
                   const list =
-                    prev.get(`${aiMessage?.sentence_id}/character/${aiMessage?.action || "default"}`) || [];
+                    prev.get(`${aiMessage?.sentence_id}/character`) || [];
                   list.push({
                     id: aiMessage?.sentence_id,
                     type: MessageType.MESSAGE,
                     sender: "character",
                     data: aiMessage?.data,
+                    action: aiMessage?.action,
                     timestamp: Date.now(),
                   });
-                  prev.set(`${aiMessage?.sentence_id}/character/${aiMessage?.action || "default"}`, list);
+                  prev.set(`${aiMessage?.sentence_id}/character`, list);
                   return prev;
                 });
                 appendSpeechInterim(aiMessage.data);
@@ -268,7 +269,7 @@ export default () => {
           });
 
           setMessageList((prev) => {
-            const list = prev.get(`${id}/character/${aiMessage?.action || "default"}`) || [];
+            const list = prev.get(`${id}/character`) || [];
             list.push({
               id: id,
               type: MessageType.DATA,
@@ -276,7 +277,7 @@ export default () => {
               data: data,
               timestamp: Date.now(),
             });
-            prev.set(`${id}/character/${aiMessage?.action || "default"}`, list);
+            prev.set(`${id}/character`, list);
             return prev;
           });
 

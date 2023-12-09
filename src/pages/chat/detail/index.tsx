@@ -77,7 +77,7 @@ const Chat: React.FC = () => {
             ];
           });
           setMessageList((prev) => {
-            const list = prev.get(`${id}/${item?.from === character?.id ? "character" : "user"}/default`) || [];
+            const list = prev.get(`${id}/${item?.from === character?.id ? "character" : "user"}`) || [];
             list.push({
               id: id,
               sender: item?.from === character?.id ? "character" : "user",
@@ -85,7 +85,7 @@ const Chat: React.FC = () => {
               data: item?.data,
               timestamp: Date.now(),
             });
-            prev.set(`${id}/${item?.from === character?.id ? "character" : "user"}/default`, list);
+            prev.set(`${id}/${item?.from === character?.id ? "character" : "user"}`, list);
             return prev;
           });
         });
@@ -325,22 +325,22 @@ const Chat: React.FC = () => {
             ref={msgList}
           >
             {!!messageList.size && Array.from(messageList?.keys())?.map((key) => {
+              console.log(messageList)
               return (
                 <React.Fragment
-                  key={key}
+                  key={key.split("/")[0]}
                 >
                   {key.split("/")[1] === "character" && (
                     <AiPop
-                      action={key.split("/")[2]}
                       data={messageList?.get(key)}
-                      data-id={key}
+                      data-id={key.split("/")[0]}
                     />
                   )}
 
                   {key.split("/")[1] === "user" && (
                     <MePop
                       data={messageList?.get(key)}
-                      data-id={key}
+                      data-id={key.split("/")[0]}
                     />
                   )}
                 </React.Fragment>

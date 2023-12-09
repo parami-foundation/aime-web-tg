@@ -25,6 +25,7 @@ export interface MessageDisplay {
   type?: MessageType;
   sender?: string;
   data?: string | Uint8Array;
+  action?: string;
   timestamp?: number;
 }
 
@@ -108,7 +109,7 @@ export default () => {
       ];
     });
     setMessageList((prev) => {
-      const list = prev.get(`${id}/character/default`) || [];
+      const list = prev.get(`${id}/character`) || [];
       list.push({
         id: id,
         sender: "character",
@@ -116,7 +117,7 @@ export default () => {
         data: "Thinking...",
         timestamp: Date.now(),
       });
-      prev.set(`${id}/character/default`, list);
+      prev.set(`${id}/character`, list);
       return prev;
     });
   }, []);
