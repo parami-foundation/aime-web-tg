@@ -110,8 +110,15 @@ export default () => {
     ; (async () => {
       if (!accessToken) return;
       const { response, data } = await GetWallet(accessToken);
-      if (response?.status === 200 && !!data?.address) {
-        setAddress(`0x${data?.address}` as `0x${string}`);
+      if (response?.status === 200 && !!data?.length) {
+        data?.forEach((item) => {
+          if (item.chain_id === NETWORK_CONFIG.chains[0].id?.toString()) {
+            setWalletBinded(true);
+            setAddress(`0x${item.address}` as `0x${string}`);
+            localStorage.setItem("aime:address", `0x${item.address}` as `0x${string}`);
+            telegramCloudStorage?.set("aime:address", `0x${item.address}` as `0x${string}`);
+          }
+        });
       }
     })();
   }, [accessToken]);

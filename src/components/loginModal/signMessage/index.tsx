@@ -101,7 +101,7 @@ const SignMessage: React.FC = () => {
             algorithm: theme.defaultAlgorithm,
             token: {
               wireframe: false,
-              colorPrimary: THEME_CONFIG.colorWhite,
+              colorPrimary: THEME_CONFIG.colorGray,
               borderRadius: THEME_CONFIG.borderRadius,
               boxShadow: THEME_CONFIG.boxShadow,
             },

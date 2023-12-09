@@ -104,7 +104,7 @@ export async function GetWallet(
   accessToken: string,
   options?: { [key: string]: any }
 ) {
-  return request<Resp.Wallet>(
+  return request<Resp.Wallet[]>(
     DEBUG
       ? "/proxy/api/v1/wallet"
       : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/wallet`,

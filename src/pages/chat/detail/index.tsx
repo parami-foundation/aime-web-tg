@@ -96,7 +96,7 @@ const Chat: React.FC = () => {
   useEffect(() => {
     if (!accessToken || !charactersData.size || !id) return;
     setCharacter(charactersData.get(id) || {});
-  }, [id]);
+  }, [id, accessToken, charactersData]);
 
   useEffect(() => {
     ; (async () => {
@@ -116,23 +116,16 @@ const Chat: React.FC = () => {
         clearChatContent();
       }
 
-      if (!!search?.session && !!messageList?.size) {
+      if (!search?.session) {
         connectSocket({
           character: charactersData.get(id) ?? {},
           onReturn: () => {
             setCharacter({});
           }
-        }, search?.session as string);
-      } else if (!search?.session) {
-        connectSocket({
-          character: charactersData.get(id) ?? {},
-          onReturn: () => {
-            setCharacter({});
-          }
-        }, chatSession.get(character?.id)?.id);
+        }, search?.session as string || chatSession.get(character?.id)?.id);
       }
     })()
-  }, [search?.session, id, accessToken, charactersData, character, chatSession, messageList]);
+  }, [search?.session, id, accessToken, charactersData, character, chatSession]);
 
   useEffect(() => {
     if (!!mediaRecorder) {

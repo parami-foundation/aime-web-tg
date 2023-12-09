@@ -25,7 +25,7 @@ export default () => {
       window.visualViewport?.removeEventListener("resize", handler);
       window.visualViewport?.removeEventListener("scroll", handler);
     };
-  }, []);
+  }, [window.visualViewport]);
 
   return {
     viewport,
