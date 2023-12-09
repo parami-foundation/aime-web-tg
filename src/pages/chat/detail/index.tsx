@@ -325,7 +325,6 @@ const Chat: React.FC = () => {
             ref={msgList}
           >
             {!!messageList.size && Array.from(messageList?.keys())?.map((key) => {
-              console.log(messageList)
               return (
                 <React.Fragment
                   key={key.split("/")[0]}
