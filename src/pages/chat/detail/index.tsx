@@ -324,6 +324,7 @@ const Chat: React.FC = () => {
             className={styles.chatContent}
             ref={msgList}
           >
+            {console.log("messageList", messageList)}
             {!!messageList.size && Array.from(messageList?.keys())?.map((key) => {
               return (
                 <React.Fragment

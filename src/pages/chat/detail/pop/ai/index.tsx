@@ -24,7 +24,7 @@ const AiPop: React.FC<{
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
   const [shareModalVisible, setShareModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
-  const [action, setAction] = React.useState<string>("default");
+  const [action, setAction] = React.useState<string>();
 
   const audioPlayer = createRef<HTMLAudioElement>();
 
@@ -39,7 +39,7 @@ const AiPop: React.FC<{
         }
       }}
     >
-      <div className={classNames(styles.aiPopWrapper, action !== "default" && styles.aiPopWrapperFull)}>
+      <div className={classNames(styles.aiPopWrapper, !!action && styles.aiPopWrapperFull)}>
         {data?.map((item: MessageDisplay) => {
           !!item?.action && setAction(item?.action);
           switch (item?.type) {
