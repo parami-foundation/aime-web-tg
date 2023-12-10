@@ -12,6 +12,7 @@ export enum MessageType {
   AUDIO = "audio",
   VIDEO = "video",
   IMAGE = "image",
+  END = "end",
 }
 
 export interface Chat {

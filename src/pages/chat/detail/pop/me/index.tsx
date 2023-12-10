@@ -22,12 +22,11 @@ const MePop: React.FC<{
     >
       <div className={styles.mePopWrapper}>
         {data?.map((item: any, index: number) => {
-          const id = uuidv4();
           switch (item?.type) {
             case "message":
               return (
                 <MDEditor.Markdown
-                  key={id}
+                  key={item?.id}
                   source={item?.data as string}
                   style={{
                     backgroundColor: 'transparent',
@@ -39,7 +38,7 @@ const MePop: React.FC<{
               return (
                 <div
                   className={styles.mePopAudio}
-                  key={id}
+                  key={item?.id}
                 >
                   <SoundPlayIcon />
                   <audio

@@ -216,6 +216,7 @@ export default () => {
                   },
                 ];
               });
+
               break;
 
             case "think":
@@ -230,10 +231,37 @@ export default () => {
                   },
                 ];
               });
+
               setIsThinking(true);
               break;
 
             case "end":
+              const id = uuidv4().replace(/-/g, "");
+              setMessages((prev) => {
+                return [
+                  ...prev,
+                  {
+                    type: MessageType.END,
+                    sender: "character",
+                    data: aiMessage?.data,
+                    timestamp: Date.now(),
+                  },
+                ];
+              });
+              setMessageList((prev) => {
+                const list =
+                  prev.get(`${id}/character`) || [];
+                list.push({
+                  id: id,
+                  type: MessageType.END,
+                  sender: "character",
+                  data: aiMessage?.data,
+                  action: aiMessage?.action,
+                  timestamp: Date.now(),
+                });
+                prev.set(`${id}/character`, list);
+                return prev;
+              });
               appendChatContent();
               setMessageEnd(true);
               const messageGroupIdMatches = message.match(

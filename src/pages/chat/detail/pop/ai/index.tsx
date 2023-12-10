@@ -1,4 +1,4 @@
-import React, { createRef, useEffect } from "react";
+import React, { createRef } from "react";
 import styles from "./style.less";
 import { Button, ConfigProvider, theme } from "antd";
 import { PROJECT_CONFIG } from "@/constants/global";
@@ -41,7 +41,6 @@ const AiPop: React.FC<{
     >
       <div className={classNames(styles.aiPopWrapper, action !== "default" && styles.aiPopWrapperFull)}>
         {data?.map((item: MessageDisplay) => {
-          const id = uuidv4();
           !!item?.action && setAction(item?.action);
           switch (item?.type) {
             case "message":
@@ -50,7 +49,7 @@ const AiPop: React.FC<{
                   return (
                     <div
                       className={styles.aiPopAction}
-                      key={id}
+                      key={item?.id}
                     >
                       <MDEditor.Markdown
                         source={item?.data as string}
@@ -84,7 +83,7 @@ const AiPop: React.FC<{
                   return (
                     <div
                       className={styles.aiPopAction}
-                      key={id}
+                      key={item?.id}
                     >
                       <MDEditor.Markdown
                         source={item?.data as string}
@@ -112,11 +111,10 @@ const AiPop: React.FC<{
                   )
                 case "buyPower":
                   return (
-                    <>
-                      <div
-                        className={styles.aiPopAction}
-                        key={id}
-                      >
+                    <React.Fragment
+                      key={item?.id}
+                    >
+                      <div className={styles.aiPopAction}>
                         <MDEditor.Markdown
                           source={item?.data as string}
                           style={{
@@ -159,15 +157,14 @@ const AiPop: React.FC<{
                         transactionHash={transactionHash}
                         setTransactionHash={setTransactionHash}
                       />
-                    </>
+                    </React.Fragment>
                   )
                 case "shareLink":
                   return (
-                    <>
-                      <div
-                        className={styles.aiPopAction}
-                        key={id}
-                      >
+                    <React.Fragment
+                      key={item?.id}
+                    >
+                      <div className={styles.aiPopAction}>
                         <MDEditor.Markdown
                           source={item?.data as string}
                           style={{
@@ -193,12 +190,12 @@ const AiPop: React.FC<{
                         visible={shareModalVisible}
                         setVisible={setShareModalVisible}
                       />
-                    </>
+                    </React.Fragment>
                   )
                 default:
                   return (
                     <MDEditor.Markdown
-                      key={id}
+                      key={item?.id}
                       source={item?.data as string}
                       style={{
                         backgroundColor: 'transparent',
@@ -211,7 +208,7 @@ const AiPop: React.FC<{
               return (
                 <div
                   className={styles.aiPopAudio}
-                  key={id}
+                  key={item?.id}
                 >
                   <SoundPlayIcon />
                   <audio
