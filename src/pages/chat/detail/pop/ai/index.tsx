@@ -11,6 +11,7 @@ import ShareModal from "../../shareModal";
 import MDEditor from '@uiw/react-md-editor';
 import { ReactComponent as SoundPlayIcon } from '@/assets/icon/soundPlay.svg';
 import { MessageDisplay } from "@/models/useChat";
+import { v4 as uuidv4 } from 'uuid';
 
 const AiPop: React.FC<{
   data?: MessageDisplay[];
@@ -40,90 +41,16 @@ const AiPop: React.FC<{
     >
       <div className={classNames(styles.aiPopWrapper, action !== "default" && styles.aiPopWrapperFull)}>
         {data?.map((item: MessageDisplay) => {
+          const id = uuidv4();
           !!item?.action && setAction(item?.action);
-          if (item?.type === "message") {
-            switch (item?.action) {
-              case "default":
-                return (
-                  <MDEditor.Markdown
-                    key={item.id}
-                    source={item?.data as string}
-                    style={{
-                      backgroundColor: 'transparent',
-                    }}
-                    className={styles.aiPopText}
-                  />
-                )
-              case "connectWallet":
-                return (
-                  <div
-                    className={styles.aiPopAction}
-                    key={item.id}
-                  >
-                    <MDEditor.Markdown
-                      source={item?.data as string}
-                      style={{
-                        backgroundColor: 'transparent',
-                      }}
-                      className={styles.aiPopText}
-                    />
-                    <div
-                      className={styles.aiPopButtons}
-                    >
-                      <Button
-                        block
-                        type="primary"
-                        size="large"
-                        className={styles.aiPopButton}
-                        onClick={() => {
-                          (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=bind&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setWalletModalVisible(true);
-                          (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
-                        }}
-                      >
-                        <RiWalletLine
-                          className={styles.aiPopButtonIcon}
-                        />
-                        Connect Wallet
-                      </Button>
-                    </div>
-                  </div>
-                )
-              case "connectTwitter":
-                return (
-                  <div
-                    className={styles.aiPopAction}
-                    key={item.id}
-                  >
-                    <MDEditor.Markdown
-                      source={item?.data as string}
-                      style={{
-                        backgroundColor: 'transparent',
-                      }}
-                      className={styles.aiPopText}
-                    />
-                    <div className={styles.aiPopButtons}>
-                      <Button
-                        block
-                        type="primary"
-                        size="large"
-                        className={styles.aiPopButton}
-                        onClick={() => {
-                        }}
-                      >
-                        <RiTwitterXFill
-                          className={styles.aiPopButtonIcon}
-                        />
-                        Login with Twitter
-                      </Button>
-                    </div>
-                  </div>
-                )
-              case "buyPower":
-                return (
-                  <>
+          switch (item?.type) {
+            case "message":
+              switch (item?.action) {
+                case "connectWallet":
+                  return (
                     <div
                       className={styles.aiPopAction}
-                      key={item.id}
+                      key={id}
                     >
                       <MDEditor.Markdown
                         source={item?.data as string}
@@ -135,46 +62,29 @@ const AiPop: React.FC<{
                       <div
                         className={styles.aiPopButtons}
                       >
-                        <ConfigProvider
-                          theme={{
-                            algorithm: theme.defaultAlgorithm,
-                            token: {
-                              wireframe: false,
-                              colorPrimary: THEME_CONFIG.colorSecondary,
-                              borderRadius: THEME_CONFIG.borderRadius,
-                              boxShadow: THEME_CONFIG.boxShadow,
-                            },
+                        <Button
+                          block
+                          type="primary"
+                          size="large"
+                          className={styles.aiPopButton}
+                          onClick={() => {
+                            (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=bind&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setWalletModalVisible(true);
+                            (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
                           }}
                         >
-                          <Button
-                            block
-                            type="primary"
-                            size="large"
-                            className={styles.aiPopButtonDark}
-                            onClick={() => {
-                              (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramAuthType=${telegramAuthType}&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
-                              (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
-                            }}
-                          >
-                            Buy AIME Power
-                          </Button>
-                        </ConfigProvider>
+                          <RiWalletLine
+                            className={styles.aiPopButtonIcon}
+                          />
+                          Connect Wallet
+                        </Button>
                       </div>
                     </div>
-                    <BuyModal
-                      visible={isBuyModalVisible}
-                      setVisible={setIsBuyModalVisible}
-                      transactionHash={transactionHash}
-                      setTransactionHash={setTransactionHash}
-                    />
-                  </>
-                )
-              case "shareLink":
-                return (
-                  <>
+                  )
+                case "connectTwitter":
+                  return (
                     <div
                       className={styles.aiPopAction}
-                      key={item.id}
+                      key={id}
                     >
                       <MDEditor.Markdown
                         source={item?.data as string}
@@ -190,39 +100,132 @@ const AiPop: React.FC<{
                           size="large"
                           className={styles.aiPopButton}
                           onClick={() => {
-                            setShareModalVisible(true);
                           }}
                         >
-                          Share
+                          <RiTwitterXFill
+                            className={styles.aiPopButtonIcon}
+                          />
+                          Login with Twitter
                         </Button>
                       </div>
                     </div>
-                    <ShareModal
-                      visible={shareModalVisible}
-                      setVisible={setShareModalVisible}
+                  )
+                case "buyPower":
+                  return (
+                    <>
+                      <div
+                        className={styles.aiPopAction}
+                        key={id}
+                      >
+                        <MDEditor.Markdown
+                          source={item?.data as string}
+                          style={{
+                            backgroundColor: 'transparent',
+                          }}
+                          className={styles.aiPopText}
+                        />
+                        <div
+                          className={styles.aiPopButtons}
+                        >
+                          <ConfigProvider
+                            theme={{
+                              algorithm: theme.defaultAlgorithm,
+                              token: {
+                                wireframe: false,
+                                colorPrimary: THEME_CONFIG.colorSecondary,
+                                borderRadius: THEME_CONFIG.borderRadius,
+                                boxShadow: THEME_CONFIG.boxShadow,
+                              },
+                            }}
+                          >
+                            <Button
+                              block
+                              type="primary"
+                              size="large"
+                              className={styles.aiPopButtonDark}
+                              onClick={() => {
+                                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramAuthType=${telegramAuthType}&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                                (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
+                              }}
+                            >
+                              Buy AIME Power
+                            </Button>
+                          </ConfigProvider>
+                        </div>
+                      </div>
+                      <BuyModal
+                        visible={isBuyModalVisible}
+                        setVisible={setIsBuyModalVisible}
+                        transactionHash={transactionHash}
+                        setTransactionHash={setTransactionHash}
+                      />
+                    </>
+                  )
+                case "shareLink":
+                  return (
+                    <>
+                      <div
+                        className={styles.aiPopAction}
+                        key={id}
+                      >
+                        <MDEditor.Markdown
+                          source={item?.data as string}
+                          style={{
+                            backgroundColor: 'transparent',
+                          }}
+                          className={styles.aiPopText}
+                        />
+                        <div className={styles.aiPopButtons}>
+                          <Button
+                            block
+                            type="primary"
+                            size="large"
+                            className={styles.aiPopButton}
+                            onClick={() => {
+                              setShareModalVisible(true);
+                            }}
+                          >
+                            Share
+                          </Button>
+                        </div>
+                      </div>
+                      <ShareModal
+                        visible={shareModalVisible}
+                        setVisible={setShareModalVisible}
+                      />
+                    </>
+                  )
+                default:
+                  return (
+                    <MDEditor.Markdown
+                      key={id}
+                      source={item?.data as string}
+                      style={{
+                        backgroundColor: 'transparent',
+                      }}
+                      className={styles.aiPopText}
                     />
-                  </>
-                )
-            }
-          } else if (item?.type === "data") {
-            return (
-              <div
-                className={styles.aiPopAudio}
-                key={item.id}
-              >
-                <SoundPlayIcon />
-                <audio
-                  className={styles.aiPopAudioPlayer}
-                  src={URL.createObjectURL(new Blob([item?.data as Uint8Array], { type: "audio/mp3" }))}
-                  ref={audioPlayer}
+                  )
+              }
+            case "data":
+              return (
+                <div
+                  className={styles.aiPopAudio}
+                  key={id}
                 >
-                  <source
+                  <SoundPlayIcon />
+                  <audio
+                    className={styles.aiPopAudioPlayer}
                     src={URL.createObjectURL(new Blob([item?.data as Uint8Array], { type: "audio/mp3" }))}
-                    type="audio/mp3"
-                  />
-                </audio>
-              </div>
-            )
+                    ref={audioPlayer}
+                  >
+                    <source
+                      src={URL.createObjectURL(new Blob([item?.data as Uint8Array], { type: "audio/mp3" }))}
+                      type="audio/mp3"
+                    />
+                  </audio>
+                </div>
+              )
           }
         })}
       </div>

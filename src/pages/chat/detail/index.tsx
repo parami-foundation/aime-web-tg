@@ -327,19 +327,21 @@ const Chat: React.FC = () => {
             {!!messageList.size && Array.from(messageList?.keys())?.map((key) => {
               return (
                 <React.Fragment
-                  key={key.split("/")[0]}
+                  key={key}
                 >
                   {key.split("/")[1] === "character" && (
                     <AiPop
                       data={messageList?.get(key)}
-                      data-id={key.split("/")[0]}
+                      data-id={key}
+                      key={key}
                     />
                   )}
 
                   {key.split("/")[1] === "user" && (
                     <MePop
                       data={messageList?.get(key)}
-                      data-id={key.split("/")[0]}
+                      data-id={key}
+                      key={key}
                     />
                   )}
                 </React.Fragment>

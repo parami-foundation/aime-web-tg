@@ -1,22 +1,13 @@
 import React, { useEffect, createRef } from "react";
 import styles from "./style.less";
-import { BsSoundwave } from "react-icons/bs";
+import { ReactComponent as SoundPlayIcon } from '@/assets/icon/soundPlay.svg';
+import MDEditor from "@uiw/react-md-editor";
+import { v4 as uuidv4 } from 'uuid';
 
 const MePop: React.FC<{
   data?: any;
 }> = ({ data }) => {
-  const [audioDuration, setAudioDuration] = React.useState<number>();
-
   const audioPlayer = createRef<HTMLAudioElement>();
-
-  useEffect(() => {
-    (async () => {
-      audioPlayer?.current?.addEventListener("loadedmetadata", () => {
-        var duration = audioPlayer?.current?.duration;
-        setAudioDuration(duration);
-      });
-    })();
-  }, [audioPlayer]);
 
   return (
     <div
@@ -30,37 +21,34 @@ const MePop: React.FC<{
       }}
     >
       <div className={styles.mePopWrapper}>
-        {typeof data === "string" && data}
-        {typeof data === "object" && data?.map((item: any, index: number) => {
+        {data?.map((item: any, index: number) => {
+          const id = uuidv4();
           switch (item?.type) {
             case "message":
               return (
-                <div
+                <MDEditor.Markdown
+                  key={id}
+                  source={item?.data as string}
+                  style={{
+                    backgroundColor: 'transparent',
+                  }}
                   className={styles.mePopText}
-                  key={index}
-                >
-                  {item?.data}
-                </div>
+                />
               )
             case "data":
               return (
                 <div
                   className={styles.mePopAudio}
-                  key={index}
+                  key={id}
                 >
-                  <div className={styles.mePopAudioTime}>
-                    {audioDuration && `${audioDuration.toFixed(2)}`}''
-                  </div>
-                  <BsSoundwave
-                    className={styles.mePopAudioIcon}
-                  />
+                  <SoundPlayIcon />
                   <audio
                     className={styles.mePopAudioPlayer}
-                    src={URL.createObjectURL(new Blob([item?.data], { type: "audio/mp3" }))}
+                    src={URL.createObjectURL(new Blob([item?.data as Uint8Array], { type: "audio/mp3" }))}
                     ref={audioPlayer}
                   >
                     <source
-                      src={URL.createObjectURL(new Blob([item?.data], { type: "audio/mp3" }))}
+                      src={URL.createObjectURL(new Blob([item?.data as Uint8Array], { type: "audio/mp3" }))}
                       type="audio/mp3"
                     />
                   </audio>

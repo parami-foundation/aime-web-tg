@@ -7,6 +7,10 @@
   margin-bottom: 10px;
 
   .mePopWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
     border-radius: var(--border-radius) 0 var(--border-radius)
       var(--border-radius);
     background-color: #fcffe3;
@@ -16,6 +20,7 @@
     font-size: 15px;
     line-height: 1.5;
     white-space: pre-wrap;
+    overflow: hidden;
 
     .mePopText {
       display: flex;
@@ -25,7 +30,9 @@
       white-space: pre-wrap;
       word-wrap: break-word;
       word-break: break-all;
+      background-color: "transparent";
       width: 100%;
+      color: #000;
 
       &:not(:last-child) {
         margin-bottom: 10px;
@@ -42,16 +49,10 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       white-space: pre-wrap;
       width: 100%;
       overflow: hidden;
-
-      .mePopAudioIcon {
-        width: 20px;
-        height: 20px;
-        margin-left: 10px;
-      }
 
       .mePopAudioPlayer {
         display: none;
