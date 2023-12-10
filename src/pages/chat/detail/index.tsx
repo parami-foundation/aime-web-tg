@@ -100,7 +100,7 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     ; (async () => {
-      if (!Object.keys(character).length || !charactersData.size) return;
+      if (!Object.keys(character).length || !charactersData.size || !character?.id) return;
       if (!accessToken || !charactersData.size || !id) {
         history.push("/home");
         return;
@@ -119,9 +119,6 @@ const Chat: React.FC = () => {
       if (!search?.session) {
         connectSocket({
           character: charactersData.get(id) ?? {},
-          onReturn: () => {
-            setCharacter({});
-          }
         }, search?.session as string || chatSession.get(character?.id)?.id);
       }
     })()
@@ -253,6 +250,7 @@ const Chat: React.FC = () => {
     }
   }, [inputBoxContainer.current, chatWrapper.current]);
 
+  console.log("messageList", messageList);
   return (
     <AccessLayout>
       <div className={styles.chatContainer}>
@@ -324,7 +322,6 @@ const Chat: React.FC = () => {
             className={styles.chatContent}
             ref={msgList}
           >
-            {console.log("messageList", messageList)}
             {!!messageList.size && Array.from(messageList?.keys())?.map((key) => {
               return (
                 <React.Fragment

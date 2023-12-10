@@ -22,9 +22,8 @@ const InputBox: React.FC<{
   const { accessToken, accessTokenExpire } = useModel("useAccess");
   const { address } = useModel("useWallet");
   const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
-  const { transactionHashs } = useModel("useContract");
   const { isRecording } = useModel("useRecorder");
-  const { speechInterim } = useModel("useChat");
+  const { speechInterim, messageList } = useModel("useChat");
   const { character } = useModel("useSetting");
 
   const [inputValue, setInputValue] = React.useState<string>();
@@ -78,55 +77,59 @@ const InputBox: React.FC<{
                 width: (!!address && balance === 0n) ? "calc(100% - 55px)" : "100%",
               }}
             >
-              <div
-                className={styles.inputBoxSwitch}
-                onClick={() => {
-                  console.log("switch");
-                  setIsTextMode(!isTextMode);
-                }}
-              >
-                {isTextMode ? (
-                  <BiMicrophone
-                    className={styles.inputBoxSwitchIcon}
-                  />
-                ) : (
-                  <CgKeyboard
-                    className={styles.inputBoxSwitchIcon}
-                  />
-                )}
-              </div>
+              {!!messageList?.size && (
+                <div
+                  className={styles.inputBoxSwitch}
+                  onClick={() => {
+                    setIsTextMode(!isTextMode);
+                  }}
+                >
+                  {isTextMode ? (
+                    <BiMicrophone
+                      className={styles.inputBoxSwitchIcon}
+                    />
+                  ) : (
+                    <CgKeyboard
+                      className={styles.inputBoxSwitchIcon}
+                    />
+                  )}
+                </div>
+              )}
               {isTextMode ? (
                 <>
                   <div className={styles.inputBoxInput}>
                     <Input
+                      disabled={!messageList?.size}
                       bordered={false}
-                      placeholder="Enter something..."
+                      placeholder={!messageList?.size ? "Thinking..." : "Type something..."}
                       className={styles.inputBoxInputInput}
                       value={inputValue}
                       onChange={(e) => {
                         setInputValue(e.target.value);
                       }}
                       onKeyDown={async (e) => {
-                        if (e.key === "Enter" && !!inputValue) {
+                        if (e.key === "Enter" && !!inputValue && !!messageList?.size) {
                           await sendOverSocket(SendMessageType.TEXT, inputValue);
                           setInputValue("");
                         }
                       }}
                     />
                   </div>
-                  <div
-                    className={styles.inputBoxSend}
-                    onClick={async () => {
-                      if (!!inputValue) {
-                        await sendOverSocket(SendMessageType.TEXT, inputValue);
-                        setInputValue("");
-                      }
-                    }}
-                  >
-                    <HiArrowNarrowRight
-                      className={styles.inputBoxSendIcon}
-                    />
-                  </div>
+                  {!!messageList?.size && (
+                    <div
+                      className={styles.inputBoxSend}
+                      onClick={async () => {
+                        if (!!inputValue) {
+                          await sendOverSocket(SendMessageType.TEXT, inputValue);
+                          setInputValue("");
+                        }
+                      }}
+                    >
+                      <HiArrowNarrowRight
+                        className={styles.inputBoxSendIcon}
+                      />
+                    </div>
+                  )}
                 </>
               ) : (
                 <div

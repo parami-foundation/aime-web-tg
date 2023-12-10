@@ -17,7 +17,6 @@ export enum SendMessageType {
 
 export interface ChatbotProps {
   character: Character;
-  onReturn: () => void;
 }
 
 export interface AIResponse {
@@ -32,7 +31,6 @@ export interface AIResponse {
 
 export default () => {
   const {
-    chatSession,
     appendChatContent,
     appendInterimChatContent,
     appendSpeechInterim,
@@ -66,8 +64,8 @@ export default () => {
   const { telegramCloudStorage } = useModel("useTelegram");
 
   const [socket, setSocket] = React.useState<WebSocket | null>(null);
-  const [socketIsOpen, setSocketIsOpen] = React.useState<boolean>(false);
-  const [currentSessionId, setCurrentSessionId] = React.useState<string>();
+  const [socketIsOpen, setSocketIsOpen] = React.useState<boolean>(true);
+  const [currentSession, setCurrentSession] = React.useState<Resp.Session>();
 
   const sendOverSocket = (
     type: SendMessageType,
@@ -336,7 +334,12 @@ export default () => {
 
         if (response?.status === 200) {
           sessionId = data?.id;
-          setCurrentSessionId(sessionId);
+          setCurrentSession({
+            id: sessionId,
+            character_id: character.id!,
+            state: "active",
+            created_at: Date.now().toString(),
+          });
           if (!!data) {
             setChatSession((prev) => {
               const session = prev;
@@ -359,7 +362,12 @@ export default () => {
           }
         }
       } else {
-        setCurrentSessionId(sessionId);
+        setCurrentSession({
+          id: sessionId,
+          character_id: character.id!,
+          state: "active",
+          created_at: Date.now().toString(),
+        });
       }
 
       if (!sessionId) return;
@@ -373,6 +381,34 @@ export default () => {
 
       socket.binaryType = "arraybuffer";
       setSocket(socket);
+
+      socket.onopen = () => {
+        if (DEBUG) console.log("Socket connected");
+
+        setSocketIsOpen(true);
+      };
+
+      socket.onclose = async (event) => {
+        console.log("Socket closed", event);
+
+        if (
+          !!currentSession
+        ) {
+          connectSocket(
+            {
+              character: props.character,
+            },
+            sessionId,
+          );
+        }
+      };
+
+      socket.onmessage = socketOnMessageHandler;
+
+      socket.onerror = (event) => {
+        closeSocket();
+        if (DEBUG) console.log(`WebSocket Error: `, event);
+      };
     }
   };
 
@@ -382,52 +418,12 @@ export default () => {
     setSocketIsOpen(false);
   };
 
-  useEffect(() => {
-    if (!socket) return;
-    socket.onopen = () => {
-      if (DEBUG) console.log("Socket connected");
-
-      setSocketIsOpen(true);
-    };
-
-    socket.onclose = async (event) => {
-      if (
-        !!currentSessionId &&
-        chatSession.has(currentSessionId) &&
-        socketIsOpen
-      ) {
-        const aiSession = chatSession.get(currentSessionId);
-
-        if (!!aiSession?.character_id) {
-          await connectSocket(
-            {
-              character: charactersData.get(aiSession?.character_id) ?? {},
-              onReturn: () => {
-                setCharacter({});
-              },
-            },
-            currentSessionId
-          );
-        }
-      }
-
-      console.log("Socket closed", event);
-      setSocketIsOpen(false);
-    };
-
-    socket.onmessage = socketOnMessageHandler;
-
-    socket.onerror = (event) => {
-      if (DEBUG) console.log(`WebSocket Error: `, event);
-    };
-  }, [socket]);
-
   return {
     SendMessageType,
     socket,
     socketIsOpen,
-    currentSessionId,
-    setCurrentSessionId,
+    currentSession,
+    setCurrentSession,
     connectSocket,
     closeSocket,
     sendOverSocket,

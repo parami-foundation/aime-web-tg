@@ -95,34 +95,6 @@ export default () => {
     })()
   }, [accessToken]);
 
-  useEffect(() => {
-    const id = uuidv4().replace(/-/g, "");
-    setMessages((prev) => {
-      return [
-        ...prev,
-        {
-          id: id,
-          type: MessageType.MESSAGE,
-          sender: "character",
-          data: "Thinking...",
-          timestamp: Date.now(),
-        },
-      ];
-    });
-    setMessageList((prev) => {
-      const list = prev.get(`${id}/character`) || [];
-      list.push({
-        id: id,
-        sender: "character",
-        type: MessageType.MESSAGE,
-        data: "Thinking...",
-        timestamp: Date.now(),
-      });
-      prev.set(`${id}/character`, list);
-      return prev;
-    });
-  }, []);
-
   const setSender = (sender: string) => {
     setInterimChat((prev) => {
       if (!!prev) {

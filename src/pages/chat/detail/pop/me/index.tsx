@@ -1,8 +1,7 @@
 import React, { useEffect, createRef } from "react";
 import styles from "./style.less";
 import { ReactComponent as SoundPlayIcon } from '@/assets/icon/soundPlay.svg';
-import MDEditor from "@uiw/react-md-editor";
-import { v4 as uuidv4 } from 'uuid';
+import ReactMarkdown from "react-markdown";
 
 const MePop: React.FC<{
   data?: any;
@@ -25,14 +24,11 @@ const MePop: React.FC<{
           switch (item?.type) {
             case "message":
               return (
-                <MDEditor.Markdown
-                  key={item?.id}
-                  source={item?.data as string}
-                  style={{
-                    backgroundColor: 'transparent',
-                  }}
+                <ReactMarkdown
                   className={styles.mePopText}
-                />
+                >
+                  {item?.data as string}
+                </ReactMarkdown>
               )
             case "data":
               return (

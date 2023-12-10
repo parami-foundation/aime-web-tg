@@ -8,10 +8,9 @@ import classNames from "classnames";
 import { THEME_CONFIG } from "@/constants/theme";
 import BuyModal from "../../buyModal";
 import ShareModal from "../../shareModal";
-import MDEditor from '@uiw/react-md-editor';
 import { ReactComponent as SoundPlayIcon } from '@/assets/icon/soundPlay.svg';
 import { MessageDisplay } from "@/models/useChat";
-import { v4 as uuidv4 } from 'uuid';
+import ReactMarkdown from "react-markdown";
 
 const AiPop: React.FC<{
   data?: MessageDisplay[];
@@ -51,13 +50,25 @@ const AiPop: React.FC<{
                       className={styles.aiPopAction}
                       key={item?.id}
                     >
-                      <MDEditor.Markdown
-                        source={item?.data as string}
-                        style={{
-                          backgroundColor: 'transparent',
-                        }}
+                      <ReactMarkdown
                         className={styles.aiPopText}
-                      />
+                        components={{
+                          a: (props) => (
+                            <a
+                              onClick={(e) => {
+                                (!!telegramDataString && !!telegramWebApp && !!props?.href) ? miniAppUtils?.openLink(props?.href) : window.open(props?.href, "_blank");
+                              }}
+                              target="_blank"
+                              rel="noreferrer"
+                              className={styles.aiPopLink}
+                            >
+                              🔗 {props.children}
+                            </a>
+                          ),
+                        }}
+                      >
+                        {item?.data as string}
+                      </ReactMarkdown>
                       <div
                         className={styles.aiPopButtons}
                       >
@@ -85,13 +96,25 @@ const AiPop: React.FC<{
                       className={styles.aiPopAction}
                       key={item?.id}
                     >
-                      <MDEditor.Markdown
-                        source={item?.data as string}
-                        style={{
-                          backgroundColor: 'transparent',
-                        }}
+                      <ReactMarkdown
                         className={styles.aiPopText}
-                      />
+                        components={{
+                          a: (props) => (
+                            <a
+                              onClick={(e) => {
+                                (!!telegramDataString && !!telegramWebApp && !!props?.href) ? miniAppUtils?.openLink(props?.href) : window.open(props?.href, "_blank");
+                              }}
+                              target="_blank"
+                              rel="noreferrer"
+                              className={styles.aiPopLink}
+                            >
+                              🔗 {props.children}
+                            </a>
+                          ),
+                        }}
+                      >
+                        {item?.data as string}
+                      </ReactMarkdown>
                       <div className={styles.aiPopButtons}>
                         <Button
                           block
@@ -115,13 +138,25 @@ const AiPop: React.FC<{
                       key={item?.id}
                     >
                       <div className={styles.aiPopAction}>
-                        <MDEditor.Markdown
-                          source={item?.data as string}
-                          style={{
-                            backgroundColor: 'transparent',
-                          }}
+                        <ReactMarkdown
                           className={styles.aiPopText}
-                        />
+                          components={{
+                            a: (props) => (
+                              <a
+                                onClick={(e) => {
+                                  (!!telegramDataString && !!telegramWebApp && !!props?.href) ? miniAppUtils?.openLink(props?.href) : window.open(props?.href, "_blank");
+                                }}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={styles.aiPopLink}
+                              >
+                                🔗 {props.children}
+                              </a>
+                            ),
+                          }}
+                        >
+                          {item?.data as string}
+                        </ReactMarkdown>
                         <div
                           className={styles.aiPopButtons}
                         >
@@ -165,13 +200,25 @@ const AiPop: React.FC<{
                       key={item?.id}
                     >
                       <div className={styles.aiPopAction}>
-                        <MDEditor.Markdown
-                          source={item?.data as string}
-                          style={{
-                            backgroundColor: 'transparent',
-                          }}
+                        <ReactMarkdown
                           className={styles.aiPopText}
-                        />
+                          components={{
+                            a: (props) => (
+                              <a
+                                onClick={(e) => {
+                                  (!!telegramDataString && !!telegramWebApp && !!props?.href) ? miniAppUtils?.openLink(props?.href) : window.open(props?.href, "_blank");
+                                }}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={styles.aiPopLink}
+                              >
+                                🔗 {props.children}
+                              </a>
+                            ),
+                          }}
+                        >
+                          {item?.data as string}
+                        </ReactMarkdown>
                         <div className={styles.aiPopButtons}>
                           <Button
                             block
@@ -194,14 +241,25 @@ const AiPop: React.FC<{
                   )
                 default:
                   return (
-                    <MDEditor.Markdown
-                      key={item?.id}
-                      source={item?.data as string}
-                      style={{
-                        backgroundColor: 'transparent',
-                      }}
+                    <ReactMarkdown
                       className={styles.aiPopText}
-                    />
+                      components={{
+                        a: (props) => (
+                          <a
+                            onClick={(e) => {
+                              (!!telegramDataString && !!telegramWebApp && !!props?.href) ? miniAppUtils?.openLink(props?.href) : window.open(props?.href, "_blank");
+                            }}
+                            target="_blank"
+                            rel="noreferrer"
+                            className={styles.aiPopLink}
+                          >
+                            🔗 {props.children}
+                          </a>
+                        ),
+                      }}
+                    >
+                      {item?.data as string}
+                    </ReactMarkdown>
                   )
               }
             case "data":
