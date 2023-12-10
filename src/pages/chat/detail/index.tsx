@@ -250,7 +250,6 @@ const Chat: React.FC = () => {
     }
   }, [inputBoxContainer.current, chatWrapper.current]);
 
-  console.log("messageList", messageList);
   return (
     <AccessLayout>
       <div className={styles.chatContainer}>

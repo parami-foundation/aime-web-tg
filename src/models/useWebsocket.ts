@@ -4,9 +4,7 @@ import { useModel } from "@umijs/max";
 import { API_CONFIG, DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
 import { Character, Resp } from "@/types";
 import { buf2hex } from "@/libs/hex";
-import { charactersData } from "@/mocks/character";
 import { CreateSession } from "@/services/api";
-import { message } from "antd";
 
 export enum SendMessageType {
   TEXT = "text",
@@ -391,16 +389,13 @@ export default () => {
       socket.onclose = async (event) => {
         console.log("Socket closed", event);
 
-        if (
-          !!currentSession
-        ) {
-          connectSocket(
-            {
-              character: props.character,
-            },
-            sessionId,
-          );
-        }
+        connectSocket(
+          {
+            character: props.character,
+          },
+          sessionId,
+        );
+        console.log("reconnecting socket")
       };
 
       socket.onmessage = socketOnMessageHandler;

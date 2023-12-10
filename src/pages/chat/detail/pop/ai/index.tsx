@@ -1,4 +1,4 @@
-import React, { createRef } from "react";
+import React, { createRef, useRef } from "react";
 import styles from "./style.less";
 import { Button, ConfigProvider, theme } from "antd";
 import { PROJECT_CONFIG } from "@/constants/global";
@@ -23,9 +23,9 @@ const AiPop: React.FC<{
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
   const [shareModalVisible, setShareModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
-  const [action, setAction] = React.useState<string>();
 
   const audioPlayer = createRef<HTMLAudioElement>();
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
@@ -38,9 +38,12 @@ const AiPop: React.FC<{
         }
       }}
     >
-      <div className={classNames(styles.aiPopWrapper, !!action && styles.aiPopWrapperFull)}>
+      <div
+        className={classNames(styles.aiPopWrapper)}
+        ref={wrapperRef}
+      >
         {data?.map((item: MessageDisplay) => {
-          !!item?.action && setAction(item?.action);
+          !!item?.action && wrapperRef?.current?.classList?.add(styles.aiPopWrapperFull);
           switch (item?.type) {
             case "message":
               switch (item?.action) {
@@ -157,9 +160,7 @@ const AiPop: React.FC<{
                         >
                           {item?.data as string}
                         </ReactMarkdown>
-                        <div
-                          className={styles.aiPopButtons}
-                        >
+                        <div className={styles.aiPopButtons}>
                           <ConfigProvider
                             theme={{
                               algorithm: theme.defaultAlgorithm,
