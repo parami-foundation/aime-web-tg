@@ -25,7 +25,7 @@ export interface LBAudioElement extends HTMLAudioElement {
 const Chat: React.FC = () => {
   const { accessToken } = useModel("useAccess");
   const { messages, messageList, chatSession, clearChatContent, setMessageList, setMessages } = useModel("useChat");
-  const { SendMessageType, socketIsOpen, closeSocket, connectSocket, sendOverSocket } = useModel("useWebsocket");
+  const { SendMessageType, socketIsOpen, closeSocket, connectSocket, sendOverSocket, setCurrentSession } = useModel("useWebsocket");
   const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer, stopAudioPlayback } = useModel("useWebRTC");
   const { selectedSpeaker, selectedMicrophone, character, isMute, setIsMute, setCharacter, getAudioList } = useModel("useSetting");
   const { mediaRecorder, vadEvents, enableVAD, closeVAD, startRecording, stopRecording, vadEventsCallback, closeMediaRecorder, connectMicrophone, disableVAD, disconnectMicrophone } = useModel("useRecorder");
@@ -233,6 +233,7 @@ const Chat: React.FC = () => {
     closeSocket();
     clearChatContent();
     setCharacter({});
+    setCurrentSession({});
   };
 
   useEffect(() => {
@@ -271,8 +272,8 @@ const Chat: React.FC = () => {
               <div className={styles.chatHeaderLeft}>
                 <div
                   className={styles.chatHeaderHome}
-                  onClick={async () => {
-                    await cleanUpStates();
+                  onClick={() => {
+                    cleanUpStates();
                     history.push("/home");
                   }}
                 >

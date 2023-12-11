@@ -390,7 +390,7 @@ export default () => {
       socket.onclose = async (event) => {
         console.log("Socket closed", event);
 
-        if (!socketIsOpen && !!currentSession) {
+        if (socketIsOpen && !!currentSession) {
           closeSocket();
           connectSocket({
             character: props?.character ?? {},

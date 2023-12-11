@@ -1,4 +1,4 @@
-import { Character } from "@/services/typing";
+import { Character } from "@/types";
 
 export const charactersData: Map<string, Character> = new Map([
   [
@@ -117,7 +117,7 @@ export const charactersData: Map<string, Character> = new Map([
     {
       id: "CZ",
       name: "Changpeng Zhao",
-      handle: "SBF",
+      handle: "cz_binance",
       avatar_url:
         "https://pbs.twimg.com/profile_images/1680299608784744448/5oR3tZi5_400x400.jpg",
       author_name: "Changpeng Zhao",
