@@ -171,7 +171,6 @@ const Detail: React.FC<{
 }> = ({ powerValue, setPurchaseSuccessVisible, setPurchaseFailedVisible, setError, setTransactionHash, setBuyModalVisible }) => {
   const { accessToken } = useModel("useAccess");
   const { publicClient } = useModel("useWagmi");
-  const { storeTransactionHash } = useModel("useContract");
   const { character } = useModel("useSetting");
 
   const [bodyDropdown, setBodyDropdown] = React.useState<boolean>(false);
@@ -221,10 +220,9 @@ const Detail: React.FC<{
 
   useEffect(() => {
     ; (async () => {
-      if (isSuccess && !!data?.hash && !!address && !!accessToken) {
+      if (isSuccess && !!data?.hash && !!accessToken) {
         setBuyModalVisible(false);
         setPurchaseSuccessVisible(true);
-        storeTransactionHash(data?.hash, "success");
         setTransactionHash(data?.hash);
 
         await CreateTransaction({
@@ -239,7 +237,7 @@ const Detail: React.FC<{
         setError(error);
       }
     })();
-  }, [address, accessToken, data, isLoading, isSuccess, error]);
+  }, [accessToken, data, isSuccess]);
 
   useEffect(() => {
     GetTokenPrice({

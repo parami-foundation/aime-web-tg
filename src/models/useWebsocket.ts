@@ -5,6 +5,7 @@ import { API_CONFIG, DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
 import { Character, Resp } from "@/types";
 import { buf2hex } from "@/libs/hex";
 import { CreateSession } from "@/services/api";
+import { charactersData } from "@/mocks/character";
 
 export enum SendMessageType {
   TEXT = "text",
@@ -334,7 +335,7 @@ export default () => {
           sessionId = data?.id;
           setCurrentSession({
             id: sessionId,
-            character_id: character.id!,
+            character_id: character.id,
             state: "active",
             created_at: Date.now().toString(),
           });
@@ -389,12 +390,11 @@ export default () => {
       socket.onclose = async (event) => {
         console.log("Socket closed", event);
 
-        if (!socketIsOpen) {
-          connectSocket(
-            {
-              character: props.character,
-            },
-            sessionId,
+        if (!socketIsOpen && !!currentSession) {
+          closeSocket();
+          connectSocket({
+            character: props?.character ?? {},
+          }, sessionId,
           );
           console.log("reconnecting socket")
         }
