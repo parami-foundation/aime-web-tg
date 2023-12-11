@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "../style.less";
-import { Spin } from "antd";
+import { Button, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
 const Loading: React.FC = () => {
@@ -27,6 +27,16 @@ const Loading: React.FC = () => {
             />
           }
         />
+        <Button
+          type="primary"
+          size="large"
+          className={styles.loginModalContentBtn}
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Retry
+        </Button>
       </div>
     </>
   )

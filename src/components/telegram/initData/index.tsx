@@ -39,6 +39,7 @@ export const TMAInitData = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     if (!!initData) {
+      console.log('initData', initData);
       setTelegramData(initData);
       localStorage.setItem('aime:telegramData', JSON.stringify(initData));
       cloudstorage?.set('aime:telegramData', JSON.stringify(initData));
@@ -49,6 +50,7 @@ export const TMAInitData = ({ children }: PropsWithChildren) => {
     }
 
     if (!!initDataString) {
+      console.log('initDataString', decodeURIComponent(initDataString));
       setTelegramDataString(decodeURIComponent(initDataString));
       localStorage.setItem('aime:telegramDataString', decodeURIComponent(initDataString));
       cloudstorage?.set('aime:telegramDataString', decodeURIComponent(initDataString));

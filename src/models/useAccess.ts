@@ -48,6 +48,7 @@ export default () => {
         );
       !!data?.expires_in && setAccessTokenExpire(now + data?.expires_in * 1000);
     } else {
+      console.log("Login failed", data)
       if (data?.error === "invalid_token") {
         localStorage.removeItem("aime:telegramAuthType");
         telegramCloudStorage?.delete("aime:telegramAuthType");
