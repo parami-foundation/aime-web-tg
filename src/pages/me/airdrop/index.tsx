@@ -11,6 +11,7 @@ const Pending: React.FC = () => {
           <img
             className={styles.airdropHeaderPendingIconImg}
             src={require("@/assets/me/airdrop.png")}
+            alt="airdrop"
           />
         </div>
         <div className={styles.airdropHeaderTitle}>
@@ -64,6 +65,7 @@ const Success: React.FC<{
           <img
             className={styles.airdropHeaderSuccessIconImg}
             src={require("@/assets/me/airdrop_success.png")}
+            alt="airdrop"
           />
         </div>
         <div className={styles.airdropHeaderTitle}>

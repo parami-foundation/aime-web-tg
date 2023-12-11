@@ -1,0 +1,33 @@
+.createContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100vh;
+  width: 100%;
+  transition: all 0.3s ease-in-out;
+
+  .createWrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: calc(100vh - 85px);
+    padding: 35px;
+    transition: all 0.3s ease-in-out;
+    overflow-y: auto;
+
+    .createSteps {
+      color: #999999;
+    }
+
+    .createAvatar {
+      position: relative;
+      width: 70px;
+      height: 70px;
+    }
+  }
+}

@@ -39,6 +39,15 @@ export default defineConfig({
       ],
     },
     {
+      path: "/create",
+      routes: [
+        {
+          path: "/create",
+          component: "create",
+        },
+      ],
+    },
+    {
       path: "/bridge",
       component: "bridge",
     },

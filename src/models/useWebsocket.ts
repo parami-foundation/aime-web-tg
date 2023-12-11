@@ -389,13 +389,15 @@ export default () => {
       socket.onclose = async (event) => {
         console.log("Socket closed", event);
 
-        connectSocket(
-          {
-            character: props.character,
-          },
-          sessionId,
-        );
-        console.log("reconnecting socket")
+        if (!socketIsOpen) {
+          connectSocket(
+            {
+              character: props.character,
+            },
+            sessionId,
+          );
+          console.log("reconnecting socket")
+        }
       };
 
       socket.onmessage = socketOnMessageHandler;

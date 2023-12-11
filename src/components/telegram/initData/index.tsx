@@ -53,7 +53,7 @@ export const TMAInitData = ({ children }: PropsWithChildren) => {
       localStorage.setItem('aime:telegramDataString', decodeURIComponent(initDataString));
       cloudstorage?.set('aime:telegramDataString', decodeURIComponent(initDataString));
     }
-  }, [initData, initDataString]);
+  }, [initData, initDataString, error, loading]);
 
   return (
     <>{children}</>

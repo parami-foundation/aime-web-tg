@@ -7,7 +7,16 @@ const Loading: React.FC = () => {
   return (
     <>
       <div className={styles.loginModalHeader}>
-        Loading...
+        <div className={styles.loginModalHeaderIcon}>
+          <img
+            className={styles.loginModalHeaderIconImg}
+            src={require("@/assets/icon/wallet.png")}
+            alt="icon"
+          />
+        </div>
+        <div className={styles.loginModalHeaderTitle}>
+          Loading...
+        </div>
       </div>
       <div className={styles.loginModalContent}>
         <Spin

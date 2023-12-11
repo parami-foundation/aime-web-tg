@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import styles from "./style.less";
-import { Button, ConfigProvider, InputNumber, Modal, theme } from "antd";
+import { Button, ConfigProvider, InputNumber, Modal, message, theme } from "antd";
 import { AiFillCaretDown, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { RiWalletLine } from "react-icons/ri";
 import { THEME_CONFIG } from "@/constants/theme";
 import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
-import { useAccount, useBalance, useContractRead, useContractWrite } from "wagmi";
+import { useAccount, useBalance, useContractRead, useContractWrite, useNetwork, useSwitchNetwork } from "wagmi";
 import { AIME_CONTRACT, DEBUG, NETWORK_CONFIG } from "@/constants/global";
 import { formatEther } from "viem";
 import { GetTokenPrice } from "@/services/third";
@@ -182,6 +182,8 @@ const Detail: React.FC<{
   const { data: balance, isError: balanceError, isLoading: balanceLoading } = useBalance({
     address: address,
   });
+  const { chain: currentChain } = useNetwork();
+  const { chains, switchNetworkAsync } = useSwitchNetwork();
 
   const { data: ethValue }: {
     data?: bigint;
@@ -382,6 +384,9 @@ const Detail: React.FC<{
           loading={isLoading}
           disabled={parseFloat(balance?.formatted ?? "0") === 0}
           onClick={async () => {
+            if (currentChain?.id !== chains[0]?.id) {
+              switchNetworkAsync?.(chains[0]?.id);
+            }
             await write({
               args: [
                 DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`,
@@ -391,10 +396,16 @@ const Detail: React.FC<{
             })
           }}
         >
-          {parseFloat(balance?.formatted ?? "0") === 0 ? (
-            <span>Insufficient Balance</span>
+          {currentChain?.id === chains[0]?.id ? (
+            <>
+              {parseFloat(balance?.formatted ?? "0") === 0 ? (
+                <span>Insufficient Balance</span>
+              ) : (
+                <span>Confirm Purchase</span>
+              )}
+            </>
           ) : (
-            <span>Confirm Purchase</span>
+            <span>Change Network</span>
           )}
         </Button>
       </ConfigProvider>
