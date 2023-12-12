@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import styles from "./style.less";
-import { Button, ConfigProvider, InputNumber, Modal, message, theme } from "antd";
+import { Button, InputNumber, Modal } from "antd";
 import { AiFillCaretDown, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { RiWalletLine } from "react-icons/ri";
-import { THEME_CONFIG } from "@/constants/theme";
 import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
 import { useAccount, useBalance, useContractRead, useContractWrite, useNetwork, useSwitchNetwork } from "wagmi";
@@ -320,7 +319,7 @@ const Detail: React.FC<{
               To
             </div>
             <div className={styles.detailModalContentBodyItemValue}>
-              0x{(DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`)?.slice(0, 5)}...{(DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`)?.slice(-4)}
+              {(DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`)?.slice(0, 5)}...{(DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`)?.slice(-4)}
             </div>
           </div>
           <div className={styles.detailModalContentBodyItem}>
