@@ -61,6 +61,17 @@ const TelegramOauth: React.FC<{
                 />
               }
             />
+            <Button
+              block
+              type="primary"
+              size="large"
+              className={styles.loginModalContentBtn}
+              onClick={() => {
+                window.location.reload();
+              }}
+            >
+              Retry
+            </Button>
           </div>
         </div>
       )}

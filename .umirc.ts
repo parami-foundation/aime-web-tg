@@ -69,7 +69,34 @@ export default defineConfig({
   },
   hash: true,
   cssMinifier: "cssnano",
+  links: [
+    {
+      rel: "icon",
+      href: "/logo.svg",
+      type: "image/x-icon",
+    },
+  ],
   metas: [
+    {
+      name: "keywords",
+      content: "meta,web3,blockchain,ethereum,social,ai",
+    },
+    {
+      name: "description",
+      content: "Parami AIME",
+    },
+    {
+      httpEquiv: 'Cache-Control',
+      content: 'no-cache',
+    },
+    {
+      httpEquiv: 'Pragma',
+      content: 'no-cache',
+    },
+    {
+      httpEquiv: 'Expires',
+      content: '0',
+    },
     {
       name: 'title',
       content: 'AIME - AI-Powered ME for my Web3 Social Network',

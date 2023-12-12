@@ -3,6 +3,7 @@ import { useModel, history } from "@umijs/max";
 import { useEffect } from "react";
 
 export default () => {
+  const { setRefer } = useModel("useAccess");
   const { setAddress, setSignature } = useModel("useWallet");
   const { setCharacter } = useModel("useSetting");
   const { miniAppParams } = useModel("useTelegram");
@@ -20,6 +21,9 @@ export default () => {
       if (key === "characterId" && !!value) {
         setCharacter(charactersData.get(value) ?? {});
         history.push(`/chat/${value}`);
+      }
+      if (key === "refer" && !!value) {
+        setRefer(value);
       }
     });
   }, [miniAppParams, miniAppParams?.initData?.startParam]);

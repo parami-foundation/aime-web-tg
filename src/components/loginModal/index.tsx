@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./style.less";
-import { Modal, message } from "antd";
+import { Modal } from "antd";
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useModel } from "@umijs/max";
 import Loading from "./loading";

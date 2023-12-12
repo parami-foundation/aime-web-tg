@@ -11,6 +11,7 @@ export default () => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [accessTokenExpire, setAccessTokenExpire] = useState<number | null>(null);
   const [profile, setProfile] = useState<Resp.Profile>({});
+  const [refer, setRefer] = useState<string>();
 
   const [twitterBinded, setTwitterBinded] = useState<boolean>(true);
 
@@ -123,6 +124,8 @@ export default () => {
     accessTokenExpire,
     twitterBinded,
     profile,
+    refer,
+    setRefer,
     setAccessToken,
     setAccessTokenExpire,
     setTwitterBinded,

@@ -63,7 +63,7 @@ export default () => {
   const { telegramCloudStorage } = useModel("useTelegram");
 
   const [socket, setSocket] = React.useState<WebSocket | null>(null);
-  const [socketIsOpen, setSocketIsOpen] = React.useState<boolean>(true);
+  const [socketIsOpen, setSocketIsOpen] = React.useState<boolean>(false);
   const [currentSession, setCurrentSession] = React.useState<Resp.Session>();
 
   const sendOverSocket = (
@@ -380,7 +380,17 @@ export default () => {
 
       socket.binaryType = "arraybuffer";
       setSocket(socket);
+    }
+  };
 
+  const closeSocket = () => {
+    socket?.close();
+    setSocket(null);
+    setSocketIsOpen(false);
+  };
+
+  useEffect(() => {
+    if (socket) {
       socket.onopen = () => {
         if (DEBUG) console.log("Socket connected");
 
@@ -390,14 +400,14 @@ export default () => {
       socket.onclose = async (event) => {
         console.log("Socket closed", event);
 
-        if (socketIsOpen && !!currentSession) {
+        if (!socketIsOpen && !!currentSession?.character_id) {
           closeSocket();
-          connectSocket({
-            character: props?.character ?? {},
-          }, sessionId,
-          );
+          let newSocket = new WebSocket(socket?.url);
+          setSocket(newSocket);
           console.log("reconnecting socket")
         }
+
+        console.log("socketIsOpen", socketIsOpen);
       };
 
       socket.onmessage = socketOnMessageHandler;
@@ -407,13 +417,7 @@ export default () => {
         if (DEBUG) console.log(`WebSocket Error: `, event);
       };
     }
-  };
-
-  const closeSocket = () => {
-    socket?.close();
-    setSocket(null);
-    setSocketIsOpen(false);
-  };
+  }, [socket, socketIsOpen, currentSession]);
 
   return {
     SendMessageType,
