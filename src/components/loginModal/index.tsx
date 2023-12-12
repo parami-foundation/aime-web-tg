@@ -7,6 +7,7 @@ import Loading from "./loading";
 import ConnectWallet from "./connectWallet";
 import SwitchNetwork from "./switchNetwork";
 import SignMessage from "./signMessage";
+import queryString from 'query-string';
 
 const LoginModal: React.FC<{
   visible: boolean;
@@ -19,6 +20,8 @@ const LoginModal: React.FC<{
   const { chains } = useSwitchNetwork();
 
   const { address, isConnected } = useAccount();
+
+  const search = queryString.parse(window.location.search);
 
   return (
     <Modal
@@ -38,10 +41,10 @@ const LoginModal: React.FC<{
         {!!address && currentChain?.id !== chains[0]?.id && (
           <SwitchNetwork />
         )}
-        {!!address && currentChain?.id === chains[0]?.id && (!signature || !walletBinded) && (
+        {!!address && currentChain?.id === chains[0]?.id && (!signature || !walletBinded) && (!!search?.action && search?.action === "bind") && (
           <SignMessage />
         )}
-        {!!address && currentChain?.id === chains[0]?.id && !!signature && walletBinded && (
+        {!!address && currentChain?.id === chains[0]?.id && ((!!signature && walletBinded) || (!!search?.action && search?.action !== "bind")) && (
           <Loading />
         )}
       </div>

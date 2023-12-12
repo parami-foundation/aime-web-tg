@@ -31,7 +31,7 @@ const SignMessage: React.FC = () => {
         accessToken,
       });
     }
-  }, [address]);
+  }, [accessToken]);
 
   useEffect(() => {
     ; (async () => {

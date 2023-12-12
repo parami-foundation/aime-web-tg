@@ -55,7 +55,7 @@ const Bridge: React.FC = () => {
     if (search?.characterId) {
       setCharacter(charactersData.get(search?.characterId as string) ?? {});
     }
-  }, [search]);
+  }, []);
 
   useEffect(() => {
     if (!!telegramDataString && !!address && isConnected && currentChain?.id === chains[0]?.id) {

@@ -12,6 +12,7 @@ import { formatEther } from "viem";
 import { GetTokenPrice } from "@/services/third";
 import { useModel } from "@umijs/max";
 import { CreateTransaction } from "@/services/api";
+import classNames from "classnames";
 
 const Select: React.FC<{
   powerValue: number;
@@ -64,9 +65,9 @@ const Select: React.FC<{
       </div>
       <div className={styles.selectModalContent}>
         <div
-          className={styles.selectModalContentItem}
+          className={classNames(styles.selectModalContentItem, manualInput === 1 && styles.selectModalContentItemSelected)}
           onClick={() => {
-            setPowerValue(1);
+            setManualInput(1);
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
@@ -77,9 +78,9 @@ const Select: React.FC<{
           </div>
         </div>
         <div
-          className={styles.selectModalContentItem}
+          className={classNames(styles.selectModalContentItem, manualInput === 10 && styles.selectModalContentItemSelected)}
           onClick={() => {
-            setPowerValue(10);
+            setManualInput(10);
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
@@ -90,9 +91,9 @@ const Select: React.FC<{
           </div>
         </div>
         <div
-          className={styles.selectModalContentItem}
+          className={classNames(styles.selectModalContentItem, manualInput === 30 && styles.selectModalContentItemSelected)}
           onClick={() => {
-            setPowerValue(30);
+            setManualInput(30);
           }}
         >
           <div className={styles.selectModalContentItemPrice}>
@@ -104,12 +105,7 @@ const Select: React.FC<{
         </div>
       </div>
       <div className={styles.selectModalContentItemFull}>
-        <div
-          className={styles.selectModalContentItemFullLeft}
-          onClick={() => {
-            setPowerValue(manualInput);
-          }}
-        >
+        <div className={styles.selectModalContentItemFullLeft}>
           <div className={styles.selectModalContentItemPrice}>
             {formatEther(getEthValue(manualInput) ?? 0n)} ETH
           </div>
@@ -157,6 +153,18 @@ const Select: React.FC<{
           </div>
         </div>
       </div>
+      <Button
+        block
+        type="primary"
+        size="large"
+        className={styles.selectModalContentItemButton}
+        disabled={manualInput === 0}
+        onClick={() => {
+          setPowerValue(manualInput);
+        }}
+      >
+        Confirm Purchase
+      </Button>
     </div>
   )
 };
@@ -363,51 +371,39 @@ const Detail: React.FC<{
           )}
         </div>
       </div>
-      <ConfigProvider
-        theme={{
-          algorithm: theme.defaultAlgorithm,
-          token: {
-            wireframe: false,
-            colorPrimary: THEME_CONFIG.colorSecondary,
-            borderRadius: THEME_CONFIG.borderRadius,
-            boxShadow: THEME_CONFIG.boxShadow,
-          },
+      <Button
+        block
+        type="primary"
+        size="large"
+        className={styles.detailModalFooterButton}
+        loading={isLoading}
+        disabled={parseFloat(balance?.formatted ?? "0") === 0 || parseFloat(balance?.formatted ?? "0") < parseFloat(formatEther(ethValue ?? 0n + gas))}
+        onClick={async () => {
+          if (currentChain?.id !== chains[0]?.id) {
+            switchNetworkAsync?.(chains[0]?.id);
+          }
+          await write({
+            args: [
+              DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`,
+              powerValue,
+            ],
+            value: ethValue ?? 0n + gas,
+          })
         }}
       >
-        <Button
-          block
-          type="primary"
-          size="large"
-          className={styles.detailModalFooterButton}
-          loading={isLoading}
-          disabled={parseFloat(balance?.formatted ?? "0") === 0}
-          onClick={async () => {
-            if (currentChain?.id !== chains[0]?.id) {
-              switchNetworkAsync?.(chains[0]?.id);
-            }
-            await write({
-              args: [
-                DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`,
-                powerValue,
-              ],
-              value: ethValue ?? 0n + gas,
-            })
-          }}
-        >
-          {currentChain?.id === chains[0]?.id ? (
-            <>
-              {parseFloat(balance?.formatted ?? "0") === 0 ? (
-                <span>Insufficient Balance</span>
-              ) : (
-                <span>Confirm Purchase</span>
-              )}
-            </>
-          ) : (
-            <span>Change Network</span>
-          )}
-        </Button>
-      </ConfigProvider>
-    </div>
+        {currentChain?.id === chains[0]?.id ? (
+          <>
+            {(parseFloat(balance?.formatted ?? "0") === 0 || parseFloat(balance?.formatted ?? "0") < parseFloat(formatEther(ethValue ?? 0n + gas))) ? (
+              <span>Insufficient Balance</span>
+            ) : (
+              <span>Confirm Purchase</span>
+            )}
+          </>
+        ) : (
+          <span>Change Network</span>
+        )}
+      </Button>
+    </div >
   )
 };
 
