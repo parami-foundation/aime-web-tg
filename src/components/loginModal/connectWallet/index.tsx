@@ -14,14 +14,13 @@ const ConnectWallet: React.FC = () => {
   const { wagmiInitialized } = useModel("useWagmi");
   const { setAddress } = useModel("useWallet");
 
-  const { connector, isReconnecting, address } = useAccount();
+  const { connector, isReconnecting } = useAccount();
   const { connect, connectors, isLoading, error, pendingConnector } =
     useConnect({
       onSuccess: (account) => {
         setAddress(account?.account);
       },
     });
-  setAddress(address);
 
   useEffect(() => {
     if (error) {

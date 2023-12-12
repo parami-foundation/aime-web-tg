@@ -7,8 +7,9 @@ import { Input } from "antd";
 import { useModel } from "@umijs/max";
 import BuyModal from "../buyModal";
 import { AIME_CONTRACT, DEBUG, PROJECT_CONFIG } from "@/constants/global";
-import { useContractRead } from "wagmi";
+import { useAccount, useContractRead } from "wagmi";
 import { formatEther } from "viem";
+import LoginModal from "@/components/loginModal";
 
 const InputBox: React.FC<{
   isTextMode: boolean;
@@ -30,6 +31,8 @@ const InputBox: React.FC<{
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
   const [balance, setBalance] = React.useState<bigint>(0n);
+
+  const { isConnected } = useAccount();
 
   useEffect(() => {
     if (!isTextMode) {
@@ -71,6 +74,17 @@ const InputBox: React.FC<{
             </div>
           )}
           <div className={styles.inputBoxWrapperRow}>
+            {!!address && (
+              <div
+                className={styles.buyButton}
+                onClick={() => {
+                  (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                  (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
+                }}
+              >
+                Buy
+              </div>
+            )}
             <div
               className={styles.inputBox}
               style={{
@@ -143,22 +157,16 @@ const InputBox: React.FC<{
                 </div>
               )}
             </div>
-            {!!address && formatEther(balance ?? 0n) === "0" && (
-              <div
-                className={styles.buyButton}
-                onClick={() => {
-                  (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
-                  (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
-                }}
-              >
-                Buy
-              </div>
-            )}
           </div>
         </div>
       </div>
+      <LoginModal
+        visible={isBuyModalVisible && !isConnected}
+        setVisible={() => { }}
+        closeable={false}
+      />
       <BuyModal
-        visible={isBuyModalVisible}
+        visible={isBuyModalVisible && isConnected}
         setVisible={setIsBuyModalVisible}
         transactionHash={transactionHash}
         setTransactionHash={setTransactionHash}
