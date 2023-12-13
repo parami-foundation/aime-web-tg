@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./style.less";
-import { Button, Modal, notification } from "antd";
-import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi';
+import { Modal } from "antd";
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useModel } from "@umijs/max";
 import Loading from "./loading";
 import ConnectWallet from "./connectWallet";
@@ -18,7 +18,6 @@ const LoginModal: React.FC<{
 
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
-  const { disconnect, error: disconnectError, isSuccess: disconnectSuccess, isLoading: disconnectLoading } = useDisconnect();
 
   const { address, isConnected } = useAccount({
     onDisconnect: () => {
@@ -26,23 +25,6 @@ const LoginModal: React.FC<{
       localStorage.removeItem('aime:address');
     }
   });
-
-  useEffect(() => {
-    disconnect();
-
-    if (disconnectSuccess) {
-      setAddress(undefined);
-      localStorage.removeItem('aime:address');
-    }
-
-    if (disconnectError) {
-      notification.error({
-        key: 'disconnectError',
-        message: 'Disconnect Wallet Error',
-        description: disconnectError.message,
-      });
-    }
-  }, [disconnectError, disconnectSuccess]);
 
   const search = queryString.parse(window.location.search);
 

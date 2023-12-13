@@ -3,28 +3,55 @@ import styles from "./style.less";
 import { useModel } from "@umijs/max";
 import { ReactComponent as Logo } from '@/assets/logo.svg';
 import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
-import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 import queryString from 'query-string';
 import BuyModal from "../chat/detail/buyModal";
 import { charactersData } from "@/mocks/character";
 import { StartParam } from "@/types";
 import LoginModal from "@/components/loginModal";
 import TelegramOauth from "@/components/telegram/oauth";
+import { notification } from "antd";
 
 const Bridge: React.FC = () => {
   const { telegramDataString, telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
-  const { address, signature, walletBinded, setWalletModalVisible } = useModel('useWallet');
+  const { address, signature, walletBinded, setWalletModalVisible, setAddress } = useModel('useWallet');
   const { setCharacter } = useModel('useSetting');
   const { setAccessToken, setAccessTokenExpire } = useModel('useAccess');
+
 
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
 
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
-  const { isConnected } = useAccount();
 
   const search = queryString.parse(window.location.search);
+
+  const { disconnect, error: disconnectError, isSuccess: disconnectSuccess, isLoading: disconnectLoading } = useDisconnect();
+
+  const { isConnected } = useAccount({
+    onDisconnect: () => {
+      setAddress(undefined);
+      localStorage.removeItem('aime:address');
+    }
+  });
+
+  useEffect(() => {
+    disconnect();
+
+    if (disconnectSuccess) {
+      setAddress(undefined);
+      localStorage.removeItem('aime:address');
+    }
+
+    if (disconnectError) {
+      notification.error({
+        key: 'disconnectError',
+        message: 'Disconnect Wallet Error',
+        description: disconnectError.message,
+      });
+    }
+  }, [disconnectError, disconnectSuccess]);
 
   useEffect(() => {
     if (search?.access_token_expire) {
