@@ -18,7 +18,6 @@ const Bridge: React.FC = () => {
   const { setCharacter } = useModel('useSetting');
   const { setAccessToken, setAccessTokenExpire } = useModel('useAccess');
 
-
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
 
@@ -27,8 +26,7 @@ const Bridge: React.FC = () => {
 
   const search = queryString.parse(window.location.search);
 
-  const { disconnect, error: disconnectError, isSuccess: disconnectSuccess, isLoading: disconnectLoading } = useDisconnect();
-
+  const { disconnect, error: disconnectError, isSuccess: disconnectSuccess } = useDisconnect();
   const { isConnected } = useAccount({
     onDisconnect: () => {
       setAddress(undefined);

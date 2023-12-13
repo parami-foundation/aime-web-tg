@@ -26,6 +26,7 @@ import { useEffect, useState } from "react";
 import { WALLETCONNECT_CONFIG } from "@/constants/walletconnect";
 import { FallbackTransport, createPublicClient, http } from "viem";
 import { EthereumClient } from "@web3modal/ethereum";
+import { createWeb3Modal } from "@web3modal/wagmi/react";
 
 export default () => {
   const [wagmiConfig, setWagmiConfig] =
@@ -99,6 +100,16 @@ export default () => {
 
     const ethClient = new EthereumClient(config, WALLETCONNECT_CONFIG.chains);
     setEthereumClient(ethClient);
+
+    createWeb3Modal({
+      wagmiConfig: config,
+      projectId: WALLETCONNECT_CONFIG.projectId,
+      chains,
+      themeMode: 'light',
+      themeVariables: {
+        '--w3m-z-index': 9999999,
+      },
+    })
   }, []);
 
   const publicClient = createPublicClient({

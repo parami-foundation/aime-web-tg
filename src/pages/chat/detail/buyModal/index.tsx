@@ -418,6 +418,8 @@ const BuyModal: React.FC<{
   const [purchaseFailedVisible, setPurchaseFailedVisible] = React.useState<boolean>(false);
   const [error, setError] = React.useState<Error>(new Error(""));
 
+  const { connector } = useAccount();
+
   useEffect(() => {
     if (!visible) {
       setPowerValue(0);
@@ -439,6 +441,11 @@ const BuyModal: React.FC<{
         closable={closeable ?? true}
         maskClosable={closeable ?? true}
       >
+        {connector?.id === 'walletConnect' && (
+          <div className={styles.walletConnectAccount}>
+            <w3m-account-button />
+          </div>
+        )}
         {powerValue === 0 ? (
           <Select
             powerValue={powerValue}

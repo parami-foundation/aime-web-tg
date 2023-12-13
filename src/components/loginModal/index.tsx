@@ -19,7 +19,7 @@ const LoginModal: React.FC<{
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
 
-  const { address, isConnected } = useAccount({
+  const { connector, address, isConnected } = useAccount({
     onDisconnect: () => {
       setAddress(undefined);
       localStorage.removeItem('aime:address');
@@ -40,6 +40,11 @@ const LoginModal: React.FC<{
       maskClosable={closeable ?? false}
     >
       <div className={styles.loginModalContainer}>
+        {connector?.id === 'walletConnect' && (
+          <div className={styles.walletConnectAccount}>
+            <w3m-account-button />
+          </div>
+        )}
         {(!address || !isConnected) && (
           <ConnectWallet />
         )}
