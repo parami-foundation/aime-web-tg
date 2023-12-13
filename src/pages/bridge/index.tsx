@@ -29,8 +29,8 @@ const Bridge: React.FC = () => {
   useEffect(() => {
     if (search?.access_token_expire) {
       setAccessTokenExpire(parseInt(search?.access_token_expire as string));
-      localStorage.setItem('aime:accessTokenExpire', search?.access_token_expire as string);
-      telegramCloudStorage?.set('aime:accessTokenExpire', search?.access_token_expire as string);
+      localStorage.setItem('aime:accessToken:expire', search?.access_token_expire as string);
+      telegramCloudStorage?.set('aime:accessToken:expire', search?.access_token_expire as string);
     }
 
     if (search?.access_token) {

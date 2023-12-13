@@ -13,14 +13,12 @@ const Layout: React.FC = () => {
   const { viewport } = useModel('useView');
   const { wagmiConfig } = useModel('useWagmi');
 
-  if (DEBUG) {
-    let el = document.createElement('div');
-    document.body.appendChild(el);
-    eruda.init({
-      container: el,
-      tool: ['console', 'elements'],
-    });
-  }
+  let el = document.createElement('div');
+  document.body.appendChild(el);
+  eruda.init({
+    container: el,
+    tool: ['console', 'elements'],
+  });
 
   return (
     <>
