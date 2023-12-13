@@ -31,7 +31,7 @@ const SignMessage: React.FC = () => {
         accessToken,
       });
     }
-  }, [accessToken]);
+  }, [accessToken, address]);
 
   useEffect(() => {
     ; (async () => {
@@ -111,7 +111,7 @@ const SignMessage: React.FC = () => {
             block
             type="primary"
             size="large"
-            loading={isLoading}
+            loading={isLoading || !message}
             disabled={isLoading}
             className={styles.loginModalContentItem}
             onClick={async () => {
@@ -123,7 +123,11 @@ const SignMessage: React.FC = () => {
                 className={styles.loginModalContentItemIcon}
               />
               <div className={styles.loginModalContentItemText}>
-                {isLoading ? 'Check Wallet' : 'Sign Message'}
+                {message ? (
+                  <>
+                    {isLoading ? 'Check Wallet' : 'Sign Message'}
+                  </>
+                ) : 'Waiting for message'}
               </div>
             </div>
             <div className={styles.loginModalContentItemRight}>

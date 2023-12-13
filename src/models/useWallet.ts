@@ -2,6 +2,7 @@ import { NETWORK_CONFIG } from "@/constants/global";
 import { BindWallet, BindWalletNonce, GetWallet } from "@/services/api";
 import { useEffect, useState } from "react";
 import { useModel } from "@umijs/max";
+import { notification } from "antd";
 
 export default () => {
   const { accessToken } = useModel("useAccess");
@@ -13,6 +14,7 @@ export default () => {
   const [message, setMessage] = useState<string>();
   const [walletModalVisible, setWalletModalVisible] = useState<boolean>(false);
   const [walletBinded, setWalletBinded] = useState<boolean>(false);
+  const [bindedAddress, setBindedAddress] = useState<`0x${string}` | undefined>();
 
   const getBindWalletNonce = async ({
     address,
@@ -46,10 +48,16 @@ export default () => {
         message: data?.message,
       };
     } else {
+      notification.error({
+        key: "getNonceError",
+        message: "Get nonce failed",
+        description: data?.error_description,
+        duration: 0,
+      });
       return {
         nonce: undefined,
         message: undefined,
-        error: "Get nonce failed",
+        error: data,
       };
     }
   };
@@ -115,6 +123,7 @@ export default () => {
           if (item.chain_id === NETWORK_CONFIG.chains[0].id?.toString()) {
             setWalletBinded(true);
             setAddress(`0x${item.address}` as `0x${string}`);
+            setBindedAddress(`0x${item.address}` as `0x${string}`);
             localStorage.setItem("aime:address", `0x${item.address}` as `0x${string}`);
             telegramCloudStorage?.set("aime:address", `0x${item.address}` as `0x${string}`);
           }
@@ -134,6 +143,7 @@ export default () => {
     setWalletModalVisible,
     getBindWalletNonce,
     walletBinded,
+    bindedAddress,
     setWalletBinded,
     bindWallet,
   };

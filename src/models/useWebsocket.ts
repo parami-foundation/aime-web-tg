@@ -5,7 +5,6 @@ import { API_CONFIG, DEBUG, WEBSOCKET_CONFIG } from "@/constants/global";
 import { Character, Resp } from "@/types";
 import { buf2hex } from "@/libs/hex";
 import { CreateSession } from "@/services/api";
-import { charactersData } from "@/mocks/character";
 
 export enum SendMessageType {
   TEXT = "text",
@@ -16,6 +15,7 @@ export enum SendMessageType {
 
 export interface ChatbotProps {
   character: Character;
+  reconnect: boolean;
 }
 
 export interface AIResponse {
@@ -376,11 +376,21 @@ export default () => {
         }&platform=web&use_search=${enableGoogle}&use_quivr=${enableQuivr}&use_multion=${enableMultiOn}&character_id=${character.id ?? ""
         }&language=${language[0]}&token=${accessToken}`;
 
-      let socket = new WebSocket(ws_path);
+      let socket = new WebSocket(`${ws_path}${props.reconnect ? "&reconnect=true" : ""}`);
 
       socket.binaryType = "arraybuffer";
       setSocket(socket);
     }
+  };
+
+  const reconnectSocket = () => {
+    setSocket((prev) => {
+      if (!prev) return null;
+      console.log(prev);
+      prev?.close();
+      return new WebSocket(`${prev?.url}${prev?.url?.includes("reconnect=true") ? "" : "&reconnect=true"}`);
+    });
+    setSocketIsOpen(true);
   };
 
   const closeSocket = () => {
@@ -390,34 +400,31 @@ export default () => {
   };
 
   useEffect(() => {
-    if (!!socket) {
-      socket.onopen = () => {
-        console.log("Socket connected");
-        setSocketIsOpen(true);
-      };
+    if (!socket) return;
+    socket.onopen = () => {
+      console.log("Socket connected");
+      setSocketIsOpen(true);
+    };
 
-      socket.onclose = async (event) => {
-        console.log("Socket closed", event);
+    socket.onclose = (event) => {
+      console.log("Socket closed", event);
 
-        if (!socketIsOpen && !!currentSession?.character_id) {
-          socket?.close();
-          setTimeout(function () {
-            let newSocket = new WebSocket(socket?.url);
-            setSocket(newSocket);
-            console.log("reconnecting socket")
-          }, 3000);
-        }
-      };
+      setSocketIsOpen(false);
+      if (!!currentSession?.character_id) {
+        reconnectSocket();
+        console.log("Reconnecting socket")
+      }
+    };
 
-      socket.onmessage = socketOnMessageHandler;
+    socket.onmessage = socketOnMessageHandler;
 
-      socket.onerror = (event) => {
-        socket?.close();
-        console.log(`WebSocket Error: `);
-        console.log(event);
-      };
-    }
-  }, [socket, socketIsOpen, currentSession]);
+    socket.onerror = (event) => {
+      socket?.close();
+      setSocketIsOpen(false);
+      console.log(`WebSocket Error: `);
+      console.log(event);
+    };
+  }, [socket]);
 
   return {
     SendMessageType,
@@ -427,6 +434,7 @@ export default () => {
     setCurrentSession,
     connectSocket,
     closeSocket,
+    reconnectSocket,
     sendOverSocket,
   };
 };

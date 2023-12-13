@@ -6,6 +6,7 @@ export default () => {
   const { setRefer } = useModel("useAccess");
   const { setAddress, setSignature } = useModel("useWallet");
   const { setCharacter } = useModel("useSetting");
+  const { setReconnect } = useModel("useChat");
   const { miniAppParams } = useModel("useTelegram");
 
   useEffect(() => {
@@ -24,6 +25,9 @@ export default () => {
       }
       if (key === "refer" && !!value) {
         setRefer(value);
+      }
+      if (key === "reconnect" && !!value) {
+        setReconnect(true);
       }
     });
   }, [miniAppParams, miniAppParams?.initData?.startParam]);

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { Modal } from "antd";
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
@@ -8,6 +8,7 @@ import ConnectWallet from "./connectWallet";
 import SwitchNetwork from "./switchNetwork";
 import SignMessage from "./signMessage";
 import queryString from 'query-string';
+import { GetWallet } from "@/services/api";
 
 const LoginModal: React.FC<{
   visible: boolean;
@@ -25,8 +26,6 @@ const LoginModal: React.FC<{
       localStorage.removeItem('aime:address');
     }
   });
-
-  const search = queryString.parse(window.location.search);
 
   return (
     <Modal
@@ -48,13 +47,13 @@ const LoginModal: React.FC<{
         {(!address || !isConnected) && (
           <ConnectWallet />
         )}
-        {!!address && currentChain?.id !== chains[0]?.id && (
+        {!!address && isConnected && currentChain?.id !== chains[0]?.id && (
           <SwitchNetwork />
         )}
-        {!!address && currentChain?.id === chains[0]?.id && (!signature || !walletBinded) && (!!search?.action && search?.action === "bind") && (
+        {!!address && isConnected && currentChain?.id === chains[0]?.id && !signature && !walletBinded && (
           <SignMessage />
         )}
-        {!!address && currentChain?.id === chains[0]?.id && ((!!signature && walletBinded) || (!!search?.action && search?.action !== "bind")) && (
+        {!!address && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded) && (
           <Loading />
         )}
       </div>

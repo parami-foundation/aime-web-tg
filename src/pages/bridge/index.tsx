@@ -9,14 +9,14 @@ import BuyModal from "../chat/detail/buyModal";
 import { charactersData } from "@/mocks/character";
 import { StartParam } from "@/types";
 import LoginModal from "@/components/loginModal";
-import TelegramOauth from "@/components/telegram/oauth";
 import { notification } from "antd";
+import { AccessLayout } from "@/layouts/access";
 
 const Bridge: React.FC = () => {
-  const { telegramDataString, telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
-  const { address, signature, walletBinded, setWalletModalVisible, setAddress } = useModel('useWallet');
+  const { telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
+  const { address, signature, walletBinded, bindedAddress, setWalletModalVisible, setAddress } = useModel('useWallet');
   const { setCharacter } = useModel('useSetting');
-  const { setAccessToken, setAccessTokenExpire } = useModel('useAccess');
+  const { accessToken, setAccessToken, setAccessTokenExpire } = useModel('useAccess');
 
   const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
@@ -52,115 +52,117 @@ const Bridge: React.FC = () => {
   }, [disconnectError, disconnectSuccess]);
 
   useEffect(() => {
-    if (search?.access_token_expire) {
+    const now = new Date().getTime();
+
+    if (!!search?.access_token_expire && parseInt(search?.access_token_expire as string) > now) {
       setAccessTokenExpire(parseInt(search?.access_token_expire as string));
       localStorage.setItem('aime:accessToken:expire', search?.access_token_expire as string);
       telegramCloudStorage?.set('aime:accessToken:expire', search?.access_token_expire as string);
-    }
 
-    if (search?.access_token) {
-      setAccessToken(search?.access_token as string);
-      localStorage.setItem('aime:accessToken', search?.access_token as string);
-      telegramCloudStorage?.set('aime:accessToken', search?.access_token as string);
-    }
+      if (!!search?.access_token) {
+        setAccessToken(search?.access_token as string);
+        localStorage.setItem('aime:accessToken', search?.access_token as string);
+        telegramCloudStorage?.set('aime:accessToken', search?.access_token as string);
+      }
 
-    if (search?.telegramDataString) {
-      setTelegramOauthModalVisible(false);
-      setTelegramDataString(decodeURIComponent(search?.telegramDataString as string));
-      localStorage.setItem('aime:telegramDataString', decodeURIComponent(search?.telegramDataString as string));
-      telegramCloudStorage?.set('aime:telegramDataString', decodeURIComponent(search?.telegramDataString as string));
-    }
+      if (!!search?.telegramDataString) {
+        setTelegramOauthModalVisible(false);
+        setTelegramDataString(decodeURIComponent(search?.telegramDataString as string));
+        localStorage.setItem('aime:telegramDataString', decodeURIComponent(search?.telegramDataString as string));
+        telegramCloudStorage?.set('aime:telegramDataString', decodeURIComponent(search?.telegramDataString as string));
+      }
 
-    if (search?.telegramAuthType) {
-      setTelegramAuthType(search?.telegramAuthType as string);
-      localStorage.setItem('aime:telegramAuthType', search?.telegramAuthType as string);
-      telegramCloudStorage?.set('aime:telegramAuthType', search?.telegramAuthType as string);
-    }
+      if (!!search?.telegramAuthType) {
+        setTelegramAuthType(search?.telegramAuthType as string);
+        localStorage.setItem('aime:telegramAuthType', search?.telegramAuthType as string);
+        telegramCloudStorage?.set('aime:telegramAuthType', search?.telegramAuthType as string);
+      }
 
-    if (search?.characterId) {
-      setCharacter(charactersData.get(search?.characterId as string) ?? {});
+      if (!!search?.characterId) {
+        setCharacter(charactersData.get(search?.characterId as string) ?? {});
+      }
     }
   }, []);
 
   useEffect(() => {
-    if (!!telegramDataString && !!address && isConnected && currentChain?.id === chains[0]?.id) {
-      if (!!search?.action) {
-        switch (search?.action) {
-          case "bind":
-            if (!!address && !!signature && walletBinded) {
-              const params: StartParam = {
-                characterId: search?.characterId as string,
-                address,
-                signature,
-              };
-              const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '____').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
+    if (!!search?.action) {
+      switch (search?.action) {
+        case "bind":
+          if (!!address && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded)) {
+            const params: StartParam = {
+              characterId: search?.characterId as string,
+              address,
+              reconnect: true,
+            };
+            const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '____').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
 
-              window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
-            }
-            break;
+            window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
+          }
+          break;
 
-          case "buypower":
+        case "buypower":
+          if (!!address && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded)) {
             setBuyModalVisible(true);
-            if (!!address && !!transactionHash) {
+            if (!!transactionHash) {
               const params: StartParam = {
                 characterId: search?.characterId as string,
                 address,
+                reconnect: true,
               };
               const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '&').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
 
               window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
             }
-            break;
-        }
+          }
+          break;
+
+        default:
+          notification.error({
+            key: 'actionError',
+            message: 'Action Error',
+            description: 'Please check the action in the URL.',
+            duration: 0,
+          });
       }
     } else {
-      setBuyModalVisible(false);
+      notification.error({
+        key: 'actionError',
+        message: 'Action Error',
+        description: 'Please check the action in the URL.',
+        duration: 0,
+      });
     }
-  }, [address, signature, walletBinded, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id, transactionHash]);
+  }, [address, currentChain, signature, walletBinded, transactionHash]);
 
   return (
-    <div className={styles.bridgeContainer}>
-      {!!telegramDataString && !!search?.action && (
-        <>
-          <LoginModal
-            visible={true}
-            setVisible={setWalletModalVisible}
-            closeable={false}
-          />
-          <div className={styles.logoContainer}>
-            <div className={styles.logo}>
-              <Logo />
-            </div>
-            <div className={styles.title}>
-              <LogoTitle />
-            </div>
+    <AccessLayout>
+      <div className={styles.bridgeContainer}>
+        <div className={styles.logoContainer}>
+          <div className={styles.logo}>
+            <Logo />
           </div>
-        </>
-      )}
-      {(!telegramDataString || !search?.action) && (
-        <>
-          <TelegramOauth
-            visible={true}
-            setVisible={setTelegramOauthModalVisible}
-          />
-          <div className={styles.logoContainer}>
-            <div className={styles.logo}>
-              <Logo />
-            </div>
-            <div className={styles.title}>
-              <LogoTitle />
-            </div>
+          <div className={styles.title}>
+            <LogoTitle />
           </div>
-        </>
-      )}
-      <BuyModal
-        visible={buyModalVisible}
-        setVisible={setBuyModalVisible}
-        closeable={false}
-        transactionHash={transactionHash}
-        setTransactionHash={setTransactionHash}
-      />
-    </div>
+        </div>
+        {!!accessToken && (
+          <>
+            <LoginModal
+              visible={true}
+              setVisible={setWalletModalVisible}
+              closeable={false}
+            />
+            <BuyModal
+              visible={buyModalVisible}
+              setVisible={setBuyModalVisible}
+              closeable={false}
+              transactionHash={transactionHash}
+              setTransactionHash={setTransactionHash}
+            />
+          </>
+        )}
+      </div>
+    </AccessLayout>
   )
 };
 

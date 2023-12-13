@@ -45,6 +45,7 @@ export default () => {
     Map<string, MessageDisplay[]>
   >(new Map());
   const [rewardModal, setRewardModal] = React.useState<boolean>(false);
+  const [reconnect, setReconnect] = React.useState<boolean>(false);
   const [chatSession, setChatSession] = React.useState<
     Map<string, Resp.Session>
   >(new Map());
@@ -157,6 +158,7 @@ export default () => {
     isThinking,
     messageEnd,
     rewardModal,
+    reconnect,
     setChatSession,
     setMessages,
     setMessageList,
@@ -172,5 +174,6 @@ export default () => {
     appendSpeechInterim,
     clearSpeechInterim,
     getSessionByCharacterId,
+    setReconnect,
   };
 };

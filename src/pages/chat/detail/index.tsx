@@ -13,7 +13,7 @@ import { IoShareSocialOutline } from "react-icons/io5";
 import { playAudios } from "@/utils/audioUtils";
 import ShareModal from "./shareModal";
 import queryString from "query-string";
-import { message, Image } from "antd";
+import { message, Image, Alert } from "antd";
 import { GetChatHistory } from "@/services/api";
 import { v4 as uuidv4 } from "uuid";
 import { MessageType } from "@/models/useChat";
@@ -24,11 +24,12 @@ export interface LBAudioElement extends HTMLAudioElement {
 
 const Chat: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { messages, messageList, chatSession, clearChatContent, setMessageList, setMessages } = useModel("useChat");
+  const { messages, messageList, chatSession, reconnect, clearChatContent, setMessageList, setMessages } = useModel("useChat");
   const { SendMessageType, socketIsOpen, closeSocket, connectSocket, sendOverSocket, setCurrentSession } = useModel("useWebsocket");
   const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer, stopAudioPlayback } = useModel("useWebRTC");
   const { selectedSpeaker, selectedMicrophone, character, isMute, setIsMute, setCharacter, getAudioList } = useModel("useSetting");
   const { mediaRecorder, vadEvents, enableVAD, closeVAD, startRecording, stopRecording, vadEventsCallback, closeMediaRecorder, connectMicrophone, disableVAD, disconnectMicrophone } = useModel("useRecorder");
+  const { viewport } = useModel("useView");
 
   const chatWrapper = React.useRef<HTMLDivElement>(null);
   const msgList = React.useRef<HTMLDivElement>(null);
@@ -116,6 +117,7 @@ const Chat: React.FC = () => {
         clearChatContent();
         connectSocket({
           character: charactersData.get(id) ?? {},
+          reconnect: reconnect,
         }, search?.session as string || chatSession.get(character?.id)?.id);
       }
     })()
@@ -243,14 +245,36 @@ const Chat: React.FC = () => {
   }, [messages, msgList.current]);
 
   useEffect(() => {
-    if (!!inputBoxContainer.current && !!chatWrapper.current) {
-      chatWrapper?.current?.setAttribute("style", `height: calc(100vh - ${inputBoxContainer.current?.clientHeight}px)`);
-    }
-  }, [inputBoxContainer.current, chatWrapper.current]);
+    const inputBoxContainerResize = new ResizeObserver((e) => {
+      if (!Array.isArray(e) || !e.length) return;
+      for (const ent of e) {
+        chatWrapper?.current?.setAttribute("style", `height: calc(${viewport.height}px - ${ent.contentRect.height}px)`);
+      }
+    });
+
+    !!inputBoxContainer.current && inputBoxContainerResize.observe(inputBoxContainer.current);
+
+    return () => {
+      !!inputBoxContainer.current && inputBoxContainerResize.unobserve(inputBoxContainer.current);
+    };
+  }, [viewport]);
 
   return (
     <AccessLayout>
       <div className={styles.chatContainer}>
+        {!socketIsOpen && (
+          <Alert
+            banner
+            message={
+              <div className={styles.warningMessage}>
+                Lost connection with AI, attempting to reconnect...
+              </div>
+            }
+            type="warning"
+            className={styles.warning}
+            showIcon
+          />
+        )}
         <audio
           ref={audioPlayerRef}
           className={styles.audioPlayer}
@@ -344,14 +368,16 @@ const Chat: React.FC = () => {
             })}
           </div>
         </div>
-        <InputBox
-          isTextMode={isTextMode}
-          setIsTextMode={setIsTextMode}
-          inputBoxContainer={inputBoxContainer}
-          handsFreeMode={handsFreeMode}
-          textMode={textMode}
-          setDisableMic={setDisableMic}
-        />
+        {!search?.session && (
+          <InputBox
+            isTextMode={isTextMode}
+            setIsTextMode={setIsTextMode}
+            inputBoxContainer={inputBoxContainer}
+            handsFreeMode={handsFreeMode}
+            textMode={textMode}
+            setDisableMic={setDisableMic}
+          />
+        )}
       </div>
       <ShareModal
         visible={shareModalVisible}

@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import styles from "./style.less";
-import { Button, InputNumber, Modal } from "antd";
+import { Button, InputNumber, Modal, notification } from "antd";
 import { AiFillCaretDown, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { RiWalletLine } from "react-icons/ri";
 import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
-import { useAccount, useBalance, useContractRead, useContractWrite, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useBalance, useContractRead, useContractWrite, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 import { AIME_CONTRACT, DEBUG, NETWORK_CONFIG } from "@/constants/global";
 import { formatEther } from "viem";
 import { GetTokenPrice } from "@/services/third";
@@ -413,12 +413,15 @@ const BuyModal: React.FC<{
   transactionHash: `0x${string}` | undefined;
   setTransactionHash: React.Dispatch<React.SetStateAction<`0x${string}` | undefined>>
 }> = ({ visible, setVisible, closeable, transactionHash, setTransactionHash }) => {
+  const { bindedAddress } = useModel("useWallet");
+
   const [powerValue, setPowerValue] = React.useState<number>(0);
   const [purchaseSuccessVisible, setPurchaseSuccessVisible] = React.useState<boolean>(false);
   const [purchaseFailedVisible, setPurchaseFailedVisible] = React.useState<boolean>(false);
   const [error, setError] = React.useState<Error>(new Error(""));
 
-  const { connector } = useAccount();
+  const { connector, address: connectAddress } = useAccount();
+  const { disconnect } = useDisconnect();
 
   useEffect(() => {
     if (!visible) {
@@ -428,6 +431,19 @@ const BuyModal: React.FC<{
       setError(new Error(""));
     }
   }, [visible]);
+
+  useEffect(() => {
+    // TODO: Why bindedAddress is lowercase?!?!
+    if (!!bindedAddress && !!connectAddress && bindedAddress !== connectAddress.toLowerCase()) {
+      notification.error({
+        key: 'walletError',
+        message: 'Wallet Error',
+        description: 'Please use the wallet you binded.',
+      });
+      disconnect();
+      setVisible(false);
+    }
+  }, [bindedAddress, connectAddress]);
 
   return (
     <>

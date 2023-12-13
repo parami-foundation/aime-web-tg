@@ -56,6 +56,7 @@ export interface StartParam {
   characterId?: string;
   address?: string;
   signature?: string;
+  reconnect?: boolean;
 }
 
 export type UseWhisperConfig = {
