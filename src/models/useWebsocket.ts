@@ -384,7 +384,6 @@ export default () => {
   };
 
   const closeSocket = () => {
-    console.log("socket", socket)
     socket?.close();
     setSocket(null);
     setSocketIsOpen(false);
@@ -401,16 +400,19 @@ export default () => {
         console.log("Socket closed", event);
 
         if (!socketIsOpen && !!currentSession?.character_id) {
-          closeSocket();
-          let newSocket = new WebSocket(socket?.url);
-          setSocket(newSocket);
-          console.log("reconnecting socket")
+          socket?.close();
+          setTimeout(function () {
+            let newSocket = new WebSocket(socket?.url);
+            setSocket(newSocket);
+            console.log("reconnecting socket")
+          }, 3000);
         }
       };
 
       socket.onmessage = socketOnMessageHandler;
 
       socket.onerror = (event) => {
+        socket?.close();
         console.log(`WebSocket Error: `);
         console.log(event);
       };
