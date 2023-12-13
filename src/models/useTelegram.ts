@@ -45,7 +45,7 @@ export default () => {
             !!telegramAuthType && setTelegramAuthType(telegramAuthType);
             !!telegramData && setTelegramData(telegramData);
           } else {
-            await cleanTelegramData();
+            cleanTelegramData();
           }
         }
       }
