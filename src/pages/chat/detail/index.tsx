@@ -62,7 +62,6 @@ const Chat: React.FC = () => {
       if (!accessToken || !search?.session || !character) return;
       const { response, data } = await GetChatHistory(accessToken, search?.session as string);
       if (response?.status === 200 && !!data?.length) {
-        closeSocket();
         clearChatContent();
         data.map((item) => {
           const id = uuidv4().replace(/-/g, "");
@@ -113,12 +112,8 @@ const Chat: React.FC = () => {
         return;
       }
 
-      closeSocket();
       if (!search?.session) {
         clearChatContent();
-      }
-
-      if (!search?.session) {
         connectSocket({
           character: charactersData.get(id) ?? {},
         }, search?.session as string || chatSession.get(character?.id)?.id);

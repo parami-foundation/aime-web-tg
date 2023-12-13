@@ -384,16 +384,16 @@ export default () => {
   };
 
   const closeSocket = () => {
+    console.log("socket", socket)
     socket?.close();
     setSocket(null);
     setSocketIsOpen(false);
   };
 
   useEffect(() => {
-    if (socket) {
+    if (!!socket) {
       socket.onopen = () => {
-        if (DEBUG) console.log("Socket connected");
-
+        console.log("Socket connected");
         setSocketIsOpen(true);
       };
 
@@ -406,15 +406,13 @@ export default () => {
           setSocket(newSocket);
           console.log("reconnecting socket")
         }
-
-        console.log("socketIsOpen", socketIsOpen);
       };
 
       socket.onmessage = socketOnMessageHandler;
 
       socket.onerror = (event) => {
-        closeSocket();
-        if (DEBUG) console.log(`WebSocket Error: `, event);
+        console.log(`WebSocket Error: `);
+        console.log(event);
       };
     }
   }, [socket, socketIsOpen, currentSession]);
