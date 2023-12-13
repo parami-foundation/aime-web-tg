@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { BiMicrophone } from "react-icons/bi";
 import { HiArrowNarrowRight } from "react-icons/hi";
@@ -8,7 +8,6 @@ import { useModel } from "@umijs/max";
 import BuyModal from "../buyModal";
 import { AIME_CONTRACT, DEBUG, PROJECT_CONFIG } from "@/constants/global";
 import { useAccount, useContractRead } from "wagmi";
-import { formatEther } from "viem";
 import LoginModal from "@/components/loginModal";
 
 const InputBox: React.FC<{

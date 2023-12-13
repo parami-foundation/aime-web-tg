@@ -6,7 +6,7 @@ import {
   Utils,
   CloudStorage,
 } from "@tma.js/sdk";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default () => {
   const [telegramOauthModalVisible, setTelegramOauthModalVisible] =

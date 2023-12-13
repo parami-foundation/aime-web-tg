@@ -35,6 +35,26 @@ export async function OauthTelegram(
   );
 }
 
+export async function GetLoginMethod(
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  return request<Resp.LoginMethod[]>(
+    DEBUG
+      ? "/proxy/api/v1/login"
+      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/login`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
+
 export async function BindWalletNonce(
   data: Req.BindWalletNonce,
   accessToken: string,

@@ -53,7 +53,9 @@ const Chat: React.FC = () => {
     setAudioPlayerRef(audioPlayerRef);
   }, []);
 
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{
+    id: string,
+  }>();
 
   useEffect(() => {
     ; (async () => {

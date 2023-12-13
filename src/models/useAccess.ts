@@ -1,19 +1,19 @@
 import { API_CONFIG } from "@/constants/global";
-import { GetProfile, OauthTelegram } from "@/services/api";
+import { GetLoginMethod, GetProfile, OauthTelegram } from "@/services/api";
 import { useModel } from "@umijs/max";
 import { message } from "antd";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Resp } from "@/types";
 
 export default () => {
   const { telegramDataString, telegramAuthType, telegramCloudStorage, setTelegramData, setTelegramDataString, setTelegramAuthType, cleanTelegramData } =
     useModel("useTelegram");
+  const { setTwitterLoginMethod } = useModel("useTwitter");
+  const [loginMethod, setLoginMethod] = useState<Resp.LoginMethod[]>([]);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [accessTokenExpire, setAccessTokenExpire] = useState<number | null>(null);
   const [profile, setProfile] = useState<Resp.Profile>({});
   const [refer, setRefer] = useState<string>();
-
-  const [twitterBinded, setTwitterBinded] = useState<boolean>(true);
 
   const oauthTelegram = async () => {
     const { response, data } = await OauthTelegram({
@@ -78,6 +78,23 @@ export default () => {
   };
 
   useEffect(() => {
+    ; (async () => {
+      if (!accessToken) {
+        return;
+      }
+      const { response, data } = await GetLoginMethod(accessToken);
+      if (response?.status === 200) {
+        setLoginMethod(data);
+
+        const twitter = data.find((item) => item.name === "twitter");
+        if (!!twitter) {
+          setTwitterLoginMethod(twitter);
+        }
+      }
+    })()
+  }, [accessToken]);
+
+  useEffect(() => {
     if (!!telegramDataString && !!telegramAuthType && !accessToken && !accessTokenExpire) {
       oauthTelegram();
     }
@@ -94,7 +111,7 @@ export default () => {
 
       const now = new Date().getTime();
 
-      if (!accessTokenExpire || parseInt(accessTokenExpire) < now) {
+      if (!!accessTokenExpire && parseInt(accessTokenExpire) < now) {
         await cleanAccessToken();
         await cleanTelegramData();
       }
@@ -120,15 +137,14 @@ export default () => {
   }, [accessToken]);
 
   return {
+    loginMethod,
     accessToken,
     accessTokenExpire,
-    twitterBinded,
     profile,
     refer,
     setRefer,
     setAccessToken,
     setAccessTokenExpire,
-    setTwitterBinded,
     oauthTelegram,
   };
 };

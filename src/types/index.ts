@@ -156,6 +156,13 @@ export declare namespace Resp {
     token_type?: string;
   }
 
+  interface LoginMethod extends Body {
+    type?: string;
+    name?: string;
+    method?: string;
+    url?: string;
+  }
+
   interface BindWalletNonce extends Body {
     error?: string;
     error_description?: string;
