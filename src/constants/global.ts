@@ -44,3 +44,5 @@ export const INFURA_CONFIG = {
 export const WAITLIST_LINK = "https://form.typeform.com/to/Q7qTVjQW";
 
 export const TELEGRAM_BOT = "aime_beta_bot";
+
+export const TELEGRAM_AUTH_EXPIRE = 10 * 60 * 1000;

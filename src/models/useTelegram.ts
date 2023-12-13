@@ -1,3 +1,4 @@
+import { TELEGRAM_AUTH_EXPIRE } from "@/constants/global";
 import { TelegramOauthDataOnauthProps } from "@/types";
 import {
   InitData,
@@ -6,6 +7,7 @@ import {
   Utils,
   CloudStorage,
 } from "@tma.js/sdk";
+import queryString from "query-string";
 import { useEffect, useState } from "react";
 
 export default () => {
@@ -25,25 +27,27 @@ export default () => {
 
   useEffect(() => {
     (async () => {
-      const telegramDataString =
-        localStorage.getItem("aime:telegramDataString") ||
-        (await telegramCloudStorage?.get("aime:telegramDataString"));
-      if (!!telegramDataString) {
-        setTelegramDataString(telegramDataString);
-      }
-
-      const telegramData =
-        JSON.parse(localStorage.getItem("aime:telegramData") || "{}") ||
-        (await telegramCloudStorage?.get("aime:telegramData"));
-      if (!!telegramData) {
-        setTelegramData(telegramData);
-      }
-
       const telegramAuthType =
         localStorage.getItem("aime:telegramAuthType") ||
         (await telegramCloudStorage?.get("aime:telegramAuthType"));
-      if (!!telegramAuthType) {
-        setTelegramAuthType(telegramAuthType);
+      const telegramDataString =
+        localStorage.getItem("aime:telegramDataString") ||
+        (await telegramCloudStorage?.get("aime:telegramDataString"));
+      const telegramData =
+        JSON.parse(localStorage.getItem("aime:telegramData") || "{}") ||
+        (await telegramCloudStorage?.get("aime:telegramData"));
+
+      if (!!telegramDataString) {
+        const raw = queryString.parse(telegramDataString)
+        if (!!raw && !!raw?.auth_date) {
+          if (new Date().getTime() < parseInt(raw?.auth_date as string) * 1000 + TELEGRAM_AUTH_EXPIRE) {
+            setTelegramDataString(telegramDataString);
+            !!telegramAuthType && setTelegramAuthType(telegramAuthType);
+            !!telegramData && setTelegramData(telegramData);
+          } else {
+            await cleanTelegramData();
+          }
+        }
       }
     })();
   }, []);

@@ -81,7 +81,7 @@ const AiPop: React.FC<{
                           size="large"
                           className={styles.aiPopButton}
                           onClick={() => {
-                            (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=bind&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                            (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=bind&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsBuyModalVisible(true);
                             (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
                           }}
                         >
@@ -178,7 +178,7 @@ const AiPop: React.FC<{
                               size="large"
                               className={styles.aiPopButtonDark}
                               onClick={() => {
-                                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsBuyModalVisible(true);
                                 (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
                               }}
                             >

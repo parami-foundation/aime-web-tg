@@ -13,8 +13,8 @@ import { notification } from "antd";
 import { AccessLayout } from "@/layouts/access";
 
 const Bridge: React.FC = () => {
-  const { telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
-  const { address, signature, walletBinded, bindedAddress, setWalletModalVisible, setAddress } = useModel('useWallet');
+  const { telegramDataString, telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
+  const { address, signature, walletBinded, setWalletModalVisible, setAddress } = useModel('useWallet');
   const { setCharacter } = useModel('useSetting');
   const { accessToken, setAccessToken, setAccessTokenExpire } = useModel('useAccess');
 
@@ -70,6 +70,12 @@ const Bridge: React.FC = () => {
         setTelegramDataString(decodeURIComponent(search?.telegramDataString as string));
         localStorage.setItem('aime:telegramDataString', decodeURIComponent(search?.telegramDataString as string));
         telegramCloudStorage?.set('aime:telegramDataString', decodeURIComponent(search?.telegramDataString as string));
+      }
+
+      if (!!search?.telegramAuthType) {
+        setTelegramAuthType(search?.telegramAuthType as string);
+        localStorage.setItem('aime:telegramAuthType', search?.telegramAuthType as string);
+        telegramCloudStorage?.set('aime:telegramAuthType', search?.telegramAuthType as string);
       }
 
       if (!!search?.telegramAuthType) {

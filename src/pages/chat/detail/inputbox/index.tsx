@@ -21,7 +21,7 @@ const InputBox: React.FC<{
   const { SendMessageType, sendOverSocket } = useModel("useWebsocket");
   const { accessToken, accessTokenExpire } = useModel("useAccess");
   const { address } = useModel("useWallet");
-  const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
+  const { telegramDataString, telegramAuthType, miniAppUtils, telegramWebApp } = useModel("useTelegram");
   const { isRecording } = useModel("useRecorder");
   const { speechInterim, messageList } = useModel("useChat");
   const { character } = useModel("useSetting");
@@ -76,7 +76,7 @@ const InputBox: React.FC<{
             <div
               className={styles.buyButton}
               onClick={() => {
-                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}`) : setIsBuyModalVisible(true);
+                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsBuyModalVisible(true);
                 (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
               }}
             >

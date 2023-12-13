@@ -4,9 +4,10 @@ import { useModel } from "@umijs/max";
 import { message } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Resp } from "@/types";
+import { ApiError } from "@/types/enum";
 
 export default () => {
-  const { telegramDataString, telegramAuthType, telegramCloudStorage, setTelegramData, setTelegramDataString, setTelegramAuthType, cleanTelegramData } =
+  const { telegramDataString, telegramAuthType, telegramCloudStorage, cleanTelegramData } =
     useModel("useTelegram");
   const { setTwitterLoginMethod } = useModel("useTwitter");
   const [loginMethod, setLoginMethod] = useState<Resp.LoginMethod[]>([]);
@@ -16,7 +17,6 @@ export default () => {
   const [refer, setRefer] = useState<string>();
 
   const oauthTelegram = async () => {
-    console.log("oauthTelegram", telegramDataString, telegramAuthType)
     const { response, data } = await OauthTelegram({
       grant_type: API_CONFIG.grant_type,
       subject_token: telegramDataString,
@@ -50,17 +50,9 @@ export default () => {
         );
       !!data?.expires_in && setAccessTokenExpire(now + data?.expires_in * 1000);
     } else {
-      console.log("Login failed", data)
-      if (data?.error === "invalid_token") {
-        localStorage.removeItem("aime:telegramAuthType");
-        telegramCloudStorage?.delete("aime:telegramAuthType");
-        localStorage.removeItem("aime:telegramDataString");
-        telegramCloudStorage?.delete("aime:telegramDataString");
-        localStorage.removeItem("aime:telegramData");
-        telegramCloudStorage?.delete("aime:telegramData");
-        setTelegramAuthType(undefined);
-        setTelegramDataString(undefined);
-        setTelegramData({});
+      if (data?.error === ApiError.InvalidToken) {
+        await cleanAccessToken();
+        await cleanTelegramData();
       }
       message.error({
         key: "loginFailed",
@@ -86,6 +78,7 @@ export default () => {
       const { response, data } = await GetLoginMethod(accessToken);
       if (response?.status === 200) {
         setLoginMethod(data);
+        console.log("loginMethod", data)
 
         const twitter = data.find((item) => item.name === "twitter");
         if (!!twitter) {
