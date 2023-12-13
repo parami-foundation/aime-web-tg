@@ -1,18 +1,20 @@
 import React, { useEffect } from "react";
 import styles from "../style.less";
-import { Button, ConfigProvider, Tag, notification, theme } from "antd";
+import { Button, ConfigProvider, notification, theme } from "antd";
 import { ReactComponent as StampIcon } from '@/assets/icon/stamp.svg';
 import { FaAngleRight } from "react-icons/fa";
 import { THEME_CONFIG } from "@/constants/theme";
 import { useSignMessage } from 'wagmi';
 import { recoverMessageAddress } from 'viem';
 import { useModel } from "@umijs/max";
+import { Resp } from "@/types";
 
 const SignMessage: React.FC = () => {
   const { accessToken } = useModel('useAccess');
-  const { address, message, nonce, setSignature, setWalletBinded, getBindWalletNonce, bindWallet } = useModel('useWallet');
+  const { address, nonce, setSignature, setWalletBinded, getBindWalletNonce, bindWallet } = useModel('useWallet');
 
   const [recoveredAddress, setRecoveredAddress] = React.useState<string>();
+  const [getNonceLoading, setGetNonceLoading] = React.useState<boolean>(false);
 
   const {
     data,
@@ -20,18 +22,7 @@ const SignMessage: React.FC = () => {
     error,
     isLoading,
     signMessage,
-  } = useSignMessage({
-    message,
-  });
-
-  useEffect(() => {
-    if (!!accessToken) {
-      getBindWalletNonce({
-        address,
-        accessToken,
-      });
-    }
-  }, [accessToken, address]);
+  } = useSignMessage();
 
   useEffect(() => {
     ; (async () => {
@@ -111,11 +102,30 @@ const SignMessage: React.FC = () => {
             block
             type="primary"
             size="large"
-            loading={isLoading || !message}
-            disabled={isLoading}
+            loading={isLoading || getNonceLoading}
+            disabled={isLoading || getNonceLoading}
             className={styles.loginModalContentItem}
             onClick={async () => {
-              await signMessage();
+              if (!!accessToken) {
+                setGetNonceLoading(true);
+                const { message, error } = await getBindWalletNonce({
+                  address,
+                  accessToken,
+                });
+                if (!!message) {
+                  await signMessage({
+                    message,
+                  });
+                }
+                setGetNonceLoading(false);
+              } else {
+                setGetNonceLoading(false);
+                notification.error({
+                  key: 'signMessageError',
+                  message: 'Sign message failed',
+                  description: 'Access token is missing',
+                });
+              }
             }}
           >
             <div className={styles.loginModalContentItemLeft}>
@@ -123,11 +133,7 @@ const SignMessage: React.FC = () => {
                 className={styles.loginModalContentItemIcon}
               />
               <div className={styles.loginModalContentItemText}>
-                {message ? (
-                  <>
-                    {isLoading ? 'Check Wallet' : 'Sign Message'}
-                  </>
-                ) : 'Waiting for message'}
+                {isLoading ? 'Check Wallet' : 'Sign Message'}
               </div>
             </div>
             <div className={styles.loginModalContentItemRight}>

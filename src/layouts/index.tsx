@@ -1,6 +1,6 @@
 import { Outlet, useModel } from '@umijs/max';
 import styles from './style.less';
-import { ConfigProvider, theme } from 'antd';
+import { ConfigProvider, FloatButton, theme } from 'antd';
 import { THEME_CONFIG } from '@/constants/theme';
 import { SDKProvider } from '@tma.js/sdk-react';
 import { DisplayGate } from '@/components/telegram/displayGate';
@@ -8,17 +8,20 @@ import { TMAInitData } from '@/components/telegram/initData';
 import { WagmiConfig } from 'wagmi';
 import { DEBUG } from '@/constants/global';
 import eruda from 'eruda';
+import { DeleteOutlined, ReloadOutlined } from '@ant-design/icons';
 
 const Layout: React.FC = () => {
   const { viewport } = useModel('useView');
   const { wagmiConfig } = useModel('useWagmi');
 
-  let el = document.createElement('div');
-  document.body.appendChild(el);
-  eruda.init({
-    container: el,
-    tool: ['console', 'elements'],
-  });
+  if (DEBUG) {
+    let el = document.createElement('div');
+    document.body.appendChild(el);
+    eruda.init({
+      container: el,
+      tool: ['console', 'elements'],
+    });
+  }
 
   return (
     <>
@@ -54,6 +57,25 @@ const Layout: React.FC = () => {
                     <div className={styles.wrapperContainer}>
                       <Outlet />
                     </div>
+                    {DEBUG && (
+                      <FloatButton.Group
+                        shape="square"
+                        style={{ right: 24 }}
+                      >
+                        <FloatButton
+                          icon={<DeleteOutlined />}
+                          onClick={() => {
+                            localStorage.clear();
+                          }}
+                        />
+                        <FloatButton
+                          icon={<ReloadOutlined />}
+                          onClick={() => {
+                            window.location.reload();
+                          }}
+                        />
+                      </FloatButton.Group>
+                    )}
                   </div>
                 </TMAInitData>
               </DisplayGate>

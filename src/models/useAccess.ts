@@ -16,6 +16,7 @@ export default () => {
   const [refer, setRefer] = useState<string>();
 
   const oauthTelegram = async () => {
+    console.log("oauthTelegram", telegramDataString, telegramAuthType)
     const { response, data } = await OauthTelegram({
       grant_type: API_CONFIG.grant_type,
       subject_token: telegramDataString,
@@ -98,7 +99,7 @@ export default () => {
     if (!!telegramDataString && !!telegramAuthType && !accessToken && !accessTokenExpire) {
       oauthTelegram();
     }
-  }, [telegramDataString, accessToken]);
+  }, [telegramDataString, telegramAuthType, accessToken, accessTokenExpire]);
 
   useEffect(() => {
     (async () => {

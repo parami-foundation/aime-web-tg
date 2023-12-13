@@ -113,6 +113,8 @@ const Bridge: React.FC = () => {
 
               window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
             }
+          } else {
+            setBuyModalVisible(false);
           }
           break;
 
