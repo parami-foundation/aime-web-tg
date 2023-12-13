@@ -51,8 +51,8 @@ export default () => {
       !!data?.expires_in && setAccessTokenExpire(now + data?.expires_in * 1000);
     } else {
       if (data?.error === ApiError.InvalidToken) {
-        await cleanAccessToken();
-        await cleanTelegramData();
+        cleanTelegramData()
+        cleanAccessToken();
       }
       message.error({
         key: "loginFailed",
@@ -95,6 +95,16 @@ export default () => {
   }, [telegramDataString, telegramAuthType, accessToken, accessTokenExpire]);
 
   useEffect(() => {
+    const timer = setInterval(() => {
+      if (!!accessTokenExpire && accessTokenExpire < new Date().getTime()) {
+        cleanTelegramData();
+        cleanAccessToken();
+        clearInterval(timer);
+      }
+    }, 1000);
+  }, [accessTokenExpire]);
+
+  useEffect(() => {
     (async () => {
       const accessToken =
         localStorage.getItem("aime:accessToken") ||
@@ -106,8 +116,8 @@ export default () => {
       const now = new Date().getTime();
 
       if (!!accessTokenExpire && parseInt(accessTokenExpire) < now) {
-        await cleanAccessToken();
-        await cleanTelegramData();
+        cleanTelegramData();
+        cleanAccessToken();
       }
       if (!!accessToken) {
         setAccessToken(accessToken);
@@ -140,5 +150,6 @@ export default () => {
     setAccessToken,
     setAccessTokenExpire,
     oauthTelegram,
+    cleanAccessToken,
   };
 };

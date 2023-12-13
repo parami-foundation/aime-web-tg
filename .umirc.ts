@@ -6,10 +6,6 @@ export default defineConfig({
   routes: [
     {
       path: "/",
-      component: "auth",
-    },
-    {
-      path: "/home",
       component: "home",
     },
     {
@@ -59,13 +55,6 @@ export default defineConfig({
   npmClient: "yarn",
   jsMinifierOptions: {
     target: ["chrome80", "es2020"],
-  },
-  proxy: {
-    "/proxy": {
-      target: "https://aime-api-beta.parami.io",
-      changeOrigin: true,
-      pathRewrite: { "^/proxy": "" },
-    },
   },
   hash: true,
   cssMinifier: "cssnano",

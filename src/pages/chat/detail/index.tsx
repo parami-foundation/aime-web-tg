@@ -104,11 +104,11 @@ const Chat: React.FC = () => {
     ; (async () => {
       if (!Object.keys(character).length || !charactersData.size || !character?.id) return;
       if (!accessToken || !charactersData.size || !id) {
-        history.push("/home");
+        history.push("/");
         return;
       }
       if (!charactersData.get(id)) {
-        history.push("/home");
+        history.push("/");
         message.error("Character not found");
         return;
       }
@@ -262,19 +262,6 @@ const Chat: React.FC = () => {
   return (
     <AccessLayout>
       <div className={styles.chatContainer}>
-        {!socketIsOpen && (
-          <Alert
-            banner
-            message={
-              <div className={styles.warningMessage}>
-                Lost connection with AI, attempting to reconnect...
-              </div>
-            }
-            type="warning"
-            className={styles.warning}
-            showIcon
-          />
-        )}
         <audio
           ref={audioPlayerRef}
           className={styles.audioPlayer}
@@ -295,7 +282,7 @@ const Chat: React.FC = () => {
                   className={styles.chatHeaderHome}
                   onClick={() => {
                     cleanUpStates();
-                    history.push("/home");
+                    history.push("/");
                   }}
                 >
                   <BiHomeAlt

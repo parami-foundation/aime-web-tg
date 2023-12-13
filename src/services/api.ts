@@ -20,9 +20,7 @@ export async function OauthTelegram(
   options?: { [key: string]: any }
 ) {
   return request<Resp.OauthTelegram>(
-    DEBUG
-      ? "/proxy/oauth2/token"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/oauth2/token`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/oauth2/token`,
     {
       method: "POST",
       headers: {
@@ -40,9 +38,7 @@ export async function GetLoginMethod(
   options?: { [key: string]: any }
 ) {
   return request<Resp.LoginMethod[]>(
-    DEBUG
-      ? "/proxy/api/v1/login"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/login`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/login`,
     {
       method: "GET",
       headers: {
@@ -61,9 +57,7 @@ export async function BindWalletNonce(
   options?: { [key: string]: any }
 ) {
   return request<Resp.BindWalletNonce>(
-    DEBUG
-      ? "/proxy/api/v1/wallet/"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/wallet/`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/wallet/`,
     {
       method: "POST",
       headers: {
@@ -84,9 +78,7 @@ export async function BindWallet(
   options?: { [key: string]: any }
 ) {
   return request<Resp.Error>(
-    DEBUG
-      ? `/proxy/api/v1/wallet/${nonce}`
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/wallet/${nonce}`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/wallet/${nonce}`,
     {
       method: "PUT",
       headers: {
@@ -105,9 +97,7 @@ export async function GetProfile(
   options?: { [key: string]: any }
 ) {
   return request<Resp.Profile>(
-    DEBUG
-      ? "/proxy/api/v1/profile"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/profile`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/profile`,
     {
       method: "GET",
       headers: {
@@ -125,9 +115,7 @@ export async function GetWallet(
   options?: { [key: string]: any }
 ) {
   return request<Resp.Wallet[]>(
-    DEBUG
-      ? "/proxy/api/v1/wallet"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/wallet`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/wallet`,
     {
       method: "GET",
       headers: {
@@ -145,9 +133,7 @@ export async function GetAsset(
   options?: { [key: string]: any }
 ) {
   return request<Resp.Asset[]>(
-    DEBUG
-      ? "/proxy/api/v1/asset"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/asset`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/asset`,
     {
       method: "GET",
       headers: {
@@ -165,9 +151,7 @@ export async function GetExtrinsic(
   options?: { [key: string]: any }
 ) {
   return request<Resp.Extrinsic[]>(
-    DEBUG
-      ? "/proxy/api/v1/extrinsic"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/extrinsic`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/extrinsic`,
     {
       method: "GET",
       headers: {
@@ -186,9 +170,7 @@ export async function CreateSession(
   options?: { [key: string]: any }
 ) {
   return request<Resp.Session>(
-    DEBUG
-      ? "/proxy/api/v1/session"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session`,
     {
       method: "POST",
       headers: {
@@ -207,9 +189,7 @@ export async function GetSession(
   options?: { [key: string]: any }
 ) {
   return request<Resp.Session[]>(
-    DEBUG
-      ? "/proxy/api/v1/session"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session`,
     {
       method: "GET",
       headers: {
@@ -228,9 +208,7 @@ export async function GetSessionByCharacterId(
   options?: { [key: string]: any }
 ) {
   return request<Resp.Session[]>(
-    DEBUG
-      ? `/proxy/api/v1/session/${characterId}`
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session?character_id=${characterId}`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session?character_id=${characterId}`,
     {
       method: "GET",
       headers: {
@@ -249,9 +227,7 @@ export async function GetChatHistory(
   options?: { [key: string]: any }
 ) {
   return request<Resp.ChatHistory[]>(
-    DEBUG
-      ? `/proxy/api/v1/session/${session_id}/message`
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session/${session_id}/message`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/session/${session_id}/message`,
     {
       method: "GET",
       headers: {
@@ -270,9 +246,7 @@ export async function CreateTransaction(
   options?: { [key: string]: any }
 ) {
   return request(
-    DEBUG
-      ? "/proxy/api/v1/transaction"
-      : `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/transaction/`,
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/transaction/`,
     {
       method: "POST",
       headers: {

@@ -18,7 +18,6 @@ import { publicProvider } from "wagmi/providers/public";
 
 import {
   ALCHEMY_CONFIG,
-  DEBUG,
   INFURA_CONFIG,
   NETWORK_CONFIG,
   PROJECT_CONFIG,
@@ -52,7 +51,7 @@ export default () => {
         }),
         infuraProvider({ apiKey: INFURA_CONFIG.apiKey }),
         alchemyProvider({
-          apiKey: DEBUG ? ALCHEMY_CONFIG.Georli : ALCHEMY_CONFIG.Arbitrum,
+          apiKey: ALCHEMY_CONFIG.Arbitrum,
         }),
         publicProvider(),
       ],

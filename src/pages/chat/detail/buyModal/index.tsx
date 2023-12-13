@@ -6,7 +6,7 @@ import { RiWalletLine } from "react-icons/ri";
 import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
 import { useAccount, useBalance, useContractRead, useContractWrite, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
-import { AIME_CONTRACT, DEBUG, NETWORK_CONFIG } from "@/constants/global";
+import { AIME_CONTRACT, NETWORK_CONFIG } from "@/constants/global";
 import { formatEther } from "viem";
 import { GetTokenPrice } from "@/services/third";
 import { useModel } from "@umijs/max";
@@ -27,10 +27,10 @@ const Select: React.FC<{
       isError: boolean;
       isLoading: boolean;
     } = useContractRead({
-      address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+      address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
       abi: require("@/abis/AIMePowers.json"),
       functionName: "getBuyPrice",
-      args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, powerValue],
+      args: [`0x${character?.wallet?.arbitrum}`, powerValue],
     });
 
     return ethValue;
@@ -196,14 +196,14 @@ const Detail: React.FC<{
     isError: boolean;
     isLoading: boolean;
   } = useContractRead({
-    address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+    address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
     abi: require("@/abis/AIMePowers.json"),
     functionName: "getBuyPrice",
-    args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, powerValue],
+    args: [`0x${character?.wallet?.arbitrum}`, powerValue],
   });
 
   const { data, isLoading, isSuccess, error, write } = useContractWrite({
-    address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+    address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
     abi: require("@/abis/AIMePowers.json"),
     functionName: 'buyPowers',
   });
@@ -211,11 +211,11 @@ const Detail: React.FC<{
   useEffect(() => {
     (async () => {
       const gas = await publicClient?.estimateContractGas({
-        address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+        address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
         abi: require("@/abis/AIMePowers.json"),
         functionName: 'buyPowers',
         args: [
-          DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`,
+          `0x${character?.wallet?.arbitrum}`,
           powerValue,
         ],
         account: address as `0x${string}`,
@@ -319,7 +319,7 @@ const Detail: React.FC<{
               To
             </div>
             <div className={styles.detailModalContentBodyItemValue}>
-              {(DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`)?.slice(0, 5)}...{(DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`)?.slice(-4)}
+              {(`0x${character?.wallet?.arbitrum}`)?.slice(0, 5)}...{(`0x${character?.wallet?.arbitrum}`)?.slice(-4)}
             </div>
           </div>
           <div className={styles.detailModalContentBodyItem}>
@@ -383,7 +383,7 @@ const Detail: React.FC<{
           }
           await write({
             args: [
-              DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`,
+              `0x${character?.wallet?.arbitrum}`,
               powerValue,
             ],
             value: ethValue ?? 0n + gas,

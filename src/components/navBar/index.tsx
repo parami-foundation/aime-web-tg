@@ -23,7 +23,7 @@ const NavBar: React.FC = () => {
         <div
           className={classNames(styles.navBarItem, menu === 'home' && styles.navBarIconActive)}
           onClick={() => {
-            history.push('/home');
+            history.push('/');
           }}
         >
           <HomeIcon

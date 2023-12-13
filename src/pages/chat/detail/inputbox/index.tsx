@@ -49,10 +49,10 @@ const InputBox: React.FC<{
     isError: boolean;
     isLoading: boolean;
   } = useContractRead({
-    address: DEBUG ? `0x${AIME_CONTRACT.Goerli.Powers}` : `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+    address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
     abi: require("@/abis/AIMePowers.json"),
     functionName: "powerBalance",
-    args: [DEBUG ? `0x${character?.wallet?.goerli}` : `0x${character?.wallet?.arbitrum}`, address],
+    args: [`0x${character?.wallet?.arbitrum}`, address],
     onSuccess: (data) => {
       setBalance(data ?? 0n);
     }
