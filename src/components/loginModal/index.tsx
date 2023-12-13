@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
-import { Modal } from "antd";
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
+import { Button, Modal, notification } from "antd";
+import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi';
 import { useModel } from "@umijs/max";
 import Loading from "./loading";
 import ConnectWallet from "./connectWallet";
@@ -14,12 +14,35 @@ const LoginModal: React.FC<{
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   closeable?: boolean;
 }> = ({ visible, setVisible, closeable }) => {
-  const { signature, walletBinded } = useModel('useWallet');
+  const { signature, walletBinded, setAddress } = useModel('useWallet');
 
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
+  const { disconnect, error: disconnectError, isSuccess: disconnectSuccess, isLoading: disconnectLoading } = useDisconnect();
 
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useAccount({
+    onDisconnect: () => {
+      setAddress(undefined);
+      localStorage.removeItem('aime:address');
+    }
+  });
+
+  useEffect(() => {
+    disconnect();
+
+    if (disconnectSuccess) {
+      setAddress(undefined);
+      localStorage.removeItem('aime:address');
+    }
+
+    if (disconnectError) {
+      notification.error({
+        key: 'disconnectError',
+        message: 'Disconnect Wallet Error',
+        description: disconnectError.message,
+      });
+    }
+  }, [disconnectError, disconnectSuccess]);
 
   const search = queryString.parse(window.location.search);
 

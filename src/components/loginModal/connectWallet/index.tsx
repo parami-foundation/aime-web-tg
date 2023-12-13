@@ -48,6 +48,9 @@ const ConnectWallet: React.FC = () => {
       </div>
       <div className={styles.loginModalContent}>
         {connectors.map((x) => {
+          if (wagmiInitialized && !x.ready) {
+            return null;
+          };
           return (
             <ConfigProvider
               theme={{
@@ -93,7 +96,6 @@ const ConnectWallet: React.FC = () => {
                   )}
                   <div className={styles.loginModalContentItemText}>
                     {x.id === 'injected' ? (wagmiInitialized ? x.name : x.id) : x.name}
-                    {wagmiInitialized && !x.ready && ' (unsupported)'}
                     {isLoading && x.id === pendingConnector?.id && '…'}
                   </div>
                 </div>

@@ -244,7 +244,7 @@ const Detail: React.FC<{
         setError(error);
       }
     })();
-  }, [accessToken, data, isSuccess]);
+  }, [accessToken, data, isSuccess, error]);
 
   useEffect(() => {
     GetTokenPrice({

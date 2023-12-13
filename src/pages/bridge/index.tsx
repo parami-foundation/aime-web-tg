@@ -88,6 +88,8 @@ const Bridge: React.FC = () => {
             break;
         }
       }
+    } else {
+      setBuyModalVisible(false);
     }
   }, [address, signature, walletBinded, !!telegramDataString, isConnected, currentChain?.id !== chains[0]?.id, transactionHash]);
 
