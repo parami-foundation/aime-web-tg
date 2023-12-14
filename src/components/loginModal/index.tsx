@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styles from "./style.less";
 import { Modal } from "antd";
 import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
@@ -7,8 +7,6 @@ import Loading from "./loading";
 import ConnectWallet from "./connectWallet";
 import SwitchNetwork from "./switchNetwork";
 import SignMessage from "./signMessage";
-import queryString from 'query-string';
-import { GetWallet } from "@/services/api";
 
 const LoginModal: React.FC<{
   visible: boolean;

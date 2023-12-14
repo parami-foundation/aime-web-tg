@@ -108,7 +108,7 @@ const SignMessage: React.FC = () => {
             onClick={async () => {
               if (!!accessToken) {
                 setGetNonceLoading(true);
-                const { message, error } = await getBindWalletNonce({
+                const { message } = await getBindWalletNonce({
                   address,
                   accessToken,
                 });
@@ -133,7 +133,7 @@ const SignMessage: React.FC = () => {
                 className={styles.loginModalContentItemIcon}
               />
               <div className={styles.loginModalContentItemText}>
-                {isLoading ? 'Check Wallet' : 'Sign Message'}
+                {(isLoading || getNonceLoading) ? 'Check Wallet' : 'Sign Message'}
               </div>
             </div>
             <div className={styles.loginModalContentItemRight}>

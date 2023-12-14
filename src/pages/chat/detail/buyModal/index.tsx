@@ -6,7 +6,7 @@ import { RiWalletLine } from "react-icons/ri";
 import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
 import { useAccount, useBalance, useContractRead, useContractWrite, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
-import { AIME_CONTRACT, NETWORK_CONFIG } from "@/constants/global";
+import { AIME_CONTRACT, DEBUG, NETWORK_CONFIG } from "@/constants/global";
 import { formatEther } from "viem";
 import { GetTokenPrice } from "@/services/third";
 import { useModel } from "@umijs/max";
@@ -379,7 +379,7 @@ const Detail: React.FC<{
         disabled={parseFloat(balance?.formatted ?? "0") === 0 || parseFloat(balance?.formatted ?? "0") < parseFloat(formatEther(ethValue ?? 0n + gas))}
         onClick={async () => {
           if (currentChain?.id !== chains[0]?.id) {
-            switchNetworkAsync?.(chains[0]?.id);
+            await switchNetworkAsync?.(chains[0]?.id);
           }
           await write({
             args: [
@@ -434,11 +434,13 @@ const BuyModal: React.FC<{
 
   useEffect(() => {
     // TODO: Why bindedAddress is lowercase?!?!
-    if (!!bindedAddress && !!connectAddress && bindedAddress !== connectAddress.toLowerCase()) {
+    DEBUG && console.log("bindedAddress", bindedAddress);
+    DEBUG && console.log("connectAddress", connectAddress);
+    if (!!bindedAddress && !!connectAddress && bindedAddress !== connectAddress) {
       notification.error({
         key: 'walletError',
         message: 'Wallet Error',
-        description: 'Please use the wallet you binded.',
+        description: `Please use the wallet you binded. And please make sure you are on the right network. ${NETWORK_CONFIG?.chains[0]?.name} is required.`
       });
       disconnect();
       setVisible(false);

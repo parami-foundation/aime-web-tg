@@ -21,7 +21,6 @@ const Layout: React.FC = () => {
     document.body.appendChild(el);
     eruda.init({
       container: el,
-      tool: ['console', 'elements'],
     });
   }
 
