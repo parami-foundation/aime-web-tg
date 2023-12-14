@@ -58,27 +58,6 @@ const Layout: React.FC = () => {
                     <div className={styles.wrapperContainer}>
                       <Outlet />
                     </div>
-                    {DEBUG && (
-                      <FloatButton.Group
-                        shape="square"
-                        style={{ right: 24 }}
-                      >
-                        <FloatButton
-                          icon={<DeleteOutlined />}
-                          onClick={() => {
-                            cleanTelegramData();
-                            cleanAccessToken();
-                            message.success('Cleaned!');
-                          }}
-                        />
-                        <FloatButton
-                          icon={<ReloadOutlined />}
-                          onClick={() => {
-                            window.location.reload();
-                          }}
-                        />
-                      </FloatButton.Group>
-                    )}
                   </div>
                 </TMAInitData>
               </DisplayGate>

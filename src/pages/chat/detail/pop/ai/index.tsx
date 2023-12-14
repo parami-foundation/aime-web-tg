@@ -68,6 +68,9 @@ const AiPop: React.FC<{
                               🔗 {props.children}
                             </a>
                           ),
+                          li: 'p',
+                          ol: 'p',
+                          ul: 'p',
                         }}
                       >
                         {item?.data as string}
@@ -114,6 +117,9 @@ const AiPop: React.FC<{
                               🔗 {props.children}
                             </a>
                           ),
+                          li: 'p',
+                          ol: 'p',
+                          ul: 'p',
                         }}
                       >
                         {item?.data as string}
@@ -156,6 +162,9 @@ const AiPop: React.FC<{
                                 🔗 {props.children}
                               </a>
                             ),
+                            li: 'p',
+                            ol: 'p',
+                            ul: 'p',
                           }}
                         >
                           {item?.data as string}
@@ -216,6 +225,9 @@ const AiPop: React.FC<{
                                 🔗 {props.children}
                               </a>
                             ),
+                            li: 'p',
+                            ol: 'p',
+                            ul: 'p',
                           }}
                         >
                           {item?.data as string}
@@ -258,6 +270,9 @@ const AiPop: React.FC<{
                             🔗 {props.children}
                           </a>
                         ),
+                        li: 'p',
+                        ol: 'p',
+                        ul: 'p',
                       }}
                     >
                       {item?.data as string}

@@ -386,7 +386,7 @@ export default () => {
   const reconnectSocket = () => {
     setSocket((prev) => {
       if (!prev) return null;
-      console.log(prev);
+      console.log("Current Socket URL", prev?.url);
       prev?.close();
       return new WebSocket(`${prev?.url}${prev?.url?.includes("reconnect=true") ? "" : "&reconnect=true"}`);
     });

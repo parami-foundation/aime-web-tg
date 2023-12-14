@@ -24,11 +24,12 @@ const MePop: React.FC<{
           switch (item?.type) {
             case "message":
               return (
-                <ReactMarkdown
+                <div
                   className={styles.mePopText}
+                  key={item?.id}
                 >
                   {item?.data as string}
-                </ReactMarkdown>
+                </div>
               )
             case "data":
               return (

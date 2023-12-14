@@ -433,7 +433,6 @@ const BuyModal: React.FC<{
   }, [visible]);
 
   useEffect(() => {
-    // TODO: Why bindedAddress is lowercase?!?!
     DEBUG && console.log("bindedAddress", bindedAddress);
     DEBUG && console.log("connectAddress", connectAddress);
     if (!!bindedAddress && !!connectAddress && bindedAddress !== connectAddress) {

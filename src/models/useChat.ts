@@ -62,15 +62,9 @@ export default () => {
 
   useEffect(() => {
     ; (async () => {
-      const sessionMap = new Map<string, Resp.Session>();
-      const session = JSON.parse(
-        localStorage.getItem("aime:chatSession") || await telegramCloudStorage?.get("aime:chatSession") || "[]"
-      );
-      session?.forEach((session: [string, Resp.Session]) => {
-        if (!session[1].character_id) return;
-        sessionMap.set(session[1].character_id, session[1]);
-      });
-      setChatSession(sessionMap);
+      // Clear chat session in local storage
+      localStorage.removeItem("aime:chatSession");
+      telegramCloudStorage?.delete("aime:chatSession");
 
       if (!accessToken) return;
       const { response, data } = await GetSession(accessToken);
@@ -84,14 +78,6 @@ export default () => {
           });
           return sessionMap;
         });
-        localStorage.setItem(
-          "aime:chatSession",
-          JSON.stringify([...sessionMap])
-        );
-        telegramCloudStorage?.set(
-          "aime:chatSession",
-          JSON.stringify([...sessionMap])
-        );
       }
     })()
   }, [accessToken]);

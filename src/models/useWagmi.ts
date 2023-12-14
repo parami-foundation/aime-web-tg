@@ -49,7 +49,9 @@ export default () => {
         walletConnectProvider({
           projectId: WALLETCONNECT_CONFIG.projectId,
         }),
-        infuraProvider({ apiKey: INFURA_CONFIG.apiKey }),
+        infuraProvider({
+          apiKey: INFURA_CONFIG.apiKey
+        }),
         alchemyProvider({
           apiKey: ALCHEMY_CONFIG.Arbitrum,
         }),
