@@ -7,8 +7,7 @@ import { DEBUG } from "@/constants/global";
 export default () => {
   const { selectedMicrophone } = useModel("useSetting");
   const { audioContext } = useModel("useWebRTC");
-  const { sendOverSocket, SendMessageType } = useModel("useWebsocket");
-
+  const { handleSendMessage, SendMessageType } = useModel("useSocket");
   const [isRecording, setIsRecording] = React.useState<boolean>(false);
   const [mediaRecorder, setMediaRecorder] =
     React.useState<MediaRecorder | null>(null);
@@ -110,7 +109,7 @@ export default () => {
         // Temporary workaround for mimic stop event behavior, as for now on iOS 16 stop event doesn't fire.
         mediaRecorder.ondataavailable = (event) => {
           let blob = new Blob([event.data], { type: "audio/mp3" });
-          sendOverSocket(SendMessageType.BLOB, blob);
+          handleSendMessage(SendMessageType.BLOB, blob);
         };
         setMediaRecorder(mediaRecorder);
       })

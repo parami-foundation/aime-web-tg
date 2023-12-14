@@ -25,11 +25,12 @@ export interface LBAudioElement extends HTMLAudioElement {
 const Chat: React.FC = () => {
   const { accessToken } = useModel("useAccess");
   const { messages, messageList, chatSession, reconnect, clearChatContent, setMessageList, setMessages } = useModel("useChat");
-  const { SendMessageType, socketIsOpen, closeSocket, connectSocket, sendOverSocket, setCurrentSession } = useModel("useWebsocket");
   const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer, stopAudioPlayback } = useModel("useWebRTC");
   const { selectedSpeaker, selectedMicrophone, character, isMute, setIsMute, setCharacter, getAudioList } = useModel("useSetting");
   const { mediaRecorder, vadEvents, enableVAD, closeVAD, startRecording, stopRecording, vadEventsCallback, closeMediaRecorder, connectMicrophone, disableVAD, disconnectMicrophone } = useModel("useRecorder");
   const { viewport } = useModel("useView");
+
+  const { SendMessageType, socketIsOpen, handleChangeSocketUrl, handleCloseSocket, handleSendMessage } = useModel("useSocket");
 
   const chatWrapper = React.useRef<HTMLDivElement>(null);
   const msgList = React.useRef<HTMLDivElement>(null);
@@ -102,7 +103,7 @@ const Chat: React.FC = () => {
 
   useEffect(() => {
     ; (async () => {
-      if (!Object.keys(character).length || !charactersData.size || !character?.id) return;
+      if (!Object.keys(character).length || !charactersData.size || !character?.id || !chatSession) return;
       if (!accessToken || !charactersData.size || !id) {
         history.push("/");
         return;
@@ -115,10 +116,16 @@ const Chat: React.FC = () => {
 
       if (!search?.session) {
         clearChatContent();
-        connectSocket({
+        // connectSocket({
+        //   character: charactersData.get(id) ?? {},
+        //   reconnect: reconnect,
+        // }, search?.session as string || chatSession.get(character?.id)?.id);
+        handleChangeSocketUrl({
+          sessionId: search?.session as string || chatSession?.get(character?.id)?.id,
           character: charactersData.get(id) ?? {},
+          accessToken: accessToken,
           reconnect: reconnect,
-        }, search?.session as string || chatSession.get(character?.id)?.id);
+        });
       }
     })()
   }, [search?.session, id, accessToken, charactersData, character, chatSession]);
@@ -154,11 +161,11 @@ const Chat: React.FC = () => {
       },
       () => {
         // Stops recording and send interim audio clip to server.
-        sendOverSocket(SendMessageType.TEXT, '[&Speech]');
+        handleSendMessage(SendMessageType.TEXT, '[&Speech]');
         stopRecording();
       },
       () => {
-        sendOverSocket(SendMessageType.TEXT, '[SpeechFinished]');
+        handleSendMessage(SendMessageType.TEXT, '[SpeechFinished]');
       })
     if (!isTextMode && !disableMic) {
       enableVAD();
@@ -229,10 +236,9 @@ const Chat: React.FC = () => {
     closeVAD();
     closeMediaRecorder();
     closePeer();
-    closeSocket();
+    handleCloseSocket();
     clearChatContent();
     setCharacter({});
-    setCurrentSession({});
   };
 
   useEffect(() => {

@@ -47,8 +47,8 @@ export default () => {
   const [rewardModal, setRewardModal] = React.useState<boolean>(false);
   const [reconnect, setReconnect] = React.useState<boolean>(false);
   const [chatSession, setChatSession] = React.useState<
-    Map<string, Resp.Session>
-  >(new Map());
+    Map<string, Resp.Session> | null
+  >(null);
 
   const getSessionByCharacterId = useMemo(() => async (characterId: string) => {
     if (!accessToken) return;
@@ -68,7 +68,7 @@ export default () => {
 
       if (!accessToken) return;
       const { response, data } = await GetSession(accessToken);
-      if (response?.status === 200 && data.length > 0) {
+      if (response?.status === 200) {
         const sessionMap = new Map<string, Resp.Session>();
         setChatSession(() => {
           data?.forEach((session) => {

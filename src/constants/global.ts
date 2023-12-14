@@ -13,9 +13,6 @@ export const NETWORK_CONFIG = {
 };
 
 export const AIME_CONTRACT = {
-  Goerli: {
-    Powers: "A0A5366f28e36A219791F59cA8128FaD656Fbf92",
-  },
   Arbitrum: {
     Powers: "be21B5812094bB808c4D88CCf62c8C7EC7b37Ab2",
   },
@@ -33,7 +30,6 @@ export const API_CONFIG = {
 };
 
 export const ALCHEMY_CONFIG = {
-  Georli: "bZy6cqaLUxCMRw2BJn76qNSK6gX7Ioij",
   Arbitrum: "DFaa0Hz4Kc9nYeqmcNcGdaM9kFuhC5Zd",
 };
 

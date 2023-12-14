@@ -18,7 +18,7 @@ const InputBox: React.FC<{
   inputBoxContainer: React.RefObject<HTMLDivElement>;
   setDisableMic: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode, setDisableMic }) => {
-  const { SendMessageType, sendOverSocket } = useModel("useWebsocket");
+  const { handleSendMessage, connecting, SendMessageType } = useModel("useSocket");
   const { accessToken, accessTokenExpire } = useModel("useAccess");
   const { address } = useModel("useWallet");
   const { telegramDataString, telegramAuthType, miniAppUtils, telegramWebApp } = useModel("useTelegram");
@@ -110,28 +110,28 @@ const InputBox: React.FC<{
                 <>
                   <div className={styles.inputBoxInput}>
                     <Input
-                      disabled={!messageList?.size}
+                      disabled={(!messageList?.size || connecting)}
                       bordered={false}
-                      placeholder={!messageList?.size ? "Thinking..." : "Type something..."}
+                      placeholder={(!messageList?.size || connecting) ? "Thinking..." : "Type something..."}
                       className={styles.inputBoxInputInput}
                       value={inputValue}
                       onChange={(e) => {
                         setInputValue(e.target.value);
                       }}
                       onKeyDown={async (e) => {
-                        if (e.key === "Enter" && !!inputValue && !!messageList?.size) {
-                          await sendOverSocket(SendMessageType.TEXT, inputValue);
+                        if (e.key === "Enter" && !!inputValue && !!messageList?.size && !connecting) {
+                          await handleSendMessage(SendMessageType.TEXT, inputValue);
                           setInputValue("");
                         }
                       }}
                     />
                   </div>
-                  {!!messageList?.size && (
+                  {!!messageList?.size && !connecting && (
                     <div
                       className={styles.inputBoxSend}
                       onClick={async () => {
                         if (!!inputValue) {
-                          await sendOverSocket(SendMessageType.TEXT, inputValue);
+                          await handleSendMessage(SendMessageType.TEXT, inputValue);
                           setInputValue("");
                         }
                       }}

@@ -46,6 +46,7 @@ export default () => {
             !!telegramData && setTelegramData(telegramData);
           } else {
             cleanTelegramData();
+            !!telegramWebApp && window.location.reload();
           }
         }
       }

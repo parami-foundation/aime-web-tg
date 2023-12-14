@@ -11,7 +11,6 @@ import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 
-import { walletConnectProvider } from "@web3modal/wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
@@ -46,21 +45,14 @@ export default () => {
     const { chains, publicClient, webSocketPublicClient } = configureChains(
       NETWORK_CONFIG.chains,
       [
-        walletConnectProvider({
-          projectId: WALLETCONNECT_CONFIG.projectId,
+        alchemyProvider({
+          apiKey: ALCHEMY_CONFIG.Arbitrum,
         }),
         infuraProvider({
           apiKey: INFURA_CONFIG.apiKey
         }),
-        alchemyProvider({
-          apiKey: ALCHEMY_CONFIG.Arbitrum,
-        }),
         publicProvider(),
       ],
-      {
-        rank: true,
-        batch: { multicall: true },
-      }
     );
 
     const config = createConfig({
