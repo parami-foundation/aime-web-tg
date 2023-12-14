@@ -17,6 +17,7 @@ export default () => {
   const [refer, setRefer] = useState<string>();
 
   const oauthTelegram = async () => {
+    console.log("telegramDataString oauth", telegramDataString);
     const { response, data } = await OauthTelegram({
       grant_type: API_CONFIG.grant_type,
       subject_token: telegramDataString,
@@ -118,12 +119,13 @@ export default () => {
       if (!!accessTokenExpire && parseInt(accessTokenExpire) < now) {
         cleanTelegramData();
         cleanAccessToken();
-      }
-      if (!!accessToken) {
-        setAccessToken(accessToken);
-      }
-      if (!!accessTokenExpire) {
-        setAccessTokenExpire(parseInt(accessTokenExpire));
+      } else {
+        if (!!accessToken) {
+          setAccessToken(accessToken);
+        }
+        if (!!accessTokenExpire) {
+          setAccessTokenExpire(parseInt(accessTokenExpire));
+        }
       }
     })();
   }, [accessToken, accessTokenExpire]);

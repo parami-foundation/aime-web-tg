@@ -1,6 +1,6 @@
 import { Outlet, useModel } from '@umijs/max';
 import styles from './style.less';
-import { ConfigProvider, FloatButton, theme } from 'antd';
+import { ConfigProvider, FloatButton, message, theme } from 'antd';
 import { THEME_CONFIG } from '@/constants/theme';
 import { SDKProvider } from '@tma.js/sdk-react';
 import { DisplayGate } from '@/components/telegram/displayGate';
@@ -69,6 +69,7 @@ const Layout: React.FC = () => {
                           onClick={() => {
                             cleanTelegramData();
                             cleanAccessToken();
+                            message.success('Cleaned!');
                           }}
                         />
                         <FloatButton

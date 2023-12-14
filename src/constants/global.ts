@@ -1,11 +1,11 @@
 import { arbitrum } from "wagmi/chains";
 
-export const DEBUG = false;
+export const DEBUG = true;
 
 export const PROJECT_CONFIG = {
   name: "AIME",
   description: "Parami AIME",
-  url: "https://aime-tg.parami.io",
+  url: "https://app.aime.bot",
 };
 
 export const NETWORK_CONFIG = {
@@ -28,7 +28,7 @@ export const WEBSOCKET_CONFIG = {
 
 export const API_CONFIG = {
   scheme: "https",
-  host: "aime-api-beta.parami.io",
+  host: "api.aime.bot",
   grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
 };
 
