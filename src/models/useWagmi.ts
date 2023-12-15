@@ -26,6 +26,7 @@ import { WALLETCONNECT_CONFIG } from "@/constants/walletconnect";
 import { FallbackTransport, createPublicClient, http } from "viem";
 import { EthereumClient } from "@web3modal/ethereum";
 import { createWeb3Modal } from "@web3modal/wagmi/react";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 
 export default () => {
   const [wagmiConfig, setWagmiConfig] =
@@ -45,14 +46,25 @@ export default () => {
     const { chains, publicClient, webSocketPublicClient } = configureChains(
       NETWORK_CONFIG.chains,
       [
-        alchemyProvider({
-          apiKey: ALCHEMY_CONFIG.Arbitrum,
+        jsonRpcProvider({
+          rpc: (chain) => {
+            if (chain.id !== NETWORK_CONFIG.chains[0].id) return null;
+            return {
+              http: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_CONFIG.Arbitrum}`,
+              webSocket: `wss://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_CONFIG.Arbitrum}`,
+            };
+          },
         }),
         infuraProvider({
           apiKey: INFURA_CONFIG.apiKey
         }),
+        alchemyProvider({
+          apiKey: ALCHEMY_CONFIG.Arbitrum,
+        }),
         publicProvider(),
-      ],
+      ], {
+      batch: { multicall: true },
+    }
     );
 
     const config = createConfig({
