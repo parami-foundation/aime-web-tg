@@ -11,8 +11,6 @@ const CardItem: React.FC<{
   character: Character;
   onClick: () => void;
 }> = ({ character, onClick }) => {
-  const avatar = new Blob([character?.avatar_url || require('@/assets/me/avatar.png')], { type: 'image/png' });
-
   return (
     <div
       className={styles.cardItemContainer}

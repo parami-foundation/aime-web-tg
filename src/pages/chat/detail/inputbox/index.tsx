@@ -6,7 +6,7 @@ import { CgKeyboard } from "react-icons/cg";
 import { Input } from "antd";
 import { useModel } from "@umijs/max";
 import BuyModal from "../buyModal";
-import { AIME_CONTRACT, DEBUG, PROJECT_CONFIG } from "@/constants/global";
+import { AIME_CONTRACT, PROJECT_CONFIG } from "@/constants/global";
 import { useAccount, useContractRead } from "wagmi";
 import LoginModal from "@/components/loginModal";
 
@@ -76,7 +76,7 @@ const InputBox: React.FC<{
             <div
               className={styles.buyButton}
               onClick={() => {
-                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsBuyModalVisible(true);
+                (!!telegramDataString && !!miniAppUtils) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsBuyModalVisible(true);
                 (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
               }}
             >

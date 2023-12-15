@@ -116,10 +116,6 @@ const Chat: React.FC = () => {
 
       if (!search?.session) {
         clearChatContent();
-        // connectSocket({
-        //   character: charactersData.get(id) ?? {},
-        //   reconnect: reconnect,
-        // }, search?.session as string || chatSession.get(character?.id)?.id);
         handleChangeSocketUrl({
           sessionId: search?.session as string || chatSession?.get(character?.id)?.id,
           character: charactersData.get(id) ?? {},
@@ -298,7 +294,12 @@ const Chat: React.FC = () => {
                 </div>
               </div>
               <div className={styles.chatHeaderRight}>
-                <div className={styles.chatHeaderButton}>
+                <div
+                  className={styles.chatHeaderButton}
+                  onClick={() => {
+                    history.push(`/chat/${id}/statistics`);
+                  }}
+                >
                   <MdOutlineAnalytics />
                 </div>
                 <div className={styles.chatHeaderButton}>

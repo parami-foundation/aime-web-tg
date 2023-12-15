@@ -12,6 +12,7 @@ export default () => {
     if (!accessToken) return;
     const { response, data } = await GetExtrinsic(accessToken);
     if (response?.status === 200) {
+      console.log("Extrinsic", data);
       setExtrinsic(data);
     }
   };

@@ -14,7 +14,7 @@ const Chat: React.FC = () => {
       <div className={styles.chatContainer}>
         <div className={styles.chatWrapper}>
           <div className={styles.chatContent}>
-            {Array.from(chatSession?.keys()).map((key) => {
+            {!!chatSession?.keys() && Array.from(chatSession?.keys())?.map((key) => {
               const character = charactersData.get(key);
               const content = chatSession?.get(key);
               if (!character || !content) {

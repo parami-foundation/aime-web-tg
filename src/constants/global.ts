@@ -37,6 +37,10 @@ export const INFURA_CONFIG = {
   apiKey: "912a4876d6f449dea2143b0c6cf07e13",
 };
 
+export const EXPLORER_CONFIG = {
+  Optimism: "https://optimistic.etherscan.io",
+}
+
 export const WAITLIST_LINK = "https://form.typeform.com/to/Q7qTVjQW";
 
 export const TELEGRAM_BOT = "aime_beta_bot";
