@@ -247,6 +247,7 @@ const AiPop: React.FC<{
                         </div>
                       </div>
                       <ShareModal
+                        characterId={character?.id}
                         visible={shareModalVisible}
                         setVisible={setShareModalVisible}
                       />

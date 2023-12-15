@@ -7,6 +7,9 @@ import { IoIosMore } from "react-icons/io";
 import { ReactComponent as TelegramIcon } from "@/assets/brand/telegram.svg";
 import { ReactComponent as TwitterIcon } from "@/assets/brand/twitter.svg";
 import Share from "@/components/share";
+import { useModel } from "@umijs/max";
+import { ShareAIME } from "@/services/api";
+import { message } from "antd";
 
 const AIME_APP_URL = `https://t.me/aime_beta_bot/aimeapp`;
 const TG_SHARE_URL = `https://t.me/share/url`;
@@ -14,8 +17,28 @@ const TG_SHARE_URL = `https://t.me/share/url`;
 const ShareModal: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
-}> = ({ visible, setVisible }) => {
+  characterId?: string;
+}> = ({ visible, setVisible, characterId }) => {
   const [shareModalVisible, setShareModalVisible] = React.useState(false);
+  const { accessToken } = useModel("useAccess");
+
+  const shareToTelegram = async () => {
+    if (accessToken && characterId) {
+      const { response } = await ShareAIME({
+        method: "telegram",
+        character_id: characterId
+      }, accessToken);
+
+      if (response?.status === 200) {
+        message.success({
+          key: "shareToTelegram",
+          content: "AIME shared to Telegram successfully!",
+        });
+      } else {
+        console.log('ShareAIME error');
+      }
+    }
+  }
 
   return (
     <>
@@ -57,7 +80,7 @@ const ShareModal: React.FC<{
                 type="primary"
                 size="large"
                 className={styles.shareModalContentItem}
-                onClick={() => window.open(`${TG_SHARE_URL}?url=${AIME_APP_URL}`, '_blank')}
+                onClick={shareToTelegram}
               >
                 <div className={styles.shareModalContentItemLeft}>
                   <TelegramIcon

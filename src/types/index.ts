@@ -135,6 +135,11 @@ export declare namespace Req {
     token: string;
     currency: string;
   }
+
+  interface ShareAIME {
+    method: string;
+    character_id: string;
+  }
 }
 
 export declare namespace Resp {

@@ -373,6 +373,7 @@ const Chat: React.FC = () => {
         )}
       </div>
       <ShareModal
+        characterId={character?.id}
         visible={shareModalVisible}
         setVisible={setShareModalVisible}
       />

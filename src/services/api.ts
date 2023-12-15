@@ -259,3 +259,23 @@ export async function CreateTransaction(
     }
   );
 }
+
+export async function ShareAIME(
+  data: Req.ShareAIME,
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  return request(
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/share`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: data,
+      ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
