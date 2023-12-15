@@ -1,4 +1,4 @@
-import { arbitrum } from "wagmi/chains";
+import { optimism } from "wagmi/chains";
 
 export const DEBUG = true;
 
@@ -9,12 +9,12 @@ export const PROJECT_CONFIG = {
 };
 
 export const NETWORK_CONFIG = {
-  chains: [arbitrum],
+  chains: [optimism],
 };
 
 export const AIME_CONTRACT = {
-  Arbitrum: {
-    Powers: "be21B5812094bB808c4D88CCf62c8C7EC7b37Ab2",
+  Optimism: {
+    Powers: "D21881a9b32509fC0C042682E8a61f57d8B57C11",
   },
 };
 
@@ -30,7 +30,7 @@ export const API_CONFIG = {
 };
 
 export const ALCHEMY_CONFIG = {
-  Arbitrum: "DFaa0Hz4Kc9nYeqmcNcGdaM9kFuhC5Zd",
+  Optimism: "Co3hROG5cgCbbMsaIKiGjplscQUvJGhb",
 };
 
 export const INFURA_CONFIG = {

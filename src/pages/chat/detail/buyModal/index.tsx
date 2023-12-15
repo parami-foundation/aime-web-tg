@@ -27,10 +27,10 @@ const Select: React.FC<{
       isError: boolean;
       isLoading: boolean;
     } = useContractRead({
-      address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+      address: `0x${AIME_CONTRACT.Optimism.Powers}`,
       abi: require("@/abis/AIMePowers.json"),
       functionName: "getBuyPrice",
-      args: [`0x${character?.wallet?.arbitrum}`, powerValue],
+      args: [`0x${character?.wallet?.optimism}`, powerValue],
     });
 
     return ethValue;
@@ -189,21 +189,22 @@ const Detail: React.FC<{
     address: address,
   });
   const { chain: currentChain } = useNetwork();
-  const { chains, switchNetworkAsync } = useSwitchNetwork();
+  const { chains, error: switchNetworkError, isLoading: switchNetworkLoading, pendingChainId, switchNetwork } =
+    useSwitchNetwork();
 
   const { data: ethValue }: {
     data?: bigint;
     isError: boolean;
     isLoading: boolean;
   } = useContractRead({
-    address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+    address: `0x${AIME_CONTRACT.Optimism.Powers}`,
     abi: require("@/abis/AIMePowers.json"),
     functionName: "getBuyPrice",
-    args: [`0x${character?.wallet?.arbitrum}`, powerValue],
+    args: [`0x${character?.wallet?.optimism}`, powerValue],
   });
 
   const { data, isLoading, isSuccess, error, write } = useContractWrite({
-    address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+    address: `0x${AIME_CONTRACT.Optimism.Powers}`,
     abi: require("@/abis/AIMePowers.json"),
     functionName: 'buyPowers',
   });
@@ -211,11 +212,11 @@ const Detail: React.FC<{
   useEffect(() => {
     (async () => {
       const gas = await publicClient?.estimateContractGas({
-        address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+        address: `0x${AIME_CONTRACT.Optimism.Powers}`,
         abi: require("@/abis/AIMePowers.json"),
         functionName: 'buyPowers',
         args: [
-          `0x${character?.wallet?.arbitrum}`,
+          `0x${character?.wallet?.optimism}`,
           powerValue,
         ],
         account: address as `0x${string}`,
@@ -233,7 +234,7 @@ const Detail: React.FC<{
         setTransactionHash(data?.hash);
 
         await CreateTransaction({
-          chain_id: NETWORK_CONFIG.chains[0].id.toString(),
+          chain_id: NETWORK_CONFIG?.chains[0]?.id?.toString(),
           address: address,
           hash: data?.hash,
         }, accessToken);
@@ -256,6 +257,16 @@ const Detail: React.FC<{
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (!!switchNetworkError) {
+      notification.error({
+        key: "switchNetworkError",
+        message: "Switch Network Error",
+        description: switchNetworkError?.message,
+      });
+    }
+  }, [switchNetworkError]);
 
   return (
     <div className={styles.detailModalContainer}>
@@ -319,7 +330,7 @@ const Detail: React.FC<{
               To
             </div>
             <div className={styles.detailModalContentBodyItemValue}>
-              {(`0x${character?.wallet?.arbitrum}`)?.slice(0, 5)}...{(`0x${character?.wallet?.arbitrum}`)?.slice(-4)}
+              {(`0x${character?.wallet?.optimism}`)?.slice(0, 5)}...{(`0x${character?.wallet?.optimism}`)?.slice(-4)}
             </div>
           </div>
           <div className={styles.detailModalContentBodyItem}>
@@ -370,38 +381,44 @@ const Detail: React.FC<{
           )}
         </div>
       </div>
-      <Button
-        block
-        type="primary"
-        size="large"
-        className={styles.detailModalFooterButton}
-        loading={isLoading}
-        disabled={parseFloat(balance?.formatted ?? "0") === 0 || parseFloat(balance?.formatted ?? "0") < parseFloat(formatEther(ethValue ?? 0n + gas))}
-        onClick={async () => {
-          if (currentChain?.id !== chains[0]?.id) {
-            await switchNetworkAsync?.(chains[0]?.id);
-          }
-          await write({
-            args: [
-              `0x${character?.wallet?.arbitrum}`,
-              powerValue,
-            ],
-            value: ethValue ?? 0n + gas,
-          })
-        }}
-      >
-        {currentChain?.id === chains[0]?.id ? (
-          <>
-            {(parseFloat(balance?.formatted ?? "0") === 0 || parseFloat(balance?.formatted ?? "0") < parseFloat(formatEther(ethValue ?? 0n + gas))) ? (
-              <span>Insufficient Balance</span>
-            ) : (
-              <span>Confirm Purchase</span>
-            )}
-          </>
-        ) : (
+      {currentChain?.id !== chains[0]?.id ? (
+        <Button
+          block
+          type="primary"
+          size="large"
+          className={styles.detailModalFooterButton}
+          loading={switchNetworkLoading && pendingChainId === chains[0]?.id}
+          onClick={() => {
+            switchNetwork?.(chains[0]?.id);
+          }}
+        >
           <span>Change Network</span>
-        )}
-      </Button>
+        </Button>
+      ) : (
+        <Button
+          block
+          type="primary"
+          size="large"
+          className={styles.detailModalFooterButton}
+          loading={isLoading}
+          disabled={parseFloat(balance?.formatted ?? "0") === 0 || parseFloat(balance?.formatted ?? "0") < parseFloat(formatEther(ethValue ?? 0n + gas))}
+          onClick={async () => {
+            await write({
+              args: [
+                `0x${character?.wallet?.optimism}`,
+                powerValue,
+              ],
+              value: ethValue ?? 0n + gas,
+            })
+          }}
+        >
+          {(parseFloat(balance?.formatted ?? "0") === 0 || parseFloat(balance?.formatted ?? "0") < parseFloat(formatEther(ethValue ?? 0n + gas))) ? (
+            <span>Insufficient Balance</span>
+          ) : (
+            <span>Confirm Purchase</span>
+          )}
+        </Button>
+      )}
     </div >
   )
 };

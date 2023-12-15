@@ -23,7 +23,7 @@ export default () => {
 
   useEffect(() => {
     const AIMePowers = getContract({
-      address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+      address: `0x${AIME_CONTRACT.Optimism.Powers}`,
       abi: require("@/abis/AIMePowers.json"),
       walletClient: ethereumClient,
     });

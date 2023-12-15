@@ -20,7 +20,7 @@ const InputBox: React.FC<{
 }> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode, setDisableMic }) => {
   const { handleSendMessage, connecting, SendMessageType } = useModel("useSocket");
   const { accessToken, accessTokenExpire } = useModel("useAccess");
-  const { address } = useModel("useWallet");
+  const { address, walletBinded } = useModel("useWallet");
   const { telegramDataString, telegramAuthType, miniAppUtils, telegramWebApp } = useModel("useTelegram");
   const { isRecording } = useModel("useRecorder");
   const { speechInterim, messageList } = useModel("useChat");
@@ -49,10 +49,10 @@ const InputBox: React.FC<{
     isError: boolean;
     isLoading: boolean;
   } = useContractRead({
-    address: `0x${AIME_CONTRACT.Arbitrum.Powers}`,
+    address: `0x${AIME_CONTRACT.Optimism.Powers}`,
     abi: require("@/abis/AIMePowers.json"),
     functionName: "powerBalance",
-    args: [`0x${character?.wallet?.arbitrum}`, address],
+    args: [`0x${character?.wallet?.optimism}`, address],
     onSuccess: (data) => {
       setBalance(data ?? 0n);
     }
@@ -158,12 +158,12 @@ const InputBox: React.FC<{
         </div>
       </div>
       <LoginModal
-        visible={isBuyModalVisible && !isConnected}
+        visible={isBuyModalVisible && (!isConnected || !walletBinded)}
         setVisible={() => { }}
         closeable={false}
       />
       <BuyModal
-        visible={isBuyModalVisible && isConnected}
+        visible={isBuyModalVisible && isConnected && walletBinded}
         setVisible={setIsBuyModalVisible}
         transactionHash={transactionHash}
         setTransactionHash={setTransactionHash}

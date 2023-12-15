@@ -13,7 +13,7 @@ import { notification } from "antd";
 import { AccessLayout } from "@/layouts/access";
 
 const Bridge: React.FC = () => {
-  const { telegramDataString, telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
+  const { telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
   const { address, signature, walletBinded, setWalletModalVisible, setAddress } = useModel('useWallet');
   const { setCharacter } = useModel('useSetting');
   const { accessToken, setAccessToken, setAccessTokenExpire } = useModel('useAccess');

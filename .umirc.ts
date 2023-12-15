@@ -21,7 +21,16 @@ export default defineConfig({
         },
         {
           path: "/chat/:id",
-          component: "chat/detail",
+          routes: [
+            {
+              path: "/chat/:id",
+              component: "chat/detail",
+            },
+            {
+              path: "/chat/:id/statistics",
+              component: "chat/statistics",
+            }
+          ],
         },
       ],
     },

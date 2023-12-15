@@ -33,7 +33,7 @@ export interface Character {
   share_message?: string;
   wallet?: {
     goerli?: string;
-    arbitrum?: string;
+    optimism?: string;
   };
   questions?: string[];
   tags?: string[];

@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "../style.less";
 import { useSwitchNetwork } from "wagmi";
 import { ReactComponent as RefreshIcon } from '@/assets/icon/refresh.svg';
 import { FaAngleRight } from "react-icons/fa";
-import { Button, ConfigProvider, theme } from "antd";
+import { Button, ConfigProvider, notification, theme } from "antd";
 import { THEME_CONFIG } from "@/constants/theme";
 
 const SwitchNetwork: React.FC = () => {
-  const { chains, switchNetworkAsync } = useSwitchNetwork();
+  const { chains, error, isLoading, pendingChainId, switchNetwork } =
+    useSwitchNetwork();
+
+  useEffect(() => {
+    if (!!error) {
+      notification.error({
+        key: "switchNetworkError",
+        message: "Switch Network Error",
+        description: error?.message,
+      });
+    }
+  }, [error]);
 
   return (
     <>
@@ -42,9 +53,10 @@ const SwitchNetwork: React.FC = () => {
             block
             type="primary"
             size="large"
+            loading={isLoading && pendingChainId === chains[0]?.id}
             className={styles.loginModalContentItem}
             onClick={() => {
-              switchNetworkAsync?.(chains[0]?.id);
+              switchNetwork?.(chains[0]?.id);
             }}
           >
             <div className={styles.loginModalContentItemLeft}>

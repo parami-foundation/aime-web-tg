@@ -1,8 +1,8 @@
-import { NETWORK_CONFIG } from "@/constants/global";
 import { BindWallet, BindWalletNonce, GetWallet } from "@/services/api";
 import { useEffect, useState } from "react";
 import { useModel } from "@umijs/max";
 import { notification } from "antd";
+import { NETWORK_CONFIG } from "@/constants/global";
 
 export default () => {
   const { accessToken } = useModel("useAccess");
@@ -81,7 +81,7 @@ export default () => {
     }
     const { response, data } = await BindWallet(
       {
-        chain_id: NETWORK_CONFIG.chains[0].id.toString(),
+        chain_id: NETWORK_CONFIG?.chains[0]?.id?.toString(),
         address: address,
         signature: signature,
       },
@@ -120,7 +120,7 @@ export default () => {
       const { response, data } = await GetWallet(accessToken);
       if (response?.status === 200 && !!data?.length) {
         data?.forEach((item) => {
-          if (item.chain_id === NETWORK_CONFIG.chains[0].id?.toString()) {
+          if (item.chain_id === NETWORK_CONFIG?.chains[0]?.id?.toString()) {
             setWalletBinded(true);
             setAddress(`0x${item.address}` as `0x${string}`);
             setBindedAddress(`0x${item.address}` as `0x${string}`);

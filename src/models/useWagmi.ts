@@ -50,19 +50,21 @@ export default () => {
           rpc: (chain) => {
             if (chain.id !== NETWORK_CONFIG.chains[0].id) return null;
             return {
-              http: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_CONFIG.Arbitrum}`,
-              webSocket: `wss://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_CONFIG.Arbitrum}`,
+              http: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_CONFIG.Optimism}`,
+              webSocket: `wss://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_CONFIG.Optimism}`,
             };
           },
+        }),
+        alchemyProvider({
+          apiKey: ALCHEMY_CONFIG.Optimism,
         }),
         infuraProvider({
           apiKey: INFURA_CONFIG.apiKey
         }),
-        alchemyProvider({
-          apiKey: ALCHEMY_CONFIG.Arbitrum,
-        }),
         publicProvider(),
       ], {
+      rank: false,
+      pollingInterval: 10000,
       batch: { multicall: true },
     }
     );

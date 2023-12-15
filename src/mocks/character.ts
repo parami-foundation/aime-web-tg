@@ -23,7 +23,7 @@ export const charactersData: Map<string, Character> = new Map([
         "Come with me, let's make money together. I will take you to new heights of earning money.",
       wallet: {
         goerli: "CecB7683E1Fa399Ff2457dE8B33D9110939547d6",
-        arbitrum: "db61B2aD59bdF2A066B7fC9F00f86c3EBc4856B4",
+        optimism: "52aBD651F0D56C2F7772DcEcEB7495b86BFaeEbD",
       },
       questions: ["Sir wen moon?", "Where are you?", "Give me some TRX!"],
       tags: ["Business", "Tech"],
@@ -60,7 +60,7 @@ export const charactersData: Map<string, Character> = new Map([
         "Come with me, let's make money together. I will take you to new heights of earning money.",
       wallet: {
         goerli: "CecB7683E1Fa399Ff2457dE8B33D9110939547d6",
-        arbitrum: "db61B2aD59bdF2A066B7fC9F00f86c3EBc4856B4",
+        optimism: "52aBD651F0D56C2F7772DcEcEB7495b86BFaeEbD",
       },
       questions: ["Sir wen moon?", "Where are you?", "Give me some TRX!"],
       tags: ["Business", "Tech"],
@@ -97,7 +97,7 @@ export const charactersData: Map<string, Character> = new Map([
         "Come with me, let's make money together. I will take you to new heights of earning money.",
       wallet: {
         goerli: "CecB7683E1Fa399Ff2457dE8B33D9110939547d6",
-        arbitrum: "db61B2aD59bdF2A066B7fC9F00f86c3EBc4856B4",
+        optimism: "52aBD651F0D56C2F7772DcEcEB7495b86BFaeEbD",
       },
       questions: ["Sir wen moon?", "Where are you?", "Give me some TRX!"],
       tags: ["Business"],
@@ -134,7 +134,7 @@ export const charactersData: Map<string, Character> = new Map([
         "Come with me, let's make money together. I will take you to new heights of earning money.",
       wallet: {
         goerli: "CecB7683E1Fa399Ff2457dE8B33D9110939547d6",
-        arbitrum: "db61B2aD59bdF2A066B7fC9F00f86c3EBc4856B4",
+        optimism: "52aBD651F0D56C2F7772DcEcEB7495b86BFaeEbD",
       },
       questions: ["Sir wen moon?", "Where are you?", "Give me some TRX!"],
       tags: ["FTXDestroyer"],
