@@ -1,7 +1,7 @@
 import { BindWallet, BindWalletNonce, GetWallet } from "@/services/api";
 import { useEffect, useState } from "react";
 import { useModel } from "@umijs/max";
-import { notification } from "antd";
+import { message as antdMessage } from "antd";
 import { NETWORK_CONFIG } from "@/constants/global";
 
 export default () => {
@@ -48,12 +48,7 @@ export default () => {
         message: data?.message,
       };
     } else {
-      notification.error({
-        key: "getNonceError",
-        message: "Get nonce failed",
-        description: data?.error_description,
-        duration: 0,
-      });
+      antdMessage.info(data?.error_description);
       return {
         nonce: undefined,
         message: undefined,
