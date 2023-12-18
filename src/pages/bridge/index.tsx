@@ -5,21 +5,22 @@ import { ReactComponent as Logo } from '@/assets/logo.svg';
 import { ReactComponent as LogoTitle } from '@/assets/auth/aime_logo_text.svg';
 import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 import queryString from 'query-string';
-import BuyModal from "../chat/detail/buyModal";
 import { charactersData } from "@/mocks/character";
 import { StartParam } from "@/types";
 import LoginModal from "@/components/loginModal";
 import { notification } from "antd";
 import { AccessLayout } from "@/layouts/access";
+import Trade from "@/components/trade";
 
 const Bridge: React.FC = () => {
   const { telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
-  const { address, signature, walletBinded, setWalletModalVisible, setAddress } = useModel('useWallet');
+  const { signature, walletBinded, setWalletModalVisible, setAddress } = useModel('useWallet');
   const { setCharacter } = useModel('useSetting');
   const { accessToken, setAccessToken, setAccessTokenExpire } = useModel('useAccess');
 
-  const [buyModalVisible, setBuyModalVisible] = React.useState<boolean>(false);
+  const [tradeModalVisible, setTradeModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
+  const [tradeMode, setTradeMode] = React.useState<'buy' | 'sell' | undefined>();
 
   const { chain: currentChain } = useNetwork();
   const { chains } = useSwitchNetwork();
@@ -27,7 +28,11 @@ const Bridge: React.FC = () => {
   const search = queryString.parse(window.location.search);
 
   const { disconnect, error: disconnectError, isSuccess: disconnectSuccess } = useDisconnect();
-  const { isConnected } = useAccount({
+  const { address: connectAddress, isConnected } = useAccount({
+    onConnect: (data) => {
+      setAddress(data.address);
+      localStorage.setItem('aime:address', data.address as string);
+    },
     onDisconnect: () => {
       setAddress(undefined);
       localStorage.removeItem('aime:address');
@@ -94,10 +99,10 @@ const Bridge: React.FC = () => {
     if (!!search?.action) {
       switch (search?.action) {
         case "bind":
-          if (!!address && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded)) {
+          if (!!connectAddress && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded)) {
             const params: StartParam = {
               characterId: search?.characterId as string,
-              address,
+              address: connectAddress,
               reconnect: true,
             };
             const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '____').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
@@ -106,13 +111,13 @@ const Bridge: React.FC = () => {
           }
           break;
 
-        case "buypower":
-          if (!!address && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded)) {
-            setBuyModalVisible(true);
+        case "trade":
+          if (!!connectAddress && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded)) {
+            setTradeModalVisible(true);
             if (!!transactionHash) {
               const params: StartParam = {
                 characterId: search?.characterId as string,
-                address,
+                address: connectAddress,
                 reconnect: true,
               };
               const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '&').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
@@ -120,7 +125,48 @@ const Bridge: React.FC = () => {
               window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
             }
           } else {
-            setBuyModalVisible(false);
+            setTradeModalVisible(false);
+            setTradeMode(undefined);
+          }
+          break;
+
+        case "buypower":
+          if (!!connectAddress && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded)) {
+            setTradeMode('buy');
+            setTradeModalVisible(true);
+            if (!!transactionHash) {
+              const params: StartParam = {
+                characterId: search?.characterId as string,
+                address: connectAddress,
+                reconnect: true,
+              };
+              const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '&').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
+
+              window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
+            }
+          } else {
+            setTradeModalVisible(false);
+            setTradeMode(undefined);
+          }
+          break;
+
+        case "sellpower":
+          if (!!connectAddress && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded)) {
+            setTradeMode('sell');
+            setTradeModalVisible(true);
+            if (!!transactionHash) {
+              const params: StartParam = {
+                characterId: search?.characterId as string,
+                address: connectAddress,
+                reconnect: true,
+              };
+              const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '&').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
+
+              window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
+            }
+          } else {
+            setTradeModalVisible(false);
+            setTradeMode(undefined);
           }
           break;
 
@@ -140,7 +186,7 @@ const Bridge: React.FC = () => {
         duration: 0,
       });
     }
-  }, [address, currentChain, signature, walletBinded, transactionHash]);
+  }, [connectAddress, currentChain, signature, walletBinded, transactionHash]);
 
   return (
     <AccessLayout>
@@ -160,12 +206,13 @@ const Bridge: React.FC = () => {
               setVisible={setWalletModalVisible}
               closeable={false}
             />
-            <BuyModal
-              visible={buyModalVisible}
-              setVisible={setBuyModalVisible}
+            <Trade
+              visible={tradeModalVisible}
+              setVisible={setTradeModalVisible}
               closeable={false}
               transactionHash={transactionHash}
               setTransactionHash={setTransactionHash}
+              mode={tradeMode}
             />
           </>
         )}

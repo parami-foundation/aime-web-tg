@@ -4,6 +4,7 @@ import { FaAngleRight } from "react-icons/fa";
 import { useModel } from "@umijs/max";
 import { useAccount, useConnect } from "wagmi";
 import { Button, ConfigProvider, notification, theme } from "antd";
+import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { ReactComponent as MetamaskIcon } from "@/assets/brand/metamask.svg";
 import { ReactComponent as CoinbaseIcon } from "@/assets/brand/coinbase.svg";
 import { ReactComponent as WalletConnectIcon } from "@/assets/brand/walletconnect.svg";
@@ -21,6 +22,7 @@ const ConnectWallet: React.FC = () => {
         setAddress(account?.account);
       },
     });
+  const { open } = useWeb3Modal();
 
   useEffect(() => {
     if (error) {
@@ -70,7 +72,13 @@ const ConnectWallet: React.FC = () => {
                 size="large"
                 className={styles.loginModalContentItem}
                 disabled={!x.ready || isReconnecting || connector?.id === x.id}
-                onClick={() => connect({ connector: x })}
+                onClick={() => {
+                  if (x.id === 'walletConnect') {
+                    open();
+                  } else {
+                    connect({ connector: x })
+                  }
+                }}
                 key={x.name}
               >
                 <div className={styles.loginModalContentItemLeft}>

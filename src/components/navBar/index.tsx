@@ -21,7 +21,7 @@ const NavBar: React.FC = () => {
     <div className={styles.navBarContainer}>
       <div className={styles.navBarWrapper}>
         <div
-          className={classNames(styles.navBarItem, menu === 'home' && styles.navBarIconActive)}
+          className={classNames(styles.navBarItem, menu === '' && styles.navBarIconActive)}
           onClick={() => {
             history.push('/');
           }}

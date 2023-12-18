@@ -13,8 +13,6 @@ import { DeleteOutlined, ReloadOutlined } from '@ant-design/icons';
 const Layout: React.FC = () => {
   const { viewport } = useModel('useView');
   const { wagmiConfig } = useModel('useWagmi');
-  const { cleanAccessToken } = useModel('useAccess');
-  const { cleanTelegramData } = useModel('useTelegram');
 
   if (DEBUG) {
     let el = document.createElement('div');

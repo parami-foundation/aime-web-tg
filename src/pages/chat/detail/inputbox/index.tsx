@@ -5,10 +5,11 @@ import { HiArrowNarrowRight } from "react-icons/hi";
 import { CgKeyboard } from "react-icons/cg";
 import { Input } from "antd";
 import { useModel } from "@umijs/max";
-import BuyModal from "../buyModal";
 import { AIME_CONTRACT, PROJECT_CONFIG } from "@/constants/global";
 import { useAccount, useContractRead } from "wagmi";
 import LoginModal from "@/components/loginModal";
+import Trade from "@/components/trade";
+import { FaCoins } from "react-icons/fa";
 
 const InputBox: React.FC<{
   isTextMode: boolean;
@@ -27,7 +28,7 @@ const InputBox: React.FC<{
   const { character } = useModel("useSetting");
 
   const [inputValue, setInputValue] = React.useState<string>();
-  const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
+  const [isTradeModalVisible, setIsTradeModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
   const [balance, setBalance] = React.useState<bigint>(0n);
 
@@ -76,11 +77,11 @@ const InputBox: React.FC<{
             <div
               className={styles.buyButton}
               onClick={() => {
-                (!!telegramDataString && !!miniAppUtils) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsBuyModalVisible(true);
+                (!!telegramDataString && !!miniAppUtils) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=trade&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsTradeModalVisible(true);
                 (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
               }}
             >
-              Buy
+              <FaCoins />
             </div>
             <div
               className={styles.inputBox}
@@ -158,13 +159,13 @@ const InputBox: React.FC<{
         </div>
       </div>
       <LoginModal
-        visible={isBuyModalVisible && (!isConnected || !walletBinded)}
+        visible={isTradeModalVisible && (!isConnected || !walletBinded)}
         setVisible={() => { }}
         closeable={false}
       />
-      <BuyModal
-        visible={isBuyModalVisible && isConnected && walletBinded}
-        setVisible={setIsBuyModalVisible}
+      <Trade
+        visible={isTradeModalVisible && isConnected && walletBinded}
+        setVisible={setIsTradeModalVisible}
         transactionHash={transactionHash}
         setTransactionHash={setTransactionHash}
       />

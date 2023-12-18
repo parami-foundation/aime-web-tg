@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styles from "./style.less";
-import { Button, InputNumber, Modal, notification } from "antd";
+import { Button, InputNumber, Modal, message, notification } from "antd";
 import { AiFillCaretDown, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { RiWalletLine } from "react-icons/ri";
 import PurchaseSuccess from "@/components/purchase/success";
@@ -12,6 +12,7 @@ import { GetTokenPrice } from "@/services/third";
 import { useModel } from "@umijs/max";
 import { CreateTransaction } from "@/services/api";
 import classNames from "classnames";
+import { Image } from "antd";
 
 const Select: React.FC<{
   powerValue: number;
@@ -20,6 +21,8 @@ const Select: React.FC<{
   const { character } = useModel("useSetting");
 
   const [manualInput, setManualInput] = React.useState<number>(0);
+  const [supply, setSupply] = React.useState<bigint>(0n);
+  const [maxSupply, setMaxSupply] = React.useState<bigint>(0n);
 
   const getEthValue = (powerValue: number) => {
     const { data: ethValue }: {
@@ -29,12 +32,39 @@ const Select: React.FC<{
     } = useContractRead({
       address: `0x${AIME_CONTRACT.Optimism.Powers}`,
       abi: require("@/abis/AIMePowers.json"),
-      functionName: "getBuyPrice",
+      functionName: "getBuyPriceAfterFee",
       args: [`0x${character?.wallet?.optimism}`, powerValue],
     });
 
     return ethValue;
   };
+
+  const getPowersSupply: {
+    data?: bigint;
+    isError: boolean;
+    isLoading: boolean;
+  } = useContractRead({
+    address: `0x${AIME_CONTRACT.Optimism.Powers}`,
+    abi: require("@/abis/AIMePowers.json"),
+    functionName: "powersSupply",
+    args: [`0x${character?.wallet?.optimism}`],
+    onSuccess: (data) => {
+      setSupply(data ?? 0n);
+    },
+  });
+
+  const getMaxSupply: {
+    data?: bigint;
+    isError: boolean;
+    isLoading: boolean;
+  } = useContractRead({
+    address: `0x${AIME_CONTRACT.Optimism.Powers}`,
+    abi: require("@/abis/AIMePowers.json"),
+    functionName: "maxSupply",
+    onSuccess: (data) => {
+      setMaxSupply(data ?? 0n);
+    },
+  });
 
   return (
     <div className={styles.selectModalContainer}>
@@ -46,8 +76,10 @@ const Select: React.FC<{
             alt="buy"
           />
           <div className={styles.selectModalHeaderIconAvatar}>
-            <img
+            <Image
+              className={styles.selectModalHeaderIconAvatarImg}
               src={character?.avatar_url}
+              fallback={require('@/assets/me/avatar.png')}
               alt="avatar"
             />
           </div>
@@ -159,7 +191,11 @@ const Select: React.FC<{
         className={styles.selectModalContentItemButton}
         disabled={manualInput === 0}
         onClick={() => {
-          setPowerValue(manualInput);
+          if (supply + BigInt(manualInput) <= maxSupply) {
+            setPowerValue(manualInput);
+          } else {
+            message.error("Power supply is not enough");
+          }
         }}
       >
         Confirm Purchase
@@ -278,8 +314,10 @@ const Detail: React.FC<{
             alt="transaction"
           />
           <div className={styles.detailModalHeaderIconAvatar}>
-            <img
+            <Image
+              className={styles.indexModalContentCharacterLeftAvatarImg}
               src={character?.avatar_url}
+              fallback={require('@/assets/me/avatar.png')}
               alt="avatar"
             />
           </div>
@@ -423,22 +461,16 @@ const Detail: React.FC<{
   )
 };
 
-const BuyModal: React.FC<{
+const Buy: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
-  closeable?: boolean;
   transactionHash: `0x${string}` | undefined;
-  setTransactionHash: React.Dispatch<React.SetStateAction<`0x${string}` | undefined>>
-}> = ({ visible, setVisible, closeable, transactionHash, setTransactionHash }) => {
-  const { bindedAddress } = useModel("useWallet");
-
+  setTransactionHash: React.Dispatch<React.SetStateAction<`0x${string}` | undefined>>;
+}> = ({ visible, setVisible, transactionHash, setTransactionHash }) => {
   const [powerValue, setPowerValue] = React.useState<number>(0);
   const [purchaseSuccessVisible, setPurchaseSuccessVisible] = React.useState<boolean>(false);
   const [purchaseFailedVisible, setPurchaseFailedVisible] = React.useState<boolean>(false);
   const [error, setError] = React.useState<Error>(new Error(""));
-
-  const { connector, address: connectAddress } = useAccount();
-  const { disconnect } = useDisconnect();
 
   useEffect(() => {
     if (!visible) {
@@ -449,53 +481,23 @@ const BuyModal: React.FC<{
     }
   }, [visible]);
 
-  useEffect(() => {
-    DEBUG && console.log("bindedAddress", bindedAddress);
-    DEBUG && console.log("connectAddress", connectAddress);
-    if (!!bindedAddress && !!connectAddress && bindedAddress !== connectAddress) {
-      notification.error({
-        key: 'walletError',
-        message: 'Wallet Error',
-        description: `Please use the wallet you binded. And please make sure you are on the right network. ${NETWORK_CONFIG?.chains[0]?.name} is required.`
-      });
-      disconnect();
-      setVisible(false);
-    }
-  }, [bindedAddress, connectAddress]);
-
   return (
     <>
-      <Modal
-        centered
-        title={null}
-        footer={null}
-        className={styles.buyModal}
-        open={visible}
-        onCancel={() => setVisible(false)}
-        closable={closeable ?? true}
-        maskClosable={closeable ?? true}
-      >
-        {connector?.id === 'walletConnect' && (
-          <div className={styles.walletConnectAccount}>
-            <w3m-account-button />
-          </div>
-        )}
-        {powerValue === 0 ? (
-          <Select
-            powerValue={powerValue}
-            setPowerValue={setPowerValue}
-          />
-        ) : (
-          <Detail
-            powerValue={powerValue}
-            setPurchaseSuccessVisible={setPurchaseSuccessVisible}
-            setPurchaseFailedVisible={setPurchaseFailedVisible}
-            setError={setError}
-            setTransactionHash={setTransactionHash}
-            setBuyModalVisible={setVisible}
-          />
-        )}
-      </Modal>
+      {powerValue === 0 ? (
+        <Select
+          powerValue={powerValue}
+          setPowerValue={setPowerValue}
+        />
+      ) : (
+        <Detail
+          powerValue={powerValue}
+          setPurchaseSuccessVisible={setPurchaseSuccessVisible}
+          setPurchaseFailedVisible={setPurchaseFailedVisible}
+          setError={setError}
+          setTransactionHash={setTransactionHash}
+          setBuyModalVisible={setVisible}
+        />
+      )}
       <PurchaseSuccess
         visible={purchaseSuccessVisible}
         setVisible={setPurchaseSuccessVisible}
@@ -510,4 +512,4 @@ const BuyModal: React.FC<{
   )
 };
 
-export default BuyModal;
+export default Buy;

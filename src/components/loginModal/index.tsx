@@ -19,6 +19,10 @@ const LoginModal: React.FC<{
   const { chains } = useSwitchNetwork();
 
   const { connector, address, isConnected } = useAccount({
+    onConnect: (data) => {
+      setAddress(data.address);
+      localStorage.setItem('aime:address', data.address as string);
+    },
     onDisconnect: () => {
       setAddress(undefined);
       localStorage.removeItem('aime:address');

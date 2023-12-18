@@ -6,11 +6,11 @@ import { RiTwitterXFill, RiWalletLine } from "react-icons/ri";
 import { useModel } from "@umijs/max";
 import classNames from "classnames";
 import { THEME_CONFIG } from "@/constants/theme";
-import BuyModal from "../../buyModal";
 import ShareModal from "../../shareModal";
 import { ReactComponent as SoundPlayIcon } from '@/assets/icon/soundPlay.svg';
 import { MessageDisplay } from "@/models/useChat";
 import ReactMarkdown from "react-markdown";
+import Trade from "@/components/trade";
 
 const AiPop: React.FC<{
   data?: MessageDisplay[];
@@ -21,7 +21,8 @@ const AiPop: React.FC<{
   const { character } = useModel("useSetting");
 
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
-  const [shareModalVisible, setShareModalVisible] = React.useState<boolean>(false);
+  const [isSellModalVisible, setIsSellModalVisible] = React.useState<boolean>(false);
+  const [isShareModalVisible, setIsShareModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
 
   const audioPlayer = createRef<HTMLAudioElement>();
@@ -196,11 +197,76 @@ const AiPop: React.FC<{
                           </ConfigProvider>
                         </div>
                       </div>
-                      <BuyModal
+                      <Trade
                         visible={isBuyModalVisible}
                         setVisible={setIsBuyModalVisible}
                         transactionHash={transactionHash}
                         setTransactionHash={setTransactionHash}
+                        mode="buy"
+                      />
+                    </React.Fragment>
+                  )
+                case "sellPower":
+                  return (
+                    <React.Fragment
+                      key={item?.id}
+                    >
+                      <div className={styles.aiPopAction}>
+                        <ReactMarkdown
+                          className={styles.aiPopText}
+                          components={{
+                            a: (props) => (
+                              <a
+                                onClick={(e) => {
+                                  (!!telegramDataString && !!telegramWebApp && !!props?.href) ? miniAppUtils?.openLink(props?.href) : window.open(props?.href, "_blank");
+                                }}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={styles.aiPopLink}
+                              >
+                                🔗 {props.children}
+                              </a>
+                            ),
+                            li: 'p',
+                            ol: 'p',
+                            ul: 'p',
+                          }}
+                        >
+                          {item?.data as string}
+                        </ReactMarkdown>
+                        <div className={styles.aiPopButtons}>
+                          <ConfigProvider
+                            theme={{
+                              algorithm: theme.defaultAlgorithm,
+                              token: {
+                                wireframe: false,
+                                colorPrimary: THEME_CONFIG.colorSecondary,
+                                borderRadius: THEME_CONFIG.borderRadius,
+                                boxShadow: THEME_CONFIG.boxShadow,
+                              },
+                            }}
+                          >
+                            <Button
+                              block
+                              type="primary"
+                              size="large"
+                              className={styles.aiPopButtonDark}
+                              onClick={() => {
+                                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=sellpower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsSellModalVisible(true);
+                                (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
+                              }}
+                            >
+                              Sell AIME Power
+                            </Button>
+                          </ConfigProvider>
+                        </div>
+                      </div>
+                      <Trade
+                        visible={isSellModalVisible}
+                        setVisible={setIsSellModalVisible}
+                        transactionHash={transactionHash}
+                        setTransactionHash={setTransactionHash}
+                        mode="sell"
                       />
                     </React.Fragment>
                   )
@@ -239,7 +305,7 @@ const AiPop: React.FC<{
                             size="large"
                             className={styles.aiPopButton}
                             onClick={() => {
-                              setShareModalVisible(true);
+                              setIsShareModalVisible(true);
                             }}
                           >
                             Share
@@ -248,8 +314,8 @@ const AiPop: React.FC<{
                       </div>
                       <ShareModal
                         characterId={character?.id}
-                        visible={shareModalVisible}
-                        setVisible={setShareModalVisible}
+                        visible={isShareModalVisible}
+                        setVisible={setIsShareModalVisible}
                       />
                     </React.Fragment>
                   )

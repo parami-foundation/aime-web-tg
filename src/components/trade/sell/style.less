@@ -1,17 +1,3 @@
-.buyModal {
-  :global(.ant-modal-content) {
-    background: var(--content-bg);
-  }
-
-  .walletConnectAccount {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-}
-
 .selectModalContainer {
   display: flex;
   flex-direction: column;
@@ -32,7 +18,7 @@
       width: 150px;
       height: 150px;
       margin-bottom: 20px;
-      background-color: #fffade;
+      background-color: #faf5ff;
       border-radius: 50%;
       padding: var(--spacing);
 
@@ -51,12 +37,12 @@
         height: 40px;
         border-radius: 100%;
         border: 3px solid #fff;
+        overflow: hidden;
 
-        img {
+        .selectModalHeaderIconAvatarImg {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          border-radius: 100%;
         }
       }
     }
@@ -108,7 +94,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      background-color: #fffade;
+      background-color: #faf5ff;
       box-shadow: var(--box-shadow);
       cursor: pointer;
 
@@ -146,7 +132,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background-color: #fffade;
+    background-color: #faf5ff;
     box-shadow: var(--box-shadow);
     width: 100%;
     margin-top: 9px;
@@ -286,12 +272,12 @@
         height: 40px;
         border-radius: 100%;
         border: 3px solid #fff;
+        overflow: hidden;
 
-        img {
+        .indexModalContentCharacterLeftAvatarImg {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          border-radius: 100%;
         }
       }
     }
