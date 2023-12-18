@@ -40,6 +40,8 @@ export default () => {
       wagmiConfig: config,
       projectId: WALLETCONNECT_CONFIG.projectId,
       chains: NETWORK_CONFIG.chains,
+      defaultChain: NETWORK_CONFIG.chains[0],
+      metadata: WALLETCONNECT_CONFIG.metadata,
       themeMode: 'light',
       themeVariables: {
         '--w3m-z-index': 9999999,

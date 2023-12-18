@@ -178,12 +178,11 @@ const Select: React.FC<{
         className={styles.selectModalContentItemButton}
         disabled={manualInput === 0}
         onClick={() => {
-          setPowerValue(manualInput);
-          // if (manualInput <= Number(formatEther(balance ?? 0n))) {
-          //   setPowerValue(manualInput);
-          // } else {
-          //   message.error("You don't have enough power to sell.");
-          // }
+          if (manualInput <= Number(formatEther(balance ?? 0n))) {
+            setPowerValue(manualInput);
+          } else {
+            message.error("You don't have enough power to sell.");
+          }
         }}
       >
         Confirm Sell
