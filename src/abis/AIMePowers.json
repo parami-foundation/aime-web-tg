@@ -48,19 +48,13 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "ethAmount",
+        "name": "feeAmount",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "creatorFee",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "protocolFee",
+        "name": "priceAfterFee",
         "type": "uint256"
       },
       {
@@ -68,12 +62,6 @@
         "internalType": "address",
         "name": "referrerAddress",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "referrerFee",
-        "type": "uint256"
       },
       {
         "indexed": false,
@@ -86,24 +74,13 @@
     "type": "event"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "addressNonceUsed",
+    "inputs": [],
+    "name": "CREATOR_INIT_AMOUNT",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "uint32",
         "name": "",
-        "type": "bool"
+        "type": "uint32"
       }
     ],
     "stateMutability": "view",
@@ -111,12 +88,12 @@
   },
   {
     "inputs": [],
-    "name": "attester",
+    "name": "DECIMALS",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "uint8",
         "name": "",
-        "type": "address"
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -142,12 +119,12 @@
   },
   {
     "inputs": [],
-    "name": "creatorFeePercent",
+    "name": "feePercentage",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "",
-        "type": "uint256"
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -282,25 +259,31 @@
   },
   {
     "inputs": [],
-    "name": "maxSupply",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "owner",
     "outputs": [
       {
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "pool",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -351,19 +334,6 @@
   },
   {
     "inputs": [],
-    "name": "protocolFeeDeductedPercent",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "protocolFeeDestination",
     "outputs": [
       {
@@ -380,9 +350,9 @@
     "name": "protocolFeePercent",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "",
-        "type": "uint256"
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -412,9 +382,9 @@
     "name": "referrerFeePercent",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint8",
         "name": "",
-        "type": "uint256"
+        "type": "uint8"
       }
     ],
     "stateMutability": "view",
@@ -442,32 +412,6 @@
     ],
     "name": "sellPowers",
     "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_attester",
-        "type": "address"
-      }
-    ],
-    "name": "setAttester",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_feePercent",
-        "type": "uint256"
-      }
-    ],
-    "name": "setCreatorFeePercent",
-    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -487,51 +431,12 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_feePercent",
-        "type": "uint256"
-      }
-    ],
-    "name": "setProtocolFeeDeductedPercent",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_feePercent",
-        "type": "uint256"
-      }
-    ],
-    "name": "setProtocolFeePercent",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "referrerAddress",
         "type": "address"
       }
     ],
     "name": "setReferrer",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_feePercent",
-        "type": "uint256"
-      }
-    ],
-    "name": "setReferrerFeePercent",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

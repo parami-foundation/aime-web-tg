@@ -15,19 +15,341 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    min-height: calc(100vh - 85px);
-    padding: 35px;
+    min-height: 100vh;
+    padding: 35px 20px;
     transition: all 0.3s ease-in-out;
     overflow-y: auto;
 
-    .createSteps {
-      color: #999999;
+    .createHeader {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+
+      .createSteps {
+        color: #999999;
+        font-weight: 700;
+        margin-bottom: 25px;
+      }
+
+      .createAvatarContainer {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .createAvatarUpload {
+          line-height: normal;
+          width: 200px;
+          height: 200px;
+        }
+
+        .createAvatar {
+          width: 200px;
+          height: 200px;
+          background-color: #999999;
+          border-radius: 50%;
+          overflow: hidden;
+        }
+
+        .createAvatarMask {
+          position: absolute;
+          top: 0;
+          left: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          border-radius: 50%;
+
+          span {
+            color: #fff;
+            font-size: 22px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+          }
+        }
+
+        .createAvatarIcon {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 50px;
+          height: 50px;
+          color: #fff;
+          font-size: 25px;
+          border: 3px solid #fff;
+          border-radius: 50%;
+          background-color: #000;
+        }
+      }
+
+      .createName {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+        color: #000;
+        font-size: 28px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        text-transform: capitalize;
+        margin-top: 20px;
+      }
+
+      .createDescription {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 60px;
+
+        .createDescriptionTitle {
+          color: #000;
+          font-size: 22px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: normal;
+        }
+
+        .createDescriptionContent {
+          color: rgba(0, 0, 0, 0.7);
+          text-align: center;
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 1.5;
+          padding: 0 15px;
+          margin-top: 15px;
+        }
+
+        .createDescriptionButton {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: center;
+          height: auto;
+          color: #000;
+          font-weight: 700;
+          padding: 8px 20px;
+          margin-top: 20px;
+
+          .createDescriptionButtonIcon {
+            font-size: 18px;
+            margin-right: 10px;
+          }
+
+          span {
+            color: #000;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+          }
+        }
+      }
+
+      .createContent {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 15px;
+        background: rgba(0, 0, 0, 0.04);
+        padding: 15px 15px 30px 15px;
+        border-radius: 10px;
+
+        .createContentInput {
+          color: #999;
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 1.5;
+        }
+      }
+
+      .createRecordAction {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+
+        .createRecordButton {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          margin-top: 100px;
+          margin-bottom: 100px;
+
+          .createRecordButtonIcon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            width: 80px;
+            height: 80px;
+            color: #000;
+            background-color: #eafd53;
+            box-shadow: 0px 4px 10px #ddf424;
+            z-index: 2;
+          }
+
+          .createRecordButtonShadow {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(234, 253, 83, 0.8);
+            border-radius: 50%;
+          }
+
+          .createRecordButtonShadowAnimation {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(234, 253, 83, 0.8);
+            border-radius: 50%;
+            animation: createRecordButtonShadowAnimation 3s infinite;
+          }
+        }
+
+        .createRecordText {
+          color: #000;
+          font-size: 16px;
+          font-style: normal;
+          font-weight: 600;
+          line-height: normal;
+        }
+
+        .createRecordAudioRecorder {
+          display: none;
+        }
+      }
+
+      .createRecordReadyAction {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 100px;
+        margin-bottom: 100px;
+
+        .createRecordReadyAudio {
+          display: none;
+        }
+
+        .createRecordRetry {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+
+          .createRecordRetryIcon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            width: 80px;
+            height: 80px;
+            color: #000;
+            background-color: #eafd53;
+            box-shadow: 0px 4px 10px #ddf424;
+            z-index: 2;
+          }
+
+          .createRecordRetryText {
+            color: #000;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            margin-top: 20px;
+          }
+        }
+
+        .createRecordPlay {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+
+          .createRecordPlayIcon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            width: 80px;
+            height: 80px;
+            color: #fff;
+            background-color: #000;
+            box-shadow: 0px 4px 10px #000;
+            z-index: 2;
+          }
+
+          .createRecordPlayText {
+            color: #000;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            margin-top: 20px;
+          }
+        }
+      }
     }
 
-    .createAvatar {
-      position: relative;
-      width: 70px;
-      height: 70px;
+    .createFooter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+
+      .createFooterButton {
+        height: auto;
+        font-weight: 700;
+        padding: 10px 20px;
+        border-radius: var(--border-radius);
+      }
     }
+  }
+}
+
+@keyframes createRecordButtonShadowAnimation {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
   }
 }

@@ -45,7 +45,7 @@ const InputBox: React.FC<{
     }
   }, [isTextMode]);
 
-  const { data }: {
+  const powerBalance: {
     data?: bigint;
     isError: boolean;
     isLoading: boolean;

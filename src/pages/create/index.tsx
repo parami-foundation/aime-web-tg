@@ -1,34 +1,36 @@
 import React from "react";
 import styles from "./style.less";
 import { AccessLayout } from "@/layouts/access";
-import { Image } from "antd";
-import { useModel } from "@umijs/max";
-import { InitData } from "@tma.js/sdk";
-import { TelegramOauthDataOnauthProps } from "@/types";
+import CreateInfo from "./info";
+import CreateRecord from "./record";
+
 
 const Create: React.FC = () => {
-  const { profile } = useModel("useAccess");
-  const { telegramData } = useModel("useTelegram");
-
-  const [avatar, setAvatar] = React.useState<string | undefined>(profile?.avatar_uri || (telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url);
+  const [step, setStep] = React.useState<number>(1);
+  const [avatar, setAvatar] = React.useState<Blob | null>(null);
+  const [bio, setBio] = React.useState<string | null>(null);
+  const [name, setName] = React.useState<string | null>(null);
+  const [record, setRecord] = React.useState<Blob | null>(null);
 
   return (
     <div className={styles.createContainer}>
-      <div className={styles.createWrapper}>
-        <div className={styles.createSteps}>
-          1 / 2
-        </div>
-        <div className={styles.createAvatar}>
-          <div className={styles.createAvatarImage}>
-            <Image
-              className={styles.createAvatarImageSrc}
-              src={avatar}
-              fallback={require('@/assets/me/avatar.png')}
-              preview={false}
-            />
-          </div>
-        </div>
-      </div>
+      {step === 1 && (
+        <CreateInfo
+          avatar={avatar}
+          setAvatar={setAvatar}
+          bio={bio}
+          setBio={setBio}
+          name={name}
+          setName={setName}
+          setStep={setStep}
+        />
+      )}
+      {step === 2 && (
+        <CreateRecord
+          record={record}
+          setRecord={setRecord}
+        />
+      )}
     </div>
   )
 };

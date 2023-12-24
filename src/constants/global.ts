@@ -14,7 +14,7 @@ export const NETWORK_CONFIG = {
 
 export const AIME_CONTRACT = {
   Optimism: {
-    Powers: "D21881a9b32509fC0C042682E8a61f57d8B57C11",
+    Powers: "2a9Ec32e051F595d4F7e3a80c9e1A5B942b421E4",
   },
 };
 
