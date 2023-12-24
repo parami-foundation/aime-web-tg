@@ -6,6 +6,9 @@ import {
   LaunchParams,
   Utils,
   CloudStorage,
+  BackButton,
+  MainButton,
+  ThemeParams,
 } from "@tma.js/sdk";
 import queryString from "query-string";
 import { useEffect, useState } from "react";
@@ -24,6 +27,9 @@ export default () => {
   const [miniAppUtils, setMiniAppUtils] = useState<Utils>();
   const [telegramCloudStorage, setTelegramCloudStorage] =
     useState<CloudStorage>();
+  const [miniAppBackButton, setMiniAppBackButton] = useState<BackButton>();
+  const [miniAppMainButton, setMiniAppMainButton] = useState<MainButton>();
+  const [miniAppThemeParams, setMiniAppThemeParams] = useState<ThemeParams>();
 
   useEffect(() => {
     (async () => {
@@ -85,5 +91,11 @@ export default () => {
     telegramOauthModalVisible,
     setTelegramOauthModalVisible,
     cleanTelegramData,
+    miniAppBackButton,
+    setMiniAppBackButton,
+    miniAppMainButton,
+    setMiniAppMainButton,
+    miniAppThemeParams,
+    setMiniAppThemeParams,
   };
 };

@@ -8,7 +8,6 @@ import { TMAInitData } from '@/components/telegram/initData';
 import { WagmiConfig } from 'wagmi';
 import { DEBUG } from '@/constants/global';
 import eruda from 'eruda';
-import { DeleteOutlined, ReloadOutlined } from '@ant-design/icons';
 
 const Layout: React.FC = () => {
   const { viewport } = useModel('useView');

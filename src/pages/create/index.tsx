@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./style.less";
 import { AccessLayout } from "@/layouts/access";
+import { useModel, history } from "@umijs/max";
 import CreateInfo from "./info";
 import CreateRecord from "./record";
 
 
 const Create: React.FC = () => {
+  const { miniAppBackButton } = useModel("useTelegram");
+
   const [step, setStep] = React.useState<number>(1);
   const [avatar, setAvatar] = React.useState<Blob | null>(null);
   const [bio, setBio] = React.useState<string | null>(null);
   const [name, setName] = React.useState<string | null>(null);
   const [record, setRecord] = React.useState<Blob | null>(null);
+
+  useEffect(() => {
+    if (!!miniAppBackButton) {
+      miniAppBackButton?.show();
+      miniAppBackButton?.on('click', () => {
+        history.push('/me');
+      });
+    }
+  }, [miniAppBackButton]);
 
   return (
     <div className={styles.createContainer}>

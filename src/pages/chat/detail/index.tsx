@@ -29,8 +29,8 @@ const Chat: React.FC = () => {
   const { selectedSpeaker, selectedMicrophone, character, isMute, setIsMute, setCharacter, getAudioList } = useModel("useSetting");
   const { mediaRecorder, vadEvents, enableVAD, closeVAD, startRecording, stopRecording, vadEventsCallback, closeMediaRecorder, connectMicrophone, disableVAD, disconnectMicrophone } = useModel("useRecorder");
   const { viewport } = useModel("useView");
-
   const { SendMessageType, socketIsOpen, handleChangeSocketUrl, handleCloseSocket, handleSendMessage } = useModel("useSocket");
+  const { miniAppBackButton } = useModel("useTelegram");
 
   const chatWrapper = React.useRef<HTMLDivElement>(null);
   const msgList = React.useRef<HTMLDivElement>(null);
@@ -41,6 +41,15 @@ const Chat: React.FC = () => {
   const [msgScrolled, setMsgScrolled] = React.useState<boolean>(false);
 
   const search = queryString.parse(window.location.search);
+
+  useEffect(() => {
+    if (!!miniAppBackButton) {
+      miniAppBackButton?.show();
+      miniAppBackButton?.on('click', () => {
+        history.push('/');
+      });
+    }
+  }, [miniAppBackButton]);
 
   // Audio player
   const audioPlayerRef = useRef<LBAudioElement>(null);

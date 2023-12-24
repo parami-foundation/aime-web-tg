@@ -3,7 +3,7 @@ import styles from "./style.less";
 import { ReactComponent as AvatarCircle } from '@/assets/me/circle.svg';
 import { IoIosLock } from "react-icons/io";
 import { Image } from "antd";
-import { useModel } from "@umijs/max";
+import { useModel, history } from "@umijs/max";
 import { InitData } from "@tma.js/sdk";
 import { TelegramOauthDataOnauthProps } from "@/types";
 
@@ -12,7 +12,12 @@ const AvatarNew: React.FC = () => {
   const { telegramData } = useModel("useTelegram");
 
   return (
-    <div className={styles.meAvatar}>
+    <div
+      className={styles.meAvatar}
+      onClick={() => {
+        history.push('/create');
+      }}
+    >
       <div className={styles.meAvatarWrapper}>
         <AvatarCircle
           className={styles.meAvatarCircle}

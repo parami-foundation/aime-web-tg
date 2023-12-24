@@ -17,7 +17,7 @@ import { AccessLayout } from "@/layouts/access";
 
 const Statistics: React.FC = () => {
   const { accessToken } = useModel("useAccess");
-  const { miniAppUtils } = useModel("useTelegram");
+  const { miniAppUtils, miniAppBackButton } = useModel("useTelegram");
 
   const [tab, setTab] = React.useState<string>("activity");
   const [shareModalVisible, setShareModalVisible] = React.useState<boolean>(false);
@@ -25,6 +25,15 @@ const Statistics: React.FC = () => {
   const { id } = useParams<{
     id: string,
   }>();
+
+  useEffect(() => {
+    if (!!miniAppBackButton) {
+      miniAppBackButton?.show();
+      miniAppBackButton?.on('click', () => {
+        history.push(`/chat/${id}`);
+      });
+    }
+  }, [miniAppBackButton]);
 
   const character = !!id ? charactersData.get(id) : {};
 
