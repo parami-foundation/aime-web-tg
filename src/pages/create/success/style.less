@@ -1,0 +1,72 @@
+.successModal {
+  :global(.ant-modal-content) {
+    background: var(--content-bg);
+  }
+}
+
+.successContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  .successHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+
+    .successHeaderIconSuccess {
+      width: 146px;
+      height: 146px;
+      background-color: #e9f5ff;
+      border-radius: 100%;
+      padding: 15px;
+
+      .successHeaderIconImg {
+        width: 100%;
+        height: 100%;
+        transform: scaleX(-1);
+        object-fit: contain;
+      }
+    }
+
+    .successHeaderTitle {
+      color: #000;
+      text-align: center;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 800;
+      line-height: normal;
+      margin-top: 20px;
+    }
+  }
+
+  .successContent {
+    color: rgba(0, 0, 0, 0.7997);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.5;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .successFooter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+
+    .successFooterBtn {
+      height: auto;
+      font-weight: 700;
+    }
+  }
+}
