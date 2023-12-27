@@ -50,10 +50,6 @@ export default () => {
   } = useModel("useWebRTC");
   const {
     isMute,
-    selectedModel,
-    enableGoogle,
-    enableQuivr,
-    enableMultiOn,
     character,
     setCharacter,
   } = useModel("useSetting");
@@ -69,11 +65,7 @@ export default () => {
 
   const { sendMessage, lastMessage, readyState, getWebSocket } = useWebSocket(socketUrl, {
     queryParams: {
-      llm_model: selectedModel.values().next().value,
       platform: "web",
-      use_search: enableGoogle ? "true" : "false",
-      use_quivr: enableQuivr ? "true" : "false",
-      use_multion: enableMultiOn ? "true" : "false",
       character_id: character.id ?? "",
       language: language[0],
       token: accessToken ?? "",
@@ -358,7 +350,7 @@ export default () => {
         }
       }
     };
-    const url = `${WEBSOCKET_CONFIG.scheme}://${API_CONFIG.host}/ws/${sessionId}/`;
+    const url = `${WEBSOCKET_CONFIG.scheme}://${API_CONFIG.host}/ws/${sessionId}`;
     !!character && setCharacter(character);
     setReconnect(reconnect ?? false);
     setSocketUrl(url);

@@ -25,7 +25,7 @@ export const WEBSOCKET_CONFIG = {
 
 export const API_CONFIG = {
   scheme: "https",
-  host: "api-beta.aime.bot",
+  host: "api.aime.bot",
   grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
 };
 

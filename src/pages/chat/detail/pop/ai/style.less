@@ -1,12 +1,13 @@
 .aiPopContainer {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
   width: 100%;
   margin-bottom: 10px;
 
   .aiPopWrapper {
+    flex: 7;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -16,7 +17,6 @@
     background-color: #fff;
     padding: 16px;
     box-shadow: var(--box-shadow);
-    max-width: 70%;
     font-size: 15px;
     line-height: 1.5;
     white-space: pre-wrap;
@@ -112,8 +112,28 @@
     }
   }
 
-  .aiPopWrapperFull {
-    max-width: 100%;
-    width: 100%;
+  .aiPopWidget {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-left: 10px;
+
+    .aiPopWidgetForward {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.2);
+
+      .aiPopWidgetForwardIcon {
+        font-size: 15px;
+        color: #fff;
+      }
+    }
   }
 }

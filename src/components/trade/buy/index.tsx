@@ -502,11 +502,13 @@ const Buy: React.FC<{
         visible={purchaseSuccessVisible}
         setVisible={setPurchaseSuccessVisible}
         transactionHash={transactionHash}
+        mode="purchase"
       />
       <PurchaseFailed
         visible={purchaseFailedVisible}
         setVisible={setPurchaseFailedVisible}
         error={error}
+        mode="purchase"
       />
     </>
   )

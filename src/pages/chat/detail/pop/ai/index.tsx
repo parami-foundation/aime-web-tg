@@ -2,7 +2,7 @@ import React, { createRef, useRef } from "react";
 import styles from "./style.less";
 import { Button, ConfigProvider, theme } from "antd";
 import { PROJECT_CONFIG } from "@/constants/global";
-import { RiTwitterXFill, RiWalletLine } from "react-icons/ri";
+import { RiShareForwardFill, RiTwitterXFill, RiWalletLine } from "react-icons/ri";
 import { useModel } from "@umijs/max";
 import classNames from "classnames";
 import { THEME_CONFIG } from "@/constants/theme";
@@ -40,7 +40,7 @@ const AiPop: React.FC<{
       }}
     >
       <div
-        className={classNames(styles.aiPopWrapper)}
+        className={styles.aiPopWrapper}
         ref={wrapperRef}
       >
         {data?.map((item: MessageDisplay) => {
@@ -367,6 +367,13 @@ const AiPop: React.FC<{
               )
           }
         })}
+      </div>
+      <div className={styles.aiPopWidget}>
+        <div className={styles.aiPopWidgetForward}>
+          <RiShareForwardFill
+            className={styles.aiPopWidgetForwardIcon}
+          />
+        </div>
       </div>
     </div>
   )

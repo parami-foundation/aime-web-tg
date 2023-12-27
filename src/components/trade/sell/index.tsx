@@ -500,11 +500,13 @@ const Sell: React.FC<{
         visible={sellSuccessVisible}
         setVisible={setSellSuccessVisible}
         transactionHash={transactionHash}
+        mode="sale"
       />
       <PurchaseFailed
         visible={sellFailedVisible}
         setVisible={setSellFailedVisible}
         error={error}
+        mode="sale"
       />
     </>
   )

@@ -6,7 +6,8 @@ const PurchaseSuccess: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
   transactionHash: `0x${string}` | undefined;
-}> = ({ visible, setVisible, transactionHash }) => {
+  mode: "purchase" | "sale";
+}> = ({ visible, setVisible, transactionHash, mode }) => {
   return (
     <Modal
       centered
@@ -19,15 +20,27 @@ const PurchaseSuccess: React.FC<{
     >
       <div className={styles.purchaseContainer}>
         <div className={styles.purchaseHeader}>
-          <div className={styles.purchaseHeaderIconSuccess}>
-            <img
-              className={styles.purchaseHeaderIconImg}
-              src={require("@/assets/icon/success.png")}
-              alt="icon"
-            />
-          </div>
+          {mode === "purchase" && (
+            <div className={styles.purchaseHeaderIconSuccess}>
+              <img
+                className={styles.purchaseHeaderIconImg}
+                src={require("@/assets/icon/purchase_success.png")}
+                alt="icon"
+              />
+            </div>
+          )}
+          {mode === "sale" && (
+            <div className={styles.purchaseHeaderIconSale}>
+              <img
+                className={styles.purchaseHeaderIconImg}
+                src={require("@/assets/icon/sale_success.png")}
+                alt="icon"
+              />
+            </div>
+          )}
           <div className={styles.purchaseHeaderTitle}>
-            Purchase Success
+            {mode === "purchase" && "Purchase Success"}
+            {mode === "sale" && "Sale Success"}
           </div>
         </div>
         <div className={styles.purchaseContent}>

@@ -31,12 +31,6 @@ export default () => {
   const [preferredLanguage, setPreferredLanguage] = React.useState<Set<string>>(
     new Set(["English"])
   );
-  const [selectedModel, setSelectedModel] = React.useState<Set<string>>(
-    new Set(["gpt-3.5-turbo-16k"])
-  );
-  const [enableGoogle, setEnableGoogle] = React.useState<boolean>(false);
-  const [enableQuivr, setEnableQuivr] = React.useState<boolean>(false);
-  const [enableMultiOn, setEnableMultiOn] = React.useState<boolean>(false);
 
   const getAudioList = async () => {
     await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
@@ -74,13 +68,5 @@ export default () => {
     preferredLanguage,
     setPreferredLanguage,
     languageList,
-    selectedModel,
-    setSelectedModel,
-    enableGoogle,
-    setEnableGoogle,
-    enableQuivr,
-    setEnableQuivr,
-    enableMultiOn,
-    setEnableMultiOn,
   };
 };

@@ -6,7 +6,8 @@ const PurchaseFailed: React.FC<{
   visible: boolean;
   setVisible: (visible: boolean) => void;
   error: Error;
-}> = ({ visible, setVisible, error }) => {
+  mode: "purchase" | "sale";
+}> = ({ visible, setVisible, error, mode }) => {
   return (
     <Modal
       centered
@@ -19,14 +20,27 @@ const PurchaseFailed: React.FC<{
     >
       <div className={styles.purchaseContainer}>
         <div className={styles.purchaseHeader}>
-          <div className={styles.purchaseHeaderIconFailed}>
-            <img
-              className={styles.purchaseHeaderIconImg}
-              src={require("@/assets/icon/failed.png")}
-            />
-          </div>
+          {mode === "purchase" && (
+            <div className={styles.purchaseHeaderIconFailed}>
+              <img
+                className={styles.purchaseHeaderIconImg}
+                src={require("@/assets/icon/purchase_failed.png")}
+                alt="icon"
+              />
+            </div>
+          )}
+          {mode === "sale" && (
+            <div className={styles.purchaseHeaderIconSale}>
+              <img
+                className={styles.purchaseHeaderIconImg}
+                src={require("@/assets/icon/sale_failed.png")}
+                alt="icon"
+              />
+            </div>
+          )}
           <div className={styles.purchaseHeaderTitle}>
-            Purchase Failed
+            {mode === "purchase" && "Purchase Failed"}
+            {mode === "sale" && "Sale Failed"}
           </div>
         </div>
         <div className={styles.purchaseContent}>
