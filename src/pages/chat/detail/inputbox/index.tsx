@@ -10,40 +10,38 @@ import { useAccount, useContractRead } from "wagmi";
 import LoginModal from "@/components/loginModal";
 import Trade from "@/components/trade";
 import { FaCoins } from "react-icons/fa";
+import classNames from "classnames";
+import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
 
 const InputBox: React.FC<{
   isTextMode: boolean;
   setIsTextMode: React.Dispatch<React.SetStateAction<boolean>>;
-  handsFreeMode: () => void;
-  textMode: () => void;
   inputBoxContainer: React.RefObject<HTMLDivElement>;
-  setDisableMic: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ isTextMode, setIsTextMode, inputBoxContainer, handsFreeMode, textMode, setDisableMic }) => {
+}> = ({ isTextMode, setIsTextMode, inputBoxContainer }) => {
   const { handleSendMessage, connecting, SendMessageType } = useModel("useSocket");
   const { accessToken, accessTokenExpire } = useModel("useAccess");
   const { address, walletBinded } = useModel("useWallet");
   const { telegramDataString, telegramAuthType, miniAppUtils, telegramWebApp } = useModel("useTelegram");
-  const { isRecording } = useModel("useRecorder");
-  const { speechInterim, messageList } = useModel("useChat");
+  const { messageList } = useModel("useChat");
   const { character } = useModel("useSetting");
 
   const [inputValue, setInputValue] = React.useState<string>();
   const [isTradeModalVisible, setIsTradeModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
   const [balance, setBalance] = React.useState<bigint>(0n);
+  const [isRecording, setIsRecording] = React.useState<boolean>(false);
 
   const { isConnected } = useAccount();
 
+  const recorderControls = useAudioRecorder();
+
   useEffect(() => {
-    if (!isTextMode) {
-      // switch to hands free mode
-      setDisableMic(false);
-      handsFreeMode();
-    } else {
-      // switch to text mode
-      textMode();
-    }
-  }, [isTextMode]);
+    ; (async () => {
+      if (!!recorderControls.recordingBlob && !isRecording) {
+        await handleSendMessage(SendMessageType.BLOB, recorderControls.recordingBlob);
+      }
+    })();
+  }, [recorderControls.recordingBlob]);
 
   const powerBalance: {
     data?: bigint;
@@ -145,13 +143,41 @@ const InputBox: React.FC<{
                 </>
               ) : (
                 <div
-                  className={styles.inputBoxRecord}
+                  className={styles.inputRecordContainer}
+                  onClick={async () => {
+                    setIsRecording(!isRecording);
+                    if (!isRecording) {
+                      recorderControls.startRecording();
+                    } else {
+                      recorderControls.stopRecording();
+                    }
+                  }}
                 >
-                  {isRecording && speechInterim ? (
-                    <>Listening...</>
-                  ) : (
-                    <>Please speak...</>
-                  )}
+                  <AudioRecorder
+                    onRecordingComplete={(blob) => {
+                      const url = URL.createObjectURL(blob);
+                      const audio = document.createElement("audio");
+                      audio.src = url;
+                      audio.controls = true;
+                      document.body.appendChild(audio);
+                    }}
+                    audioTrackConstraints={{
+                      noiseSuppression: true,
+                      echoCancellation: true,
+                    }}
+                    classes={{
+                      AudioRecorderClass: styles.inputBoxRecorder,
+                    }}
+                  />
+                  <div
+                    className={classNames(styles.inputBoxRecord, {
+                      [styles.inputBoxRecordActive]: isRecording,
+                    })}
+                  >
+                    <span>
+                      {isRecording ? 'Click to stop' : 'Click to record'}
+                    </span>
+                  </div>
                 </div>
               )}
             </div>
@@ -160,8 +186,9 @@ const InputBox: React.FC<{
       </div>
       <LoginModal
         visible={isTradeModalVisible && (!isConnected || !walletBinded)}
-        setVisible={() => { }}
-        closeable={false}
+        setVisible={() => {
+          setIsTradeModalVisible(false);
+        }}
       />
       <Trade
         visible={isTradeModalVisible && isConnected && walletBinded}

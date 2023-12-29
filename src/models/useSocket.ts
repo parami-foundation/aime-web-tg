@@ -27,10 +27,6 @@ export interface AIResponse {
 
 export default () => {
   const {
-    appendChatContent,
-    appendInterimChatContent,
-    appendSpeechInterim,
-    clearSpeechInterim,
     setMessageGroupId,
     setIsThinking,
     setSender,
@@ -41,15 +37,8 @@ export default () => {
     setChatSession,
     MessageType,
   } = useModel("useChat");
+
   const {
-    audioQueue,
-    shouldPlayAudio,
-    setShouldPlayAudio,
-    setIsPlaying,
-    pushAudioQueue,
-  } = useModel("useWebRTC");
-  const {
-    isMute,
     character,
     setCharacter,
   } = useModel("useSetting");
@@ -101,66 +90,89 @@ export default () => {
   });
 
   useEffect(() => {
-    switch (typeof lastMessage?.data) {
-      case "string":
-        const message = lastMessage?.data;
-        const aiMessage: AIResponse = JSON.parse(message);
+    ; (async () => {
+      switch (typeof lastMessage?.data) {
+        case "string":
+          const message = lastMessage?.data;
+          const aiMessage: AIResponse = JSON.parse(message);
 
-        if (DEBUG) console.log("AI Message", aiMessage);
+          if (DEBUG) console.log("AI Message", aiMessage);
 
-        if (!!aiMessage?.data) {
-          switch (aiMessage?.type) {
-            case "text":
-              if (
-                message === "[end]\n" ||
-                message.match(/\[end=([a-zA-Z0-9]+)]/)
-              ) {
-                appendChatContent();
-                const messageGroupIdMatches = message.match(
-                  /\[end=([a-zA-Z0-9]+)]/
-                );
-                if (!!messageGroupIdMatches) {
-                  const messageGroupId = messageGroupIdMatches[1];
-                  setMessageGroupId(messageGroupId);
+          if (!!aiMessage?.data) {
+            switch (aiMessage?.type) {
+              case "text":
+                if (!!aiMessage?.sentence_id) {
+                  setSender("character");
+                  setMessages((prev) => {
+                    return [
+                      ...prev,
+                      {
+                        id: aiMessage?.sentence_id,
+                        type: MessageType.MESSAGE,
+                        sender: "character",
+                        data: aiMessage?.data,
+                        timestamp: Date.now(),
+                      },
+                    ];
+                  });
+                  setMessageList((prev) => {
+                    const list =
+                      prev.get(`${aiMessage?.sentence_id}/character`) || [];
+                    list.push({
+                      id: aiMessage?.sentence_id,
+                      type: MessageType.MESSAGE,
+                      sender: "character",
+                      data: aiMessage?.data,
+                      action: aiMessage?.action,
+                      timestamp: Date.now(),
+                    });
+                    prev.set(`${aiMessage?.sentence_id}/character`, list);
+                    return prev;
+                  });
+
+                  if (!!aiMessage?.give_token) {
+                    setRewardModal(true);
+                  }
                 }
-                setMessageEnd(true);
-              } else if (message.startsWith("[+]You said: ")) {
-                // [+] indicates the transcription is done.
-                let msg = message.split("[+]You said: ");
-                setSender("user");
-                appendInterimChatContent(msg[1]);
-                appendChatContent();
-                clearSpeechInterim();
+                break;
+
+              case "score":
                 setMessages((prev) => {
                   return [
                     ...prev,
                     {
-                      id: uuidv4().replace(/-/g, ""),
-                      type: MessageType.MESSAGE,
-                      sender: "user",
-                      data: msg[1],
+                      type: MessageType.SCORE,
+                      sender: "character",
+                      data: aiMessage?.data,
                       timestamp: Date.now(),
                     },
                   ];
                 });
-              } else if (
-                message.startsWith("[=]" || message.match(/\[=([a-zA-Z0-9]+)]/))
-              ) {
-                // [=] or [=id] indicates the response is done
-                appendChatContent();
-              } else if (message.startsWith("[+&]")) {
-                let msg = message.split("[+&]");
-                appendSpeechInterim(msg[1]);
-              }
+                break;
 
-              if (!!aiMessage?.sentence_id) {
-                setSender("character");
-                appendInterimChatContent(aiMessage.data);
+              case "think":
                 setMessages((prev) => {
                   return [
                     ...prev,
                     {
-                      id: aiMessage?.sentence_id,
+                      type: MessageType.THINK,
+                      sender: "character",
+                      data: aiMessage?.data,
+                      timestamp: Date.now(),
+                    },
+                  ];
+                });
+                setIsThinking(true);
+                break;
+
+              case "end":
+                const id = uuidv4().replace(/-/g, "");
+                setSender("character");
+                setMessages((prev) => {
+                  return [
+                    ...prev,
+                    {
+                      id: id,
                       type: MessageType.MESSAGE,
                       sender: "character",
                       data: aiMessage?.data,
@@ -168,146 +180,69 @@ export default () => {
                     },
                   ];
                 });
-                setMessageList((prev) => {
-                  const list =
-                    prev.get(`${aiMessage?.sentence_id}/character`) || [];
-                  list.push({
-                    id: aiMessage?.sentence_id,
-                    type: MessageType.MESSAGE,
-                    sender: "character",
-                    data: aiMessage?.data,
-                    action: aiMessage?.action,
-                    timestamp: Date.now(),
-                  });
-                  prev.set(`${aiMessage?.sentence_id}/character`, list);
+                !!aiMessage?.action && setMessageList((prev) => {
+                  prev.set(`${id}/character`, [
+                    {
+                      id: id,
+                      type: MessageType.MESSAGE,
+                      sender: "character",
+                      action: aiMessage?.action,
+                      timestamp: Date.now(),
+                    }
+                  ]);
                   return prev;
                 });
-                appendSpeechInterim(aiMessage.data);
 
-                // if user interrupts the previous response, should be able to play audios of new response
-                setShouldPlayAudio(true);
-
-                if (!!aiMessage?.give_token) {
-                  setRewardModal(true);
+                setMessageEnd(true);
+                const messageGroupIdMatches = message.match(
+                  /\[end=([a-zA-Z0-9]+)]/
+                );
+                if (!!messageGroupIdMatches) {
+                  const messageGroupId = messageGroupIdMatches[1];
+                  setMessageGroupId(messageGroupId);
                 }
-              }
-              break;
-
-            case "score":
-              setMessages((prev) => {
-                return [
-                  ...prev,
-                  {
-                    type: MessageType.SCORE,
-                    sender: "character",
-                    data: aiMessage?.data,
-                    timestamp: Date.now(),
-                  },
-                ];
-              });
-              break;
-
-            case "think":
-              setMessages((prev) => {
-                return [
-                  ...prev,
-                  {
-                    type: MessageType.THINK,
-                    sender: "character",
-                    data: aiMessage?.data,
-                    timestamp: Date.now(),
-                  },
-                ];
-              });
-              setIsThinking(true);
-              break;
-
-            case "end":
-              const id = uuidv4().replace(/-/g, "");
-              setSender("character");
-              setMessages((prev) => {
-                return [
-                  ...prev,
-                  {
-                    id: id,
-                    type: MessageType.MESSAGE,
-                    sender: "character",
-                    data: aiMessage?.data,
-                    timestamp: Date.now(),
-                  },
-                ];
-              });
-              !!aiMessage?.action && setMessageList((prev) => {
-                prev.set(`${id}/character`, [
-                  {
-                    id: id,
-                    type: MessageType.MESSAGE,
-                    sender: "character",
-                    action: aiMessage?.action,
-                    timestamp: Date.now(),
-                  }
-                ]);
-                return prev;
-              });
-
-              appendChatContent();
-              setMessageEnd(true);
-              const messageGroupIdMatches = message.match(
-                /\[end=([a-zA-Z0-9]+)]/
-              );
-              if (!!messageGroupIdMatches) {
-                const messageGroupId = messageGroupIdMatches[1];
-                setMessageGroupId(messageGroupId);
-              }
-              break;
+                break;
+            }
           }
-        }
-        break;
+          break;
 
-      default:
-        if (DEBUG) console.log("ws message", lastMessage?.data);
+        default:
+          const arrayBuffer = await lastMessage?.data?.arrayBuffer();
 
-        const id = buf2hex(new Uint8Array(lastMessage?.data).slice(0, 16)).toString();
-        const data = new Uint8Array(lastMessage?.data).slice(16);
+          if (DEBUG) console.log("ws message", await lastMessage?.data);
 
-        if (!!id) {
-          setMessages((prev) => {
-            return [
-              ...prev,
-              {
+          const id = buf2hex(arrayBuffer?.slice(0, 16)).toString();
+          const data = arrayBuffer?.slice(16);
+
+          if (!!id) {
+            setMessages((prev) => {
+              return [
+                ...prev,
+                {
+                  id: id,
+                  type: MessageType.DATA,
+                  sender: "character",
+                  data: data,
+                  timestamp: Date.now(),
+                },
+              ];
+            });
+
+            setMessageList((prev) => {
+              const list = prev.get(`${id}/character`) || [];
+              list.push({
                 id: id,
                 type: MessageType.DATA,
                 sender: "character",
                 data: data,
                 timestamp: Date.now(),
-              },
-            ];
-          });
-
-          setMessageList((prev) => {
-            const list = prev.get(`${id}/character`) || [];
-            list.push({
-              id: id,
-              type: MessageType.DATA,
-              sender: "character",
-              data: data,
-              timestamp: Date.now(),
+              });
+              prev.set(`${id}/character`, list);
+              return prev;
             });
-            prev.set(`${id}/character`, list);
-            return prev;
-          });
-
-          // binary data
-          if (!shouldPlayAudio || isMute) {
-            console.log("should not play audio");
-            return;
           }
-          pushAudioQueue(lastMessage?.data);
-          if (audioQueue.length === 1) {
-            setIsPlaying(true); // this will trigger playAudios in CallView.
-          }
-        }
-    }
+      }
+    })();
   }, [lastMessage]);
 
   const handleChangeSocketUrl = useCallback(async ({
@@ -389,6 +324,10 @@ export default () => {
         });
 
         sendMessage(data as string);
+        break;
+
+      case SendMessageType.BLOB:
+        sendMessage(data as Blob);
         break;
     }
     console.log("message sent to server");

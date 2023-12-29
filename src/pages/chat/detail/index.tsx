@@ -10,7 +10,6 @@ import { AccessLayout } from "@/layouts/access";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineStar } from "react-icons/ai";
 import { IoShareSocialOutline } from "react-icons/io5";
-import { playAudios } from "@/utils/audioUtils";
 import ShareModal from "./shareModal";
 import queryString from "query-string";
 import { message, Image, Alert } from "antd";
@@ -25,17 +24,15 @@ export interface LBAudioElement extends HTMLAudioElement {
 const Chat: React.FC = () => {
   const { accessToken } = useModel("useAccess");
   const { messages, messageList, chatSession, reconnect, clearChatContent, setMessageList, setMessages } = useModel("useChat");
-  const { isPlaying, audioContext, audioQueue, incomingStreamDestination, rtcConnectionEstablished, setAudioPlayerRef, setIsPlaying, popAudioQueueFront, closePeer, connectPeer, stopAudioPlayback } = useModel("useWebRTC");
-  const { selectedSpeaker, selectedMicrophone, character, isMute, setIsMute, setCharacter, getAudioList } = useModel("useSetting");
-  const { mediaRecorder, vadEvents, enableVAD, closeVAD, startRecording, stopRecording, vadEventsCallback, closeMediaRecorder, connectMicrophone, disableVAD, disconnectMicrophone } = useModel("useRecorder");
+  const { audioQueue, setAudioPlayerRef } = useModel("useWebRTC");
+  const { selectedSpeaker, character, setCharacter } = useModel("useSetting");
   const { viewport } = useModel("useView");
-  const { SendMessageType, socketIsOpen, handleChangeSocketUrl, handleCloseSocket, handleSendMessage } = useModel("useSocket");
+  const { handleChangeSocketUrl, handleCloseSocket } = useModel("useSocket");
   const { miniAppBackButton } = useModel("useTelegram");
 
   const chatWrapper = React.useRef<HTMLDivElement>(null);
   const msgList = React.useRef<HTMLDivElement>(null);
   const inputBoxContainer = React.useRef<HTMLDivElement>(null);
-  const [disableMic, setDisableMic] = React.useState<boolean>(true);
   const [isTextMode, setIsTextMode] = React.useState<boolean>(true);
   const [shareModalVisible, setShareModalVisible] = React.useState<boolean>(false);
   const [msgScrolled, setMsgScrolled] = React.useState<boolean>(false);
@@ -136,111 +133,13 @@ const Chat: React.FC = () => {
   }, [search?.session, id, accessToken, charactersData, character, chatSession]);
 
   useEffect(() => {
-    if (!!mediaRecorder) {
-      closeMediaRecorder();
-    }
-    if (!!rtcConnectionEstablished) {
-      closePeer();
-    }
-    if (!disableMic) {
-      getAudioList().then(
-      ).then(() => {
-        connectPeer().then(
-          () => {
-            connectMicrophone();
-            initializeVAD();
-          }
-        );
-      });
-    }
-  }, [selectedMicrophone, isTextMode, disableMic]);
-
-  function initializeVAD() {
-    if (vadEvents) {
-      closeVAD();
-    }
-    vadEventsCallback(
-      () => {
-        stopAudioPlayback();
-        startRecording();
-      },
-      () => {
-        // Stops recording and send interim audio clip to server.
-        handleSendMessage(SendMessageType.TEXT, '[&Speech]');
-        stopRecording();
-      },
-      () => {
-        handleSendMessage(SendMessageType.TEXT, '[SpeechFinished]');
-      })
-    if (!isTextMode && !disableMic) {
-      enableVAD();
-    }
-  };
-
-  useEffect(() => {
-    if (!mediaRecorder || !socketIsOpen || !rtcConnectionEstablished) {
-      return;
-    }
-    initializeVAD();
-  }, []);
-
-  useEffect(() => {
     // The chrome on android seems to have problems selecting devices.
     if (typeof audioPlayerRef.current?.setSinkId === 'function') {
       audioPlayerRef.current?.setSinkId(selectedSpeaker.values().next().value);
     }
   }, [selectedSpeaker]);
 
-  // Audio Playback
-  useEffect(() => {
-    if (isPlaying && !!audioContext) {
-      console.log("playback");
-      playAudios(
-        audioContext,
-        audioPlayerRef,
-        audioQueueRef,
-        isPlaying,
-        setIsPlaying,
-        incomingStreamDestination!,
-        popAudioQueueFront
-      );
-    }
-  }
-    , [isPlaying, audioPlayerRef]);
-
-  function handsFreeMode() {
-    setIsTextMode(false);
-    if (!disableMic) {
-      enableVAD();
-    }
-  };
-
-  function textMode() {
-    setIsTextMode(true);
-    disableVAD();
-  };
-
-  function toggleMute() {
-    if (!isMute) {
-      stopAudioPlayback();
-    }
-    setIsMute(!isMute);
-  };
-
-  function handleMic() {
-    if (disableMic) {
-      enableVAD();
-    } else {
-      disableVAD();
-    }
-    setDisableMic(!disableMic);
-  };
-
   const cleanUpStates = () => {
-    disableVAD();
-    closeVAD();
-    closeMediaRecorder();
-    closePeer();
     handleCloseSocket();
     clearChatContent();
     setCharacter({});
@@ -376,9 +275,6 @@ const Chat: React.FC = () => {
             isTextMode={isTextMode}
             setIsTextMode={setIsTextMode}
             inputBoxContainer={inputBoxContainer}
-            handsFreeMode={handsFreeMode}
-            textMode={textMode}
-            setDisableMic={setDisableMic}
           />
         )}
       </div>

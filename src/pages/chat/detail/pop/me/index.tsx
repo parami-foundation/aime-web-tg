@@ -1,7 +1,6 @@
-import React, { useEffect, createRef } from "react";
+import React, { createRef } from "react";
 import styles from "./style.less";
 import { ReactComponent as SoundPlayIcon } from '@/assets/icon/soundPlay.svg';
-import ReactMarkdown from "react-markdown";
 
 const MePop: React.FC<{
   data?: any;

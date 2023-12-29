@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./style.less";
 import { Modal } from "antd";
 import { Image } from "antd";
+import ReactPlayer from "react-player";
 
 const Loading: React.FC<{
   visible: boolean;
@@ -20,11 +21,13 @@ const Loading: React.FC<{
     >
       <div className={styles.loadingContainer}>
         <div className={styles.loadingImageContainer}>
-          <Image
+          <ReactPlayer
             className={styles.loadingImage}
-            src={require('@/assets/create/loading.png')}
-            fallback={require('@/assets/me/avatar.png')}
-            preview={false}
+            url={require('@/assets/create/loading.webm')}
+            playing
+            muted
+            loop
+            controls={false}
           />
         </div>
       </div>

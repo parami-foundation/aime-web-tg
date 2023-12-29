@@ -11,7 +11,7 @@ import { TelegramOauthDataOnauthProps } from "@/types";
 
 const Create: React.FC = () => {
   const { profile } = useModel("useAccess");
-  const { telegramData, miniAppBackButton } = useModel("useTelegram");
+  const { telegramData, miniAppBackButton, miniAppMainButton } = useModel("useTelegram");
 
   const [step, setStep] = React.useState<number>(1);
   const [avatar, setAvatar] = React.useState<Blob | null>(null);
@@ -29,6 +29,15 @@ const Create: React.FC = () => {
       });
     }
   }, [miniAppBackButton]);
+
+  useEffect(() => {
+    if (!!miniAppMainButton) {
+      miniAppMainButton?.show();
+      miniAppMainButton?.on('click', () => {
+        history.push('/');
+      });
+    }
+  }, [miniAppMainButton]);
 
   return (
     <AccessLayout>

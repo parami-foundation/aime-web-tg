@@ -21,6 +21,7 @@
       align-items: center;
       justify-content: center;
       width: 100%;
+      overflow: hidden;
     }
 
     .inputBoxWrapperTip {
@@ -92,15 +93,47 @@
         }
       }
 
-      .inputBoxRecord {
+      .inputRecordContainer {
+        position: relative;
         display: flex;
+        flex-direction: row;
         align-items: center;
         justify-content: center;
         width: 100%;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
-        color: #000;
-        font-weight: 700;
+
+        .inputBoxRecorder {
+          display: none;
+        }
+
+        .inputBoxRecord {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s ease-in-out;
+          color: #000;
+          font-weight: 700;
+
+          span {
+            z-index: 2;
+          }
+        }
+
+        .inputBoxRecordActive {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &::before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(234, 253, 83, 0.8);
+            border-radius: 100%;
+            animation: inputBoxRecordAnimation 3s infinite;
+          }
+        }
       }
     }
 
@@ -120,5 +153,16 @@
       cursor: pointer;
       transition: all 0.2s ease-in-out;
     }
+  }
+}
+
+@keyframes inputBoxRecordAnimation {
+  0% {
+    transform: scale(0.1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
   }
 }
