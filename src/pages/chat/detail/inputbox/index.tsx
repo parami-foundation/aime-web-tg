@@ -12,6 +12,7 @@ import Trade from "@/components/trade";
 import { FaCoins } from "react-icons/fa";
 import classNames from "classnames";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
+import { TrainVoice } from "@/services/api";
 
 const InputBox: React.FC<{
   isTextMode: boolean;
@@ -37,11 +38,12 @@ const InputBox: React.FC<{
 
   useEffect(() => {
     ; (async () => {
-      if (!!recorderControls.recordingBlob && !isRecording) {
-        await handleSendMessage(SendMessageType.BLOB, recorderControls.recordingBlob);
+      if (!!recorderControls.recordingBlob && !isRecording && !!accessToken) {
+        const { response, data } = await TrainVoice(recorderControls.recordingBlob, accessToken);
+        console.log(response, data);
       }
     })();
-  }, [recorderControls.recordingBlob]);
+  }, [recorderControls.recordingBlob, accessToken]);
 
   const powerBalance: {
     data?: bigint;

@@ -279,3 +279,25 @@ export async function ShareAIME(
     }
   );
 }
+
+export async function TrainVoice(
+  data: Blob,
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  const formData = new FormData();
+  formData.append('file', data);
+  return request(
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/train_voice`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: formData,
+      requestType: 'form',
+      ...(options || {}),
+      getResponse: true,
+    }
+  )
+}

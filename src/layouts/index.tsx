@@ -1,6 +1,6 @@
 import { Outlet, useModel } from '@umijs/max';
 import styles from './style.less';
-import { ConfigProvider, FloatButton, message, theme } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 import { THEME_CONFIG } from '@/constants/theme';
 import { SDKProvider } from '@tma.js/sdk-react';
 import { DisplayGate } from '@/components/telegram/displayGate';
