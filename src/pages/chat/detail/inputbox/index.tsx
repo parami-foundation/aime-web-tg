@@ -3,7 +3,7 @@ import styles from "./style.less";
 import { BiMicrophone } from "react-icons/bi";
 import { HiArrowNarrowRight } from "react-icons/hi";
 import { CgKeyboard } from "react-icons/cg";
-import { Input } from "antd";
+import { Input, message } from "antd";
 import { useModel } from "@umijs/max";
 import { AIME_CONTRACT, PROJECT_CONFIG } from "@/constants/global";
 import { useAccount, useContractRead } from "wagmi";
@@ -12,7 +12,7 @@ import Trade from "@/components/trade";
 import { FaCoins } from "react-icons/fa";
 import classNames from "classnames";
 import { AudioRecorder, useAudioRecorder } from "react-audio-voice-recorder";
-import { TrainVoice } from "@/services/api";
+import { TrainVoice, TranslationTTS } from "@/services/api";
 
 const InputBox: React.FC<{
   isTextMode: boolean;
@@ -33,17 +33,20 @@ const InputBox: React.FC<{
   const [isRecording, setIsRecording] = React.useState<boolean>(false);
 
   const { isConnected } = useAccount();
-
   const recorderControls = useAudioRecorder();
 
   useEffect(() => {
     ; (async () => {
       if (!!recorderControls.recordingBlob && !isRecording && !!accessToken) {
-        const { response, data } = await TrainVoice(recorderControls.recordingBlob, accessToken);
-        console.log(response, data);
+        const { response, data } = await TranslationTTS(recorderControls.recordingBlob, accessToken);
+        if (response?.status === 200 && !!data.text) {
+          await handleSendMessage(SendMessageType.TEXT, data.text);
+        } else {
+          message.error("Please speak again");
+        }
       }
     })();
-  }, [recorderControls.recordingBlob, accessToken]);
+  }, [recorderControls.recordingBlob, isRecording, accessToken]);
 
   const powerBalance: {
     data?: bigint;

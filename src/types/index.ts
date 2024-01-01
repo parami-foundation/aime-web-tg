@@ -238,4 +238,8 @@ export declare namespace Resp {
     data?: string;
     created_at?: string;
   }
+
+  interface TrainVoice extends Body {
+    text?: string;
+  }
 }

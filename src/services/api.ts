@@ -1,6 +1,7 @@
 import { extend } from "umi-request";
 import { Resp, Req } from "@/types";
-import { API_CONFIG, DEBUG } from "@/constants/global";
+import { API_CONFIG } from "@/constants/global";
+import { v4 as uuidv4 } from 'uuid';
 
 const errorHandler = (error: any) => {
   const { response = {}, data = {} } = error;
@@ -274,6 +275,29 @@ export async function ShareAIME(
         Authorization: `Bearer ${accessToken}`,
       },
       data: data,
+      ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
+
+export async function TranslationTTS(
+  data: Blob,
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  const formData = new FormData();
+  formData.append('file', data, `${uuidv4()}.wav}`);
+
+  return request<Resp.TrainVoice>(
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/translation-tts`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: formData,
+      requestType: 'form',
       ...(options || {}),
       getResponse: true,
     }
