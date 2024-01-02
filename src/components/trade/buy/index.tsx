@@ -21,8 +21,6 @@ const Select: React.FC<{
   const { character } = useModel("useSetting");
 
   const [manualInput, setManualInput] = React.useState<number>(0);
-  const [supply, setSupply] = React.useState<bigint>(0n);
-  const [maxSupply, setMaxSupply] = React.useState<bigint>(0n);
 
   const getEthValue = (powerValue: number) => {
     const { data: ethValue }: {
@@ -38,33 +36,6 @@ const Select: React.FC<{
 
     return ethValue;
   };
-
-  const getPowersSupply: {
-    data?: bigint;
-    isError: boolean;
-    isLoading: boolean;
-  } = useContractRead({
-    address: `0x${AIME_CONTRACT.Optimism.Powers}`,
-    abi: require("@/abis/AIMePowers.json"),
-    functionName: "powersSupply",
-    args: [`0x${character?.wallet?.optimism}`],
-    onSuccess: (data) => {
-      setSupply(data ?? 0n);
-    },
-  });
-
-  const getMaxSupply: {
-    data?: bigint;
-    isError: boolean;
-    isLoading: boolean;
-  } = useContractRead({
-    address: `0x${AIME_CONTRACT.Optimism.Powers}`,
-    abi: require("@/abis/AIMePowers.json"),
-    functionName: "maxSupply",
-    onSuccess: (data) => {
-      setMaxSupply(data ?? 0n);
-    },
-  });
 
   return (
     <div className={styles.selectModalContainer}>
@@ -191,11 +162,7 @@ const Select: React.FC<{
         className={styles.selectModalContentItemButton}
         disabled={manualInput === 0}
         onClick={() => {
-          if (supply + BigInt(manualInput) <= maxSupply) {
-            setPowerValue(manualInput);
-          } else {
-            message.error("Power supply is not enough");
-          }
+          setPowerValue(manualInput);
         }}
       >
         Confirm Purchase
