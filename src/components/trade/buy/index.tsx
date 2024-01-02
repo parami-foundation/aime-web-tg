@@ -5,7 +5,7 @@ import { AiFillCaretDown, AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { RiWalletLine } from "react-icons/ri";
 import PurchaseSuccess from "@/components/purchase/success";
 import PurchaseFailed from "@/components/purchase/failed";
-import { useAccount, useBalance, useContractRead, useContractWrite, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useBalance, useContractRead, useContractWrite, useDisconnect, useNetwork, usePrepareContractWrite, useSwitchNetwork } from "wagmi";
 import { AIME_CONTRACT, DEBUG, NETWORK_CONFIG } from "@/constants/global";
 import { formatEther } from "viem";
 import { GetTokenPrice } from "@/services/third";
@@ -407,8 +407,8 @@ const Detail: React.FC<{
           className={styles.detailModalFooterButton}
           loading={isLoading}
           disabled={parseFloat(balance?.formatted ?? "0") === 0 || parseFloat(balance?.formatted ?? "0") < parseFloat(formatEther(ethValue ?? 0n + gas))}
-          onClick={async () => {
-            await write({
+          onClick={() => {
+            write({
               args: [
                 `0x${character?.wallet?.optimism}`,
                 powerValue,
