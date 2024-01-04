@@ -2,15 +2,25 @@ import {
   Config,
   PublicClient,
   WebSocketPublicClient,
+  configureChains,
+  createConfig,
 } from "wagmi";
 
 import {
+  ALCHEMY_CONFIG,
+  INFURA_CONFIG,
   NETWORK_CONFIG,
 } from "@/constants/global";
 import { useEffect, useState } from "react";
 import { WALLETCONNECT_CONFIG } from "@/constants/walletconnect";
 import { FallbackTransport, createPublicClient, http } from "viem";
-import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
+import { createWeb3Modal } from "@web3modal/wagmi/react";
+import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { walletConnectProvider } from "@web3modal/wagmi";
+import { InjectedConnector } from "wagmi/connectors/injected";
+import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
+import { alchemyProvider } from "wagmi/providers/alchemy";
+import { infuraProvider } from "wagmi/providers/infura";
 
 export default () => {
   const [wagmiConfig, setWagmiConfig] =
@@ -26,14 +36,50 @@ export default () => {
 
   useEffect(() => {
     console.log("Initializing Wagmi");
-    const config = defaultWagmiConfig({
-      chains: NETWORK_CONFIG.chains,
-      projectId: WALLETCONNECT_CONFIG.projectId,
-      metadata: WALLETCONNECT_CONFIG.metadata,
-      enableInjected: true,
-      enableEmail: false,
-      enableEIP6963: false,
+
+    const { publicClient, webSocketPublicClient } = configureChains(
+      [...NETWORK_CONFIG.chains],
+      [
+        walletConnectProvider({
+          projectId: WALLETCONNECT_CONFIG.projectId,
+        }),
+        alchemyProvider({
+          apiKey: ALCHEMY_CONFIG.Optimism,
+        }),
+        infuraProvider({
+          apiKey: INFURA_CONFIG.apiKey,
+        }),
+      ]
+    )
+
+    const config = createConfig({
+      autoConnect: true,
+      connectors: [
+        new WalletConnectConnector({
+          chains: NETWORK_CONFIG.chains,
+          options: {
+            projectId: WALLETCONNECT_CONFIG.projectId,
+            showQrModal: false,
+            metadata: WALLETCONNECT_CONFIG.metadata,
+          }
+        }),
+        new InjectedConnector({
+          chains: NETWORK_CONFIG.chains,
+          options: {
+            shimDisconnect: true,
+          }
+        }),
+        new CoinbaseWalletConnector({
+          chains: NETWORK_CONFIG.chains,
+          options: {
+            appName: WALLETCONNECT_CONFIG.metadata.name,
+          }
+        })
+      ],
+      publicClient,
+      webSocketPublicClient,
     });
+
     setWagmiConfig(config);
 
     createWeb3Modal({
