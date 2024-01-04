@@ -7,7 +7,7 @@ import { Input, message } from "antd";
 import { useModel } from "@umijs/max";
 import { AIME_CONTRACT, PROJECT_CONFIG } from "@/constants/global";
 import { useAccount, useContractRead } from "wagmi";
-import LoginModal from "@/components/loginModal";
+import LoginModal from "@/components/login";
 import Trade from "@/components/trade";
 import { FaCoins } from "react-icons/fa";
 import classNames from "classnames";

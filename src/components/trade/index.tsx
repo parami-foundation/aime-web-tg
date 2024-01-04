@@ -168,46 +168,44 @@ const Trade: React.FC<{
   }, [bindedAddress, connectAddress]);
 
   return (
-    <>
-      <Modal
-        centered
-        title={null}
-        footer={null}
-        className={styles.tradeModal}
-        open={visible}
-        onCancel={() => setVisible(false)}
-        closeIcon={closeable ?? true}
-        maskClosable={closeable ?? true}
-      >
-        {connector?.id === 'walletConnect' && (
-          <div className={styles.walletConnectAccount}>
-            <w3m-account-button />
-          </div>
-        )}
-        {!selectMode && !mode && (
-          <Index
-            setSelectMode={setSelectMode}
-          />
-        )}
+    <Modal
+      centered
+      title={null}
+      footer={null}
+      className={styles.tradeModal}
+      open={visible}
+      onCancel={() => setVisible(false)}
+      closeIcon={closeable ?? true}
+      maskClosable={closeable ?? true}
+    >
+      {connector?.id === 'walletConnect' && (
+        <div className={styles.walletConnectAccount}>
+          <w3m-account-button />
+        </div>
+      )}
+      {!selectMode && !mode && (
+        <Index
+          setSelectMode={setSelectMode}
+        />
+      )}
 
-        {(selectMode === "buy" || mode === "buy") && (
-          <Buy
-            visible={visible}
-            setVisible={setVisible}
-            transactionHash={transactionHash}
-            setTransactionHash={setTransactionHash}
-          />
-        )}
-        {(selectMode === "sell" || mode === "sell") && (
-          <Sell
-            visible={visible}
-            setVisible={setVisible}
-            transactionHash={transactionHash}
-            setTransactionHash={setTransactionHash}
-          />
-        )}
-      </Modal>
-    </>
+      {(selectMode === "buy" || mode === "buy") && (
+        <Buy
+          visible={visible}
+          setVisible={setVisible}
+          transactionHash={transactionHash}
+          setTransactionHash={setTransactionHash}
+        />
+      )}
+      {(selectMode === "sell" || mode === "sell") && (
+        <Sell
+          visible={visible}
+          setVisible={setVisible}
+          transactionHash={transactionHash}
+          setTransactionHash={setTransactionHash}
+        />
+      )}
+    </Modal>
   )
 };
 

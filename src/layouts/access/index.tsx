@@ -1,4 +1,4 @@
-import LoginModal from '@/components/loginModal';
+import LoginModal from '@/components/login';
 import TelegramOauth from '@/components/telegram/oauth';
 import TwitterOauth from '@/components/twitter/oauth';
 import { useModel } from '@umijs/max';

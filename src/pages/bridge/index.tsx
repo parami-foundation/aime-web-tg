@@ -7,7 +7,7 @@ import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 import queryString from 'query-string';
 import { charactersData } from "@/mocks/character";
 import { StartParam } from "@/types";
-import LoginModal from "@/components/loginModal";
+import LoginModal from "@/components/login";
 import { notification } from "antd";
 import { AccessLayout } from "@/layouts/access";
 import Trade from "@/components/trade";
