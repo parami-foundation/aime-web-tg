@@ -8,7 +8,7 @@ export const AccessLayout = ({ children }: PropsWithChildren) => {
   const { accessToken } = useModel('useAccess');
   const { walletModalVisible, setWalletModalVisible } = useModel('useWallet');
   const { telegramOauthModalVisible, setTelegramOauthModalVisible } = useModel('useTelegram');
-  const { twitterOauthModalVisible, setTwitterOauthModalVisible } = useModel('useTwitter');
+  const { twitterOauthModalVisible, setTwitterOauthModalVisible, twitterBinded } = useModel('useTwitter');
 
   useEffect(() => {
     if (!accessToken) {
@@ -17,6 +17,14 @@ export const AccessLayout = ({ children }: PropsWithChildren) => {
       setTelegramOauthModalVisible(false);
     }
   }, [accessToken]);
+
+  useEffect(() => {
+    if (!!accessToken && !twitterBinded) {
+      setTwitterOauthModalVisible(true);
+    } else {
+      setTwitterOauthModalVisible(false);
+    }
+  }, [accessToken, twitterBinded]);
 
   return (
     <>

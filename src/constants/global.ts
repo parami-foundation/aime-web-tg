@@ -29,6 +29,12 @@ export const API_CONFIG = {
   grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
 };
 
+export const IPFS_CONFIG = {
+  host: "ipfs.parami.io",
+  upload: "/api/v0/add",
+  download: "/ipfs",
+};
+
 export const ALCHEMY_CONFIG = {
   Optimism: "Co3hROG5cgCbbMsaIKiGjplscQUvJGhb",
 };

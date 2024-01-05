@@ -325,3 +325,23 @@ export async function TrainVoice(
     }
   )
 }
+
+export async function TrainCharacterBasic(
+  data: Req.TrainCharacterBasic,
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  return request(
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/train_character_basic`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: data,
+      ...(options || {}),
+      getResponse: true,
+    }
+  )
+}

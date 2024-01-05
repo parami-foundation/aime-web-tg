@@ -1,4 +1,4 @@
-import { API_CONFIG } from "@/constants/global";
+import { API_CONFIG, DEBUG } from "@/constants/global";
 import { GetLoginMethod, GetProfile, OauthTelegram } from "@/services/api";
 import { useModel } from "@umijs/max";
 import { message } from "antd";
@@ -79,9 +79,9 @@ export default () => {
       const { response, data } = await GetLoginMethod(accessToken);
       if (response?.status === 200) {
         setLoginMethod(data);
-        console.log("loginMethod", data)
+        DEBUG && console.log("loginMethod", data)
 
-        const twitter = data.find((item) => item.name === "twitter");
+        const twitter = data?.find((item) => item.name === "twitter");
         if (!!twitter) {
           setTwitterLoginMethod(twitter);
         }

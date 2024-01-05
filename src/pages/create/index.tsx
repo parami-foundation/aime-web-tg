@@ -8,9 +8,12 @@ import Loading from "./loading";
 import Success from "./success";
 import { InitData } from "@tma.js/sdk";
 import { TelegramOauthDataOnauthProps } from "@/types";
+import { UploadIPFS } from "@/services/third";
+import { notification } from "antd";
+import { TrainCharacterBasic, TrainVoice } from "@/services/api";
 
 const Create: React.FC = () => {
-  const { profile } = useModel("useAccess");
+  const { profile, accessToken } = useModel("useAccess");
   const { telegramData, miniAppBackButton, miniAppMainButton } = useModel("useTelegram");
 
   const [step, setStep] = React.useState<number>(1);
@@ -38,6 +41,26 @@ const Create: React.FC = () => {
       });
     }
   }, [miniAppMainButton]);
+
+  const handleCreate = async () => {
+    if (!avatar || !bio || !name || !record || !accessToken) return;
+    setLoading(true);
+    // Upload avatar to IPFS
+    const { response: avatarResponse, data: avatarData } = await UploadIPFS(avatar);
+    if (avatarResponse.status !== 200) {
+      setLoading(false);
+      notification.error({
+        key: "uploadAvatarFailed",
+        message: "Upload avatar failed",
+        description: "Please try again later",
+      });
+      return;
+    }
+
+    // Upload record to AI
+    const { response: recordResponse, data: recordData } = await TrainVoice(record, accessToken);
+
+  };
 
   return (
     <AccessLayout>
