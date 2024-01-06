@@ -23,7 +23,7 @@ const AvatarRegistered: React.FC = () => {
         <div className={styles.meAvatarImage}>
           <Image
             className={styles.meAvatarImageSrc}
-            src={profile?.avatar_uri || (telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
+            src={profile?.telegram?.avatar_uri || (telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
             fallback={require('@/assets/me/avatar.png')}
             preview={false}
           />
@@ -37,7 +37,7 @@ const AvatarRegistered: React.FC = () => {
       </div>
       <div className={styles.meAvatarPop}>
         <div className={styles.meAvatarPopWrapper}>
-          👋 Hi, {profile?.name || (telegramData as InitData)?.user?.firstName || (telegramData as TelegramOauthDataOnauthProps)?.first_name}
+          👋 Hi, {profile?.telegram?.name || (telegramData as InitData)?.user?.firstName || (telegramData as TelegramOauthDataOnauthProps)?.first_name}
         </div>
       </div>
     </div>

@@ -49,7 +49,7 @@ const Me: React.FC = () => {
               <div className={styles.meInfoAvatarImage}>
                 <Image
                   className={styles.meInfoAvatarImageSrc}
-                  src={profile?.avatar_uri || (telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
+                  src={profile?.telegram?.avatar_uri || (telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
                   fallback={require('@/assets/me/avatar.png')}
                   preview={false}
                 />
@@ -62,7 +62,7 @@ const Me: React.FC = () => {
             </div>
             <div className={styles.meInfoText}>
               <div className={styles.meInfoTextName}>
-                {profile?.name || (telegramData as InitData)?.user?.firstName || (telegramData as TelegramOauthDataOnauthProps)?.first_name}
+                {profile?.telegram?.name || (telegramData as InitData)?.user?.firstName || (telegramData as TelegramOauthDataOnauthProps)?.first_name}
               </div>
               <div className={styles.meInfoTextDesc}>
                 Find something difference.

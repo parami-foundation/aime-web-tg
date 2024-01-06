@@ -28,7 +28,7 @@ const AvatarNew: React.FC = () => {
         <div className={styles.meAvatarImage}>
           <Image
             className={styles.meAvatarImageSrc}
-            src={profile?.avatar_uri || (telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
+            src={profile?.telegram?.avatar_uri || (telegramData as InitData)?.user?.photoUrl || (telegramData as TelegramOauthDataOnauthProps)?.photo_url}
             fallback={require('@/assets/me/avatar.png')}
             preview={false}
           />

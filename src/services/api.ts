@@ -17,7 +17,7 @@ export const request = extend({
 });
 
 export async function OauthTelegram(
-  data: Req.OauthTelegram,
+  data: Req.Oauth,
   options?: { [key: string]: any }
 ) {
   return request<Resp.OauthTelegram>(
@@ -46,6 +46,26 @@ export async function GetLoginMethod(
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
+      ...(options || {}),
+      getResponse: true,
+    }
+  );
+}
+
+export async function BindThirdParty(
+  data: Req.Oauth,
+  accessToken: string,
+  options?: { [key: string]: any }
+) {
+  return request(
+    `${API_CONFIG.scheme}://${API_CONFIG.host}/api/v1/oauth2/bind`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: data,
       ...(options || {}),
       getResponse: true,
     }

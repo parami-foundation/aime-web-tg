@@ -11,8 +11,8 @@ const TwitterOauth: React.FC<{
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   closeable?: boolean;
 }> = ({ visible, setVisible, closeable }) => {
+  const { twitterLoginMethod } = useModel("useAccess");
   const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
-  const { twitterLoginMethod } = useModel("useTwitter");
 
   return (
     <Modal

@@ -60,7 +60,7 @@ export interface StartParam {
 }
 
 export declare namespace Req {
-  interface OauthTelegram {
+  interface Oauth {
     grant_type?: string;
     subject_token?: string;
     subject_issuer?: string;
@@ -149,11 +149,18 @@ export declare namespace Resp {
 
   interface Profile extends Body {
     id?: string;
-    name?: string;
-    avatar_uri?: string;
     bio?: string;
     credit?: string;
     created_at?: string;
+    referral_code?: string;
+    telegram?: {
+      name?: string;
+      avatar_uri?: string;
+    };
+    twitter?: {
+      name?: string;
+      avatar_uri?: string;
+    };
   }
 
   interface Wallet extends Body {

@@ -2,19 +2,21 @@ import { API_CONFIG, DEBUG } from "@/constants/global";
 import { GetLoginMethod, GetProfile, OauthTelegram } from "@/services/api";
 import { useModel } from "@umijs/max";
 import { message } from "antd";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Resp } from "@/types";
 import { ApiError } from "@/types/enum";
+import queryString from "query-string";
 
 export default () => {
   const { telegramDataString, telegramAuthType, telegramCloudStorage, cleanTelegramData } =
     useModel("useTelegram");
-  const { setTwitterLoginMethod } = useModel("useTwitter");
   const [loginMethod, setLoginMethod] = useState<Resp.LoginMethod[]>([]);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [accessTokenExpire, setAccessTokenExpire] = useState<number | null>(null);
   const [profile, setProfile] = useState<Resp.Profile>({});
   const [refer, setRefer] = useState<string>();
+
+  const [twitterLoginMethod, setTwitterLoginMethod] = useState<Resp.LoginMethod>({});
 
   const oauthTelegram = async () => {
     console.log("telegramDataString oauth", telegramDataString);
@@ -148,6 +150,7 @@ export default () => {
     accessTokenExpire,
     profile,
     refer,
+    twitterLoginMethod,
     setRefer,
     setAccessToken,
     setAccessTokenExpire,
