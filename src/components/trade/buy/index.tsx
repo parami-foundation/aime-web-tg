@@ -407,8 +407,8 @@ const Detail: React.FC<{
           className={styles.detailModalFooterButton}
           loading={isLoading}
           disabled={parseFloat(balance?.formatted ?? "0") === 0 || parseFloat(balance?.formatted ?? "0") < parseFloat(formatEther(ethValue ?? 0n + gas))}
-          onClick={() => {
-            write({
+          onClick={async () => {
+            await write({
               args: [
                 `0x${character?.wallet?.optimism}`,
                 powerValue,

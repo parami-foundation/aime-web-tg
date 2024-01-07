@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styles from "./style.less";
 import { useModel } from "@umijs/max";
-import { useAccount, useBalance, useContractRead, useContractWrite, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useBalance, useContractRead, useContractWrite, useNetwork, useSwitchNetwork } from "wagmi";
 import { AIME_CONTRACT, DEBUG, NETWORK_CONFIG } from "@/constants/global";
 import { Button, InputNumber, message, notification } from "antd";
 import { Image } from "antd";
