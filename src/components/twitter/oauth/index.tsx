@@ -5,14 +5,16 @@ import { THEME_CONFIG } from "@/constants/theme";
 import { FaAngleRight } from "react-icons/fa";
 import { ReactComponent as TwitterIcon } from "@/assets/brand/twitter.svg";
 import { useModel } from "@umijs/max";
+import { PROJECT_CONFIG } from "@/constants/global";
 
 const TwitterOauth: React.FC<{
   visible: boolean;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
   closeable?: boolean;
 }> = ({ visible, setVisible, closeable }) => {
-  const { twitterLoginMethod } = useModel("useAccess");
-  const { telegramDataString, miniAppUtils, telegramWebApp } = useModel("useTelegram");
+  const { accessToken, accessTokenExpire, twitterLoginMethod } = useModel("useAccess");
+  const { telegramDataString, telegramAuthType, miniAppUtils, telegramWebApp } = useModel("useTelegram");
+  const { character } = useModel("useSetting");
 
   return (
     <Modal
@@ -57,7 +59,7 @@ const TwitterOauth: React.FC<{
               className={styles.loginModalContentItem}
               onClick={() => {
                 if (!!twitterLoginMethod?.url) {
-                  (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(twitterLoginMethod?.url) : window.open(twitterLoginMethod?.url, "_blank");
+                  (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/hub?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=connectTwitter&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : window.open(twitterLoginMethod?.url, "_blank");
                   (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
                 } else {
                   message.error("Twitter login method not found");

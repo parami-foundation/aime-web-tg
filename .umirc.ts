@@ -53,8 +53,8 @@ export default defineConfig({
       ],
     },
     {
-      path: "/bridge",
-      component: "bridge",
+      path: "/hub",
+      component: "hub",
     },
   ],
   manifest: {

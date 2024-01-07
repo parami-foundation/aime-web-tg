@@ -12,11 +12,12 @@ import { notification } from "antd";
 import { AccessLayout } from "@/layouts/access";
 import Trade from "@/components/trade";
 
-const Bridge: React.FC = () => {
+const Hub: React.FC = () => {
+  const { twitterLoginMethod, accessToken, setAccessToken, setAccessTokenExpire } = useModel('useAccess');
   const { telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
   const { signature, walletBinded, setWalletModalVisible, setAddress } = useModel('useWallet');
   const { setCharacter } = useModel('useSetting');
-  const { accessToken, setAccessToken, setAccessTokenExpire } = useModel('useAccess');
+  const { twitterBinded } = useModel('useTwitter');
 
   const [tradeModalVisible, setTradeModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
@@ -98,7 +99,7 @@ const Bridge: React.FC = () => {
   useEffect(() => {
     if (!!search?.action) {
       switch (search?.action) {
-        case "bind":
+        case "connectWallet":
           if (!!connectAddress && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded)) {
             const params: StartParam = {
               characterId: search?.characterId as string,
@@ -130,7 +131,7 @@ const Bridge: React.FC = () => {
           }
           break;
 
-        case "buypower":
+        case "buyPower":
           if (!!connectAddress && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded)) {
             setTradeMode('buy');
             setTradeModalVisible(true);
@@ -150,7 +151,7 @@ const Bridge: React.FC = () => {
           }
           break;
 
-        case "sellpower":
+        case "sellPower":
           if (!!connectAddress && isConnected && currentChain?.id === chains[0]?.id && (!!signature || walletBinded)) {
             setTradeMode('sell');
             setTradeModalVisible(true);
@@ -170,6 +171,23 @@ const Bridge: React.FC = () => {
           }
           break;
 
+        case "connectTwitter":
+          if (!!accessToken && !!twitterLoginMethod?.url) {
+            window.location.href = twitterLoginMethod?.url;
+          }
+          if (!!accessToken && !!twitterLoginMethod?.url && twitterBinded) {
+            const params: StartParam = {
+              characterId: search?.characterId as string,
+              address: connectAddress,
+              reconnect: true,
+            };
+            const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '____').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
+
+            window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
+          }
+
+          break;
+
         default:
           notification.error({
             key: 'actionError',
@@ -186,11 +204,11 @@ const Bridge: React.FC = () => {
         duration: 0,
       });
     }
-  }, [connectAddress, currentChain, signature, walletBinded, transactionHash]);
+  }, [connectAddress, currentChain, signature, walletBinded, transactionHash, twitterLoginMethod, twitterBinded]);
 
   return (
     <AccessLayout>
-      <div className={styles.bridgeContainer}>
+      <div className={styles.hubContainer}>
         <div className={styles.logoContainer}>
           <div className={styles.logo}>
             <Logo />
@@ -221,4 +239,4 @@ const Bridge: React.FC = () => {
   )
 };
 
-export default Bridge;
+export default Hub;

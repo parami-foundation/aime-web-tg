@@ -11,6 +11,7 @@ import { ReactComponent as SoundPlayIcon } from '@/assets/icon/soundPlay.svg';
 import { MessageDisplay } from "@/models/useChat";
 import ReactMarkdown from "react-markdown";
 import Trade from "@/components/trade";
+import TwitterOauth from "@/components/twitter/oauth";
 
 const AiPop: React.FC<{
   data?: MessageDisplay[];
@@ -23,6 +24,8 @@ const AiPop: React.FC<{
   const [isBuyModalVisible, setIsBuyModalVisible] = React.useState<boolean>(false);
   const [isSellModalVisible, setIsSellModalVisible] = React.useState<boolean>(false);
   const [isShareModalVisible, setIsShareModalVisible] = React.useState<boolean>(false);
+  const [isTradeModalVisible, setIsTradeModalVisible] = React.useState<boolean>(false);
+  const [isTwitterModalVisible, setIsTwitterModalVisible] = React.useState<boolean>(false);
   const [transactionHash, setTransactionHash] = React.useState<`0x${string}` | undefined>();
 
   const audioPlayer = createRef<HTMLAudioElement>();
@@ -85,7 +88,7 @@ const AiPop: React.FC<{
                           size="large"
                           className={styles.aiPopButton}
                           onClick={() => {
-                            (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=bind&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setWalletModalVisible(true);
+                            (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/hub?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=connectWallet&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setWalletModalVisible(true);
                             (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
                           }}
                         >
@@ -99,48 +102,55 @@ const AiPop: React.FC<{
                   )
                 case "connectTwitter":
                   return (
-                    <div
-                      className={styles.aiPopAction}
+                    <React.Fragment
                       key={item?.id}
                     >
-                      <ReactMarkdown
-                        className={styles.aiPopText}
-                        components={{
-                          a: (props) => (
-                            <a
-                              onClick={(e) => {
-                                (!!telegramDataString && !!telegramWebApp && !!props?.href) ? miniAppUtils?.openLink(props?.href) : window.open(props?.href, "_blank");
-                              }}
-                              target="_blank"
-                              rel="noreferrer"
-                              className={styles.aiPopLink}
-                            >
-                              🔗 {props.children}
-                            </a>
-                          ),
-                          li: 'p',
-                          ol: 'p',
-                          ul: 'p',
-                        }}
-                      >
-                        {item?.data as string}
-                      </ReactMarkdown>
-                      <div className={styles.aiPopButtons}>
-                        <Button
-                          block
-                          type="primary"
-                          size="large"
-                          className={styles.aiPopButton}
-                          onClick={() => {
+                      <div className={styles.aiPopAction}>
+                        <ReactMarkdown
+                          className={styles.aiPopText}
+                          components={{
+                            a: (props) => (
+                              <a
+                                onClick={(e) => {
+                                  (!!telegramDataString && !!telegramWebApp && !!props?.href) ? miniAppUtils?.openLink(props?.href) : window.open(props?.href, "_blank");
+                                }}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={styles.aiPopLink}
+                              >
+                                🔗 {props.children}
+                              </a>
+                            ),
+                            li: 'p',
+                            ol: 'p',
+                            ul: 'p',
                           }}
                         >
-                          <RiTwitterXFill
-                            className={styles.aiPopButtonIcon}
-                          />
-                          Login with Twitter
-                        </Button>
+                          {item?.data as string}
+                        </ReactMarkdown>
+                        <div className={styles.aiPopButtons}>
+                          <Button
+                            block
+                            type="primary"
+                            size="large"
+                            className={styles.aiPopButton}
+                            onClick={() => {
+                              (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/hub?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=connectTwitter&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsTwitterModalVisible(true);
+                              (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
+                            }}
+                          >
+                            <RiTwitterXFill
+                              className={styles.aiPopButtonIcon}
+                            />
+                            Login with Twitter
+                          </Button>
+                        </div>
                       </div>
-                    </div>
+                      <TwitterOauth
+                        visible={isTwitterModalVisible}
+                        setVisible={setIsTwitterModalVisible}
+                      />
+                    </React.Fragment>
                   )
                 case "buyPower":
                   return (
@@ -188,7 +198,7 @@ const AiPop: React.FC<{
                               size="large"
                               className={styles.aiPopButtonDark}
                               onClick={() => {
-                                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buypower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsBuyModalVisible(true);
+                                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/hub?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=buyPower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsBuyModalVisible(true);
                                 (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
                               }}
                             >
@@ -252,7 +262,7 @@ const AiPop: React.FC<{
                               size="large"
                               className={styles.aiPopButtonDark}
                               onClick={() => {
-                                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/bridge?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=sellpower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsSellModalVisible(true);
+                                (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/hub?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=sellPower&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : setIsSellModalVisible(true);
                                 (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
                               }}
                             >

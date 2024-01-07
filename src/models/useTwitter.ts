@@ -18,7 +18,7 @@ export default () => {
 
   useEffect(() => {
     ; (async () => {
-      if (!!search?.oauth && search?.oauth === "twitter" && !!accessToken) {
+      if (!!search?.action && search?.action === "connectTwitter" && !!accessToken) {
         if (!!search?.state && !!search?.code) {
           setTwitterState(search?.state as string);
           setTwitterCode(search?.code as string);
