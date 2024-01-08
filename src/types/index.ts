@@ -217,4 +217,14 @@ export declare namespace Resp {
     Hash?: string;
     Size?: string;
   }
+
+  interface BindThirdParty extends Body {
+    access_token?: {
+      code?: string;
+      status?: string;
+      token?: string;
+    };
+    message?: string;
+    oauth_code?: string;
+  }
 }

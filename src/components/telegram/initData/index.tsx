@@ -4,7 +4,6 @@ import { useModel } from "@umijs/max";
 import { PropsWithChildren, useEffect } from "react";
 import { TelegramAuth } from "@/types/enum";
 import { DEBUG } from "@/constants/global";
-import { THEME_CONFIG } from "@/constants/theme";
 
 export const TMAInitData = ({ children }: PropsWithChildren) => {
   const { setTelegramData, setTelegramDataString, setTelegramAuthType, setTelegramMiniAppHeight, setTelegramWebApp, setMiniAppParams, setMiniAppUtils, setTelegramCloudStorage, setMiniAppBackButton, setMiniAppMainButton, setMiniAppThemeParams } = useModel('useTelegram');

@@ -11,10 +11,11 @@ import LoginModal from "@/components/login";
 import { notification } from "antd";
 import { AccessLayout } from "@/layouts/access";
 import Trade from "@/components/trade";
+import { PROJECT_CONFIG } from "@/constants/global";
 
 const Hub: React.FC = () => {
   const { twitterLoginMethod, accessToken, setAccessToken, setAccessTokenExpire } = useModel('useAccess');
-  const { telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
+  const { telegramWebApp, telegramCloudStorage, setTelegramOauthModalVisible, setTelegramAuthType, setTelegramDataString } = useModel('useTelegram');
   const { signature, walletBinded, setWalletModalVisible, setAddress } = useModel('useWallet');
   const { setCharacter } = useModel('useSetting');
   const { twitterBinded } = useModel('useTwitter');
@@ -172,9 +173,6 @@ const Hub: React.FC = () => {
           break;
 
         case "connectTwitter":
-          if (!!accessToken && !!twitterLoginMethod?.url) {
-            window.location.href = twitterLoginMethod?.url;
-          }
           if (!!accessToken && !!twitterLoginMethod?.url && twitterBinded) {
             const params: StartParam = {
               characterId: search?.characterId as string,
@@ -183,7 +181,9 @@ const Hub: React.FC = () => {
             };
             const paramsString = JSON.stringify(params).replace(/"/g, '').replace(/'/g, '').replace(/:/g, '__').replace(/,/g, '____').replace(/ /g, '').replace(/{/g, '').replace(/}/g, '');
 
-            window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}`;
+            !!telegramWebApp ? window.location.href = `https://t.me/aime_beta_bot/aimeapp?startapp=${paramsString}` : window.location.href = localStorage.getItem('aime:redirect_uri') || PROJECT_CONFIG.url;
+          } else if (!!accessToken && !!twitterLoginMethod?.url && !search?.code) {
+            window.location.href = twitterLoginMethod?.url;
           }
 
           break;

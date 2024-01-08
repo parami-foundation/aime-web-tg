@@ -29,8 +29,9 @@ const Layout: React.FC = () => {
         >
           <SDKProvider
             options={{
-              cssVars: true,
               acceptCustomStyles: true,
+              cssVars: true,
+              async: true,
             }}
           >
             <ConfigProvider

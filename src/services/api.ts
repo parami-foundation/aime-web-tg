@@ -351,7 +351,7 @@ export async function TrainCharacterBasic(
   accessToken: string,
   options?: { [key: string]: any }
 ) {
-  return request(
+  return request<Resp.BindThirdParty>(
     `${API_CONFIG.scheme}://${API_CONFIG.host}/train_character_basic`,
     {
       method: "POST",

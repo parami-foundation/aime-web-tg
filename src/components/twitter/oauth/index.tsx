@@ -60,6 +60,7 @@ const TwitterOauth: React.FC<{
               onClick={() => {
                 if (!!twitterLoginMethod?.url) {
                   (!!telegramDataString && !!telegramWebApp) ? miniAppUtils?.openLink(`${PROJECT_CONFIG?.url}/hub?access_token=${accessToken}&access_token_expire=${accessTokenExpire}&action=connectTwitter&characterId=${character?.id}&telegramDataString=${encodeURIComponent(telegramDataString)}&telegramAuthType=${telegramAuthType}`) : window.open(twitterLoginMethod?.url, "_blank");
+                  (!telegramDataString && !telegramWebApp) && localStorage.setItem("aime:redirect_uri", window.location.href);
                   (!!telegramDataString && !!telegramWebApp) && telegramWebApp?.close();
                 } else {
                   message.error("Twitter login method not found");
